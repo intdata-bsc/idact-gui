@@ -1,0 +1,24 @@
+2019-05-27 17:20:21 DEBUG: Loaded config: {'clusters': {'hpc2': {'auth': 'PUBLIC_KEY', 'disableSshd': False, 'host': 'plg.cyfronet.pl', 'installKey': True, 'key': 'C:\\Users\\piotr/.ssh\\id_rsa_cs', 'notebookDefaults': {}, 'port': 22, 'retries': {'CANCEL_DEPLOYMENT': {'count': 5, 'secondsBetween': 1}, 'CHECK_WORKER_STARTED': {'count': 25, 'secondsBetween': 1}, 'DASK_NODE_CONNECT': {'count': 3, 'secondsBetween': 5}, 'DEPLOY_DASK_SCHEDULER': {'count': 3, 'secondsBetween': 5}, 'DEPLOY_DASK_WORKER': {'count': 3, 'secondsBetween': 5}, 'GET_SCHEDULER_ADDRESS': {'count': 25, 'secondsBetween': 1}, 'JUPYTER_JSON': {'count': 15, 'secondsBetween': 1}, 'OPEN_TUNNEL': {'count': 3, 'secondsBetween': 5}, 'PORT_INFO': {'count': 25, 'secondsBetween': 1}, 'SCHEDULER_CONNECT': {'count': 5, 'secondsBetween': 2}, 'SQUEUE_AFTER_SBATCH': {'count': 9, 'secondsBetween': 1}, 'TUNNEL_TRY_AGAIN_WITH_ANY_PORT': {'count': 1, 'secondsBetween': 0}, 'VALIDATE_HTTP_TUNNEL': {'count': 6, 'secondsBetween': 1}}, 'scratch': '$HOME', 'setupActions': {'dask': [], 'jupyter': []}, 'useJupyterLab': True, 'user': 'plgswedrak'}}, 'logLevel': 20}
+2019-05-27 17:20:21 ERROR: Exception raised.
+Traceback (most recent call last):
+  File "C:\Users\piotr\Desktop\AGH\Semestr VI\intdata-bsc\idact\idact\detail\jupyter_app\main.py", line 56, in main
+    cluster = show_cluster(name=cluster_name)
+  File "C:\Users\piotr\Desktop\AGH\Semestr VI\intdata-bsc\idact\idact\core\show_clusters.py", line 25, in show_cluster
+    return environment.clusters[name]
+KeyError: 'a'
+2019-05-27 17:20:33 DEBUG: Loaded config: {'clusters': {'hpc2': {'auth': 'PUBLIC_KEY', 'disableSshd': False, 'host': 'plg.cyfronet.pl', 'installKey': True, 'key': 'C:\\Users\\piotr/.ssh\\id_rsa_cs', 'notebookDefaults': {}, 'port': 22, 'retries': {'CANCEL_DEPLOYMENT': {'count': 5, 'secondsBetween': 1}, 'CHECK_WORKER_STARTED': {'count': 25, 'secondsBetween': 1}, 'DASK_NODE_CONNECT': {'count': 3, 'secondsBetween': 5}, 'DEPLOY_DASK_SCHEDULER': {'count': 3, 'secondsBetween': 5}, 'DEPLOY_DASK_WORKER': {'count': 3, 'secondsBetween': 5}, 'GET_SCHEDULER_ADDRESS': {'count': 25, 'secondsBetween': 1}, 'JUPYTER_JSON': {'count': 15, 'secondsBetween': 1}, 'OPEN_TUNNEL': {'count': 3, 'secondsBetween': 5}, 'PORT_INFO': {'count': 25, 'secondsBetween': 1}, 'SCHEDULER_CONNECT': {'count': 5, 'secondsBetween': 2}, 'SQUEUE_AFTER_SBATCH': {'count': 9, 'secondsBetween': 1}, 'TUNNEL_TRY_AGAIN_WITH_ANY_PORT': {'count': 1, 'secondsBetween': 0}, 'VALIDATE_HTTP_TUNNEL': {'count': 6, 'secondsBetween': 1}}, 'scratch': '$HOME', 'setupActions': {'dask': [], 'jupyter': []}, 'useJupyterLab': True, 'user': 'plgswedrak'}}, 'logLevel': 20}
+2019-05-27 17:20:33 ERROR: Exception raised.
+Traceback (most recent call last):
+  File "C:\Users\piotr\Desktop\AGH\Semestr VI\intdata-bsc\idact\idact\detail\jupyter_app\main.py", line 56, in main
+    cluster = show_cluster(name=cluster_name)
+  File "C:\Users\piotr\Desktop\AGH\Semestr VI\intdata-bsc\idact\idact\core\show_clusters.py", line 25, in show_cluster
+    return environment.clusters[name]
+KeyError: 'hpc'
+2019-05-27 17:20:35 DEBUG: Loaded config: {'clusters': {'hpc2': {'auth': 'PUBLIC_KEY', 'disableSshd': False, 'host': 'plg.cyfronet.pl', 'installKey': True, 'key': 'C:\\Users\\piotr/.ssh\\id_rsa_cs', 'notebookDefaults': {}, 'port': 22, 'retries': {'CANCEL_DEPLOYMENT': {'count': 5, 'secondsBetween': 1}, 'CHECK_WORKER_STARTED': {'count': 25, 'secondsBetween': 1}, 'DASK_NODE_CONNECT': {'count': 3, 'secondsBetween': 5}, 'DEPLOY_DASK_SCHEDULER': {'count': 3, 'secondsBetween': 5}, 'DEPLOY_DASK_WORKER': {'count': 3, 'secondsBetween': 5}, 'GET_SCHEDULER_ADDRESS': {'count': 25, 'secondsBetween': 1}, 'JUPYTER_JSON': {'count': 15, 'secondsBetween': 1}, 'OPEN_TUNNEL': {'count': 3, 'secondsBetween': 5}, 'PORT_INFO': {'count': 25, 'secondsBetween': 1}, 'SCHEDULER_CONNECT': {'count': 5, 'secondsBetween': 2}, 'SQUEUE_AFTER_SBATCH': {'count': 9, 'secondsBetween': 1}, 'TUNNEL_TRY_AGAIN_WITH_ANY_PORT': {'count': 1, 'secondsBetween': 0}, 'VALIDATE_HTTP_TUNNEL': {'count': 6, 'secondsBetween': 1}}, 'scratch': '$HOME', 'setupActions': {'dask': [], 'jupyter': []}, 'useJupyterLab': True, 'user': 'plgswedrak'}}, 'logLevel': 20}
+2019-05-27 17:20:35 ERROR: Exception raised.
+Traceback (most recent call last):
+  File "C:\Users\piotr\Desktop\AGH\Semestr VI\intdata-bsc\idact\idact\detail\jupyter_app\main.py", line 56, in main
+    cluster = show_cluster(name=cluster_name)
+  File "C:\Users\piotr\Desktop\AGH\Semestr VI\intdata-bsc\idact\idact\core\show_clusters.py", line 25, in show_cluster
+    return environment.clusters[name]
+KeyError: 'hpc'
