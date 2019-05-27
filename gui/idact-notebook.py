@@ -7,7 +7,7 @@ class App(QDialog):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Idact")
+        self.setWindowTitle("idact notebook")
         self.width = 600
         self.height = 300
         self.resize(self.width, self.height)
@@ -70,9 +70,11 @@ class App(QDialog):
                              reset_defaults=False,
                              nodes=nodes,
                              cores=cores,
-                             memory_per_node=memory,
+                             memory_per_node=memory+"GiB",
                              walltime=walltime,
-                             native_arg=None)
+                             native_arg=[
+                                 ('partition', 'plgrid-testing')
+                               ])
 
 
 if __name__ == '__main__':
