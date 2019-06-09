@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Notebook</class>
+ <widget class="QMainWindow" name="Notebook">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>489</width>
+    <height>302</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Idact notebook</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="gridLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>10</y>
+      <width>451</width>
+      <height>271</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <widget class="QLabel" name="cluster_name_label">
+           <property name="text">
+            <string>Cluster name</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="nodes_label">
+           <property name="text">
+            <string>Nodes</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="cores_label">
+           <property name="text">
+            <string>Cores per node</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="memory_label">
+           <property name="text">
+            <string>Memory per node (GiB)</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="walltime_label">
+           <property name="text">
+            <string>Walltime (HH:MM:SS)</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="QLineEdit" name="cluster_name_edit"/>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="nodes_edit"/>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="cores_edit"/>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="memory_edit"/>
+         </item>
+         <item>
+          <widget class="QTimeEdit" name="walltime_edit">
+           <property name="displayFormat">
+            <string>HH:mm:ss</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item row="1" column="0">
+      <widget class="QPushButton" name="deploy_button">
+       <property name="text">
+        <string>Deploy Jupyter Notebook</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionAdd">
+   <property name="text">
+    <string>Add</string>
+   </property>
+  </action>
+  <action name="actionRemove">
+   <property name="text">
+    <string>Remove</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
