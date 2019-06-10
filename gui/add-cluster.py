@@ -16,7 +16,7 @@ class MyApp(QMainWindow):
         super(MyApp, self).__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        self.ui.deploy_button.clicked.connect(self.add_cluster)
+        self.ui.add_cluster_button.clicked.connect(self.add_cluster)
 
     def add_cluster(self):
         cluster_name = self.ui.cluster_name_edit.text()
