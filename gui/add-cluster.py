@@ -22,7 +22,7 @@ class MyApp(QMainWindow):
         cluster_name = self.ui.cluster_name_edit.text()
         user = self.ui.user_edit.text()
         host = self.ui.host_edit.text()
-        port = self.ui.port_edit.text()
+        port = int(self.ui.port_edit.text())
         auth = self.ui.auth_method_box.currentText()
         if auth == 'PUBLIC_KEY':
             key = self.ui.key_type_box.currentText()
