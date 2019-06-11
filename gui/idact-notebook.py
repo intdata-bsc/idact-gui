@@ -26,10 +26,10 @@ class MyApp(QMainWindow):
                         reset_defaults=False,
                         nodes=nodes,
                         cores=cores,
-                        memory_per_node=memory,
+                        memory_per_node=memory + 'GiB',
                         walltime=walltime,
                         native_arg=[
-                            ('partition', 'plgrid-testing') #TODO
+                            ('--partition', 'plgrid-testing') #TODO
                         ])
 
 
