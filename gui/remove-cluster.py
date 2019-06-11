@@ -1,11 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QMainWindow, QApplication
 from PyQt5 import uic
-# from idact.detail.cluster_app import main as cluster
-from idact.core.remove_cluster import remove_cluster
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# work in progress - need updated idact to have cluster_app
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+from idact.detail.remove_cluster_app.main import main as remove_cluster
 
 Ui_MainWindow, QtBaseClass = uic.loadUiType('../widgets_templates/remove_cluster.ui')
 

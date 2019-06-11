@@ -2,11 +2,7 @@ import sys
 from PyQt5.QtWidgets import QMainWindow, QApplication
 from PyQt5 import uic
 from idact.core.auth import AuthMethod, KeyType
-# from idact.detail.cluster_app import main as cluster
-from idact.core.add_cluster import add_cluster
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# work in progress - need updated idact to have cluster_app
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+from idact.detail.add_cluster_app.main import main as add_cluster
 
 Ui_MainWindow, QtBaseClass = uic.loadUiType('../widgets_templates/add_cluster.ui')
 
