@@ -27,7 +27,10 @@ class MyApp(QMainWindow):
                              nodes=nodes,
                              cores=cores,
                              memory_per_node=memory,
-                             walltime=walltime)
+                             walltime=walltime,
+                             native_arg=[
+                                 ('partition', 'plgrid-testing')
+                             ])
 
 
 if __name__ == '__main__':
