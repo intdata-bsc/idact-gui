@@ -77,7 +77,7 @@
           <widget class="QSpinBox" name="cores_edit"/>
          </item>
          <item>
-          <widget class="QDoubleSpinBox" name="memory_edit"/>
+          <widget class="QSpinBox" name="memory_edit"/>
          </item>
          <item>
           <widget class="QTimeEdit" name="walltime_edit">

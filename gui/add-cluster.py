@@ -2,7 +2,7 @@ import sys
 from PyQt5.QtWidgets import QMainWindow, QApplication
 from PyQt5 import uic
 from idact.core.auth import AuthMethod, KeyType
-from idact.detail.cluster_app import main as cluster_app
+from idact.detail.add_cluster_app.main import main as add_cluster
 
 Ui_MainWindow, QtBaseClass = uic.loadUiType('../widgets_templates/add_cluster.ui')
 
@@ -23,19 +23,19 @@ class MyApp(QMainWindow):
         if auth == 'PUBLIC_KEY':
             key = self.ui.key_type_box.currentText()
             if key == 'RSA_KEY':
-                cluster_app.main(cluster_name=cluster_name,
-                                 user=user,
-                                 host=host,
-                                 port=port,
-                                 auth=AuthMethod.PUBLIC_KEY,
-                                 key=KeyType.RSA,
-                                 install_key=True)
+                add_cluster(cluster_name=cluster_name,
+                            user=user,
+                            host=host,
+                            port=port,
+                            auth=AuthMethod.PUBLIC_KEY,
+                            key=KeyType.RSA,
+                            install_key=True)
         elif auth == 'ASK_EVERYTIME':
-            cluster_app.main(cluster_name=cluster_name,
-                             user=user,
-                             host=host,
-                             port=port,
-                             auth=AuthMethod.ASK)
+            add_cluster(cluster_name=cluster_name,
+                        user=user,
+                        host=host,
+                        port=port,
+                        auth=AuthMethod.ASK)
 
 
 if __name__ == '__main__':

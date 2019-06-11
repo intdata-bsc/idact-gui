@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QMainWindow, QApplication
 from PyQt5 import uic
-from idact.detail.remove_cluster_app import main as remove_cluster_app
+from idact.detail.remove_cluster_app.main import main as remove_cluster
 
 Ui_MainWindow, QtBaseClass = uic.loadUiType('../widgets_templates/remove_cluster.ui')
 
@@ -15,7 +15,7 @@ class MyApp(QMainWindow):
 
     def remove_cluster(self):
         cluster_name = self.ui.cluster_name_edit.text()
-        remove_cluster_app.main(cluster_name)
+        remove_cluster(cluster_name)
 
 
 if __name__ == '__main__':
