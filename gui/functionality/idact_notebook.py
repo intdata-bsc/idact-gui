@@ -13,6 +13,7 @@ class IdactNotebook:
         nodes = int(self.ui.nodes_edit.text())
         cores = int(self.ui.cores_edit.text())
         memory = self.ui.memory_edit.text()
+        unit = self.ui.memory_unit_box.currentText()
         walltime = self.ui.walltime_edit.text()
 
         deploy_notebook(cluster_name=cluster_name,
@@ -21,7 +22,7 @@ class IdactNotebook:
                         reset_defaults=False,
                         nodes=nodes,
                         cores=cores,
-                        memory_per_node=memory+"GiB",
+                        memory_per_node=memory+unit,
                         walltime=walltime,
                         native_arg=[
                             ('--partition', 'plgrid-testing')  # TODO
