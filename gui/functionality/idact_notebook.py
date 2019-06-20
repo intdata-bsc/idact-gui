@@ -9,7 +9,7 @@ class IdactNotebook:
         idact_app.ui.cluster_name_deployn_edit.setText(idact_app.parameters['deploy_notebook_arguments']['cluster_name'])
         idact_app.ui.nodes_edit.setValue(idact_app.parameters['deploy_notebook_arguments']['nodes'])
         idact_app.ui.cores_edit.setValue(idact_app.parameters['deploy_notebook_arguments']['cores'])
-        idact_app.ui.memory_edit.setValue(idact_app.parameters['deploy_notebook_arguments']['memory_value'])
+        idact_app.ui.memory_edit.setValue(int(idact_app.parameters['deploy_notebook_arguments']['memory_value']))
         idact_app.ui.memory_unit_box.setCurrentText(idact_app.parameters['deploy_notebook_arguments']['memory_unit'])
         idact_app.ui.walltime_edit.setText(idact_app.parameters['deploy_notebook_arguments']['walltime'])
 
@@ -21,7 +21,7 @@ class IdactNotebook:
         self.parameters['deploy_notebook_arguments']['nodes'] = nodes
         cores = int(self.ui.cores_edit.text())
         self.parameters['deploy_notebook_arguments']['cores'] = cores
-        memory = int(self.ui.memory_edit.text())
+        memory = self.ui.memory_edit.text()
         self.parameters['deploy_notebook_arguments']['memory_value'] = memory
         unit = self.ui.memory_unit_box.currentText()
         self.parameters['deploy_notebook_arguments']['memory_unit'] = unit
