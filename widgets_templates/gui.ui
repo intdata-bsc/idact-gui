@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>415</height>
+    <width>406</width>
+    <height>325</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <x>0</x>
      <y>10</y>
      <width>401</width>
-     <height>401</height>
+     <height>311</height>
     </rect>
    </property>
    <property name="currentIndex">
@@ -30,17 +30,31 @@
      <string>Deploy notebook</string>
     </attribute>
     <layout class="QGridLayout" name="gridLayout_2">
-     <item row="8" column="0" colspan="4">
+     <item row="4" column="1" colspan="2">
+      <widget class="QSpinBox" name="memory_edit">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="3">
+      <widget class="QPushButton" name="show_native_arguments_button">
+       <property name="text">
+        <string>Show native arguments</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="2">
       <widget class="QPushButton" name="remove_native_argument_button">
        <property name="text">
         <string>Remove native argument</string>
        </property>
       </widget>
      </item>
-     <item row="4" column="1" colspan="2">
-      <widget class="QSpinBox" name="memory_edit"/>
-     </item>
-     <item row="6" column="0">
+     <item row="5" column="0">
       <widget class="QLabel" name="walltime_label">
        <property name="maximumSize">
         <size>
@@ -53,10 +67,67 @@
        </property>
       </widget>
      </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="nodes_label">
+       <property name="text">
+        <string>Nodes</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1" colspan="3">
+      <widget class="QLineEdit" name="walltime_edit"/>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="cores_label">
+       <property name="text">
+        <string>Cores per node</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="0" colspan="4">
+      <widget class="QPushButton" name="deploy_button">
+       <property name="text">
+        <string>Deploy Jupyter Notebook</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="memory_label">
+       <property name="text">
+        <string>Memory per node</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="cluster_name_deployn_label">
+       <property name="text">
+        <string>Cluster name</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1" colspan="3">
+      <widget class="QLineEdit" name="cluster_name_deployn_edit"/>
+     </item>
+     <item row="1" column="1" colspan="3">
+      <widget class="QSpinBox" name="nodes_edit"/>
+     </item>
+     <item row="6" column="0" colspan="2">
+      <widget class="QPushButton" name="add_native_argument_button">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="text">
+        <string>Add native argument</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1" colspan="3">
+      <widget class="QSpinBox" name="cores_edit"/>
+     </item>
      <item row="4" column="3">
       <widget class="QComboBox" name="memory_unit_box">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+        <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -81,70 +152,6 @@
          <string>PiB</string>
         </property>
        </item>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="memory_label">
-       <property name="text">
-        <string>Memory per node</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1" colspan="3">
-      <widget class="QSpinBox" name="cores_edit"/>
-     </item>
-     <item row="0" column="1" colspan="3">
-      <widget class="QLineEdit" name="cluster_name_deployn_edit"/>
-     </item>
-     <item row="1" column="1" colspan="3">
-      <widget class="QSpinBox" name="nodes_edit"/>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="nodes_label">
-       <property name="text">
-        <string>Nodes</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="cluster_name_deployn_label">
-       <property name="text">
-        <string>Cluster name</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="cores_label">
-       <property name="text">
-        <string>Cores per node</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="1" colspan="3">
-      <widget class="QLineEdit" name="walltime_edit"/>
-     </item>
-     <item row="7" column="0" colspan="4">
-      <widget class="QPushButton" name="add_native_argument_button">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="text">
-        <string>Add native argument</string>
-       </property>
-      </widget>
-     </item>
-     <item row="9" column="0" colspan="4">
-      <widget class="QPushButton" name="show_native_arguments_button">
-       <property name="text">
-        <string>Show native arguments</string>
-       </property>
-      </widget>
-     </item>
-     <item row="10" column="0" colspan="4">
-      <widget class="QPushButton" name="deploy_button">
-       <property name="text">
-        <string>Deploy Jupyter Notebook</string>
-       </property>
       </widget>
      </item>
     </layout>
@@ -272,7 +279,6 @@
   <tabstop>cores_edit</tabstop>
   <tabstop>memory_edit</tabstop>
   <tabstop>walltime_edit</tabstop>
-  <tabstop>memory_unit_box</tabstop>
   <tabstop>tabWidget</tabstop>
   <tabstop>cluster_name_addc_edit</tabstop>
   <tabstop>host_edit</tabstop>
