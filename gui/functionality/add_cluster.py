@@ -1,6 +1,7 @@
 from gui.decorators import addToClass
 from idact.core.auth import AuthMethod, KeyType
 from idact.core.add_cluster import add_cluster
+from idact import save_environment, load_environment
 from gui.idact_app import IdactApp
 
 
@@ -16,6 +17,8 @@ class AddCluster:
 
     @addToClass(IdactApp)
     def add_cluster(self):
+        load_environment()
+
         cluster_name = self.ui.cluster_name_addc_edit.text()
         self.parameters['add_cluster_arguments']['cluster_name'] = cluster_name
         user = self.ui.user_edit.text()
@@ -45,4 +48,6 @@ class AddCluster:
                         host=host,
                         port=port,
                         auth=AuthMethod.ASK)
+
+        save_environment()
 

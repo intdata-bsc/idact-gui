@@ -62,12 +62,6 @@ class IdactNotebook:
 
                 cluster = show_cluster(name=cluster_name)
 
-                # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                cluster.config.setup_actions.jupyter = [
-                    'module load plgrid/tools/python-intel/3.6.2']  # TODO
-                cluster.config.use_jupyter_lab = False
-                # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
                 config = cluster.config
                 assert isinstance(config, ClusterConfigImpl)
                 parameters = AppAllocationParameters.deserialize(
