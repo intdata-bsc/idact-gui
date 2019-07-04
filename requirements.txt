@@ -1,4 +1,3 @@
-pytest-qt
 idact>=0.7
 PyQt5>=5.12.2
 
