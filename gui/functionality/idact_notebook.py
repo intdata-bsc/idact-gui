@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QTableWidgetItem
 
 from gui.decorators import addToClass
 from gui.idact_app import IdactApp
-from idact import load_environment, show_cluster
+from idact import load_environment, show_cluster, Walltime
 from idact.detail.config.client.client_cluster_config import ClusterConfigImpl
 from idact.detail.deployment.cancel_local_on_exit import cancel_local_on_exit
 from idact.detail.deployment.cancel_on_exit import cancel_on_exit
@@ -54,6 +54,26 @@ class IdactNotebook:
         walltime = self.ui.walltime_edit.text()
         self.parameters['deploy_notebook_arguments']['walltime'] = walltime
         self.saver.save(self.parameters)
+
+        walltime_elements = walltime.split(" ")
+
+        days = 0
+        hours = 0
+        minutes = 0
+        seconds = 0
+
+        for element in walltime_elements:
+            letter = element[len(element) - 1]
+            if letter == 'd':
+                days = int(element[0:len(element)-1])
+            elif letter == 'h':
+                hours = int(element[0:len(element) - 1])
+            elif letter == 'm':
+                minutes = int(element[0:len(element) - 1])
+            elif letter == 's':
+                seconds = int(element[0:len(element) - 1])
+
+        walltime = Walltime(days=days, hours=hours, minutes=minutes, seconds=seconds)
 
         log = None
         try:
