@@ -1,9 +1,17 @@
-dist: xenial
 language: python
-python:
-  - "3.7.3"
-install:
-  - pip install -r requirements.txt
-  - pip install -r tests/requirements-test.txt
-before_script: cd tests
-script: pytest
+dist: trusty
+sudo: tru
+addons:
+  apt:
+    packages:
+      - xvfb
+      - dbus-x11
+      - xorg
+python: 3.6
+os: linux
+script:
+  - sudo apt-get update
+  - pip install -r requirements.txt --upgrade
+  - pip install -r tests/requirements-test.txt --upgrade
+  - cd tests
+  - pytest
