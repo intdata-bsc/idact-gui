@@ -1,6 +1,6 @@
 language: python
 dist: trusty
-sudo: tru
+sudo: true
 addons:
   apt:
     packages:
@@ -14,4 +14,4 @@ script:
   - pip install -r requirements.txt --upgrade
   - pip install -r tests/requirements-test.txt --upgrade
   - cd tests
-  - pytest
+  - xvfb-run pytest
