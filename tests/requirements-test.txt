@@ -1,0 +1,5 @@
+PyQt5>=5.12.2
+pytest>=4.6.2
+pytest-qt>=3.2.2
+pytest-xvfb
+pyvirtualdisplay
