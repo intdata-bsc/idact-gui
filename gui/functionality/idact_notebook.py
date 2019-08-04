@@ -1,8 +1,21 @@
 from PyQt5.QtWidgets import QTableWidgetItem
 
 from gui.decorators import addToClass
-from idact.detail.jupyter_app.main import main as deploy_notebook
-from gui.idact_app import IdactApp, AddArgumentApp
+from gui.idact_app import IdactApp
+from idact import load_environment, show_cluster, Walltime
+from idact.detail.config.client.client_cluster_config import ClusterConfigImpl
+from idact.detail.deployment.cancel_local_on_exit import cancel_local_on_exit
+from idact.detail.deployment.cancel_on_exit import cancel_on_exit
+from idact.detail.jupyter_app.app_allocation_parameters import \
+    AppAllocationParameters
+from idact.detail.jupyter_app.native_args_conversion import \
+    convert_native_args_from_command_line_to_dict
+from idact.detail.jupyter_app.override_parameters_if_possible import \
+    override_parameters_if_possible
+from idact.detail.jupyter_app.sleep_until_allocation_ends import \
+    sleep_until_allocation_ends
+
+from contextlib import ExitStack
 
 
 class IdactNotebook:
@@ -42,15 +55,76 @@ class IdactNotebook:
         self.parameters['deploy_notebook_arguments']['walltime'] = walltime
         self.saver.save(self.parameters)
 
-        deploy_notebook(cluster_name=cluster_name,
-                        environment=None,
-                        save_defaults=False,
-                        reset_defaults=False,
-                        nodes=nodes,
-                        cores=cores,
-                        memory_per_node=memory+unit,
-                        walltime=walltime,
-                        native_arg=self.native_args_saver.get_native_args_list())
+        walltime_elements = walltime.split(" ")
+
+        days = 0
+        hours = 0
+        minutes = 0
+        seconds = 0
+
+        for element in walltime_elements:
+            letter = element[len(element) - 1]
+            if letter == 'd':
+                days = int(element[0:len(element)-1])
+            elif letter == 'h':
+                hours = int(element[0:len(element) - 1])
+            elif letter == 'm':
+                minutes = int(element[0:len(element) - 1])
+            elif letter == 's':
+                seconds = int(element[0:len(element) - 1])
+
+        walltime = Walltime(days=days, hours=hours, minutes=minutes, seconds=seconds)
+
+        log = None
+        try:
+            with ExitStack() as stack:
+                load_environment()
+
+                cluster = show_cluster(name=cluster_name)
+
+                # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                cluster.config.setup_actions.jupyter = [
+                    'module load plgrid/tools/python-intel/3.6.2']  # TODO
+                cluster.config.use_jupyter_lab = False
+                # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+                config = cluster.config
+                assert isinstance(config, ClusterConfigImpl)
+                parameters = AppAllocationParameters.deserialize(
+                    serialized=config.notebook_defaults)
+
+                native = self.native_args_saver.get_native_args_list()
+                override_parameters_if_possible(parameters=parameters,
+                                                nodes=nodes,
+                                                cores=cores,
+                                                memory_per_node=memory+unit,
+                                                walltime=walltime,
+                                                native_args=native)
+                nodes = cluster.allocate_nodes(
+                    nodes=parameters.nodes,
+                    cores=parameters.cores,
+                    memory_per_node=parameters.memory_per_node,
+                    walltime=parameters.walltime,
+                    native_args=convert_native_args_from_command_line_to_dict(
+                        native_args=parameters.native_args))
+                stack.enter_context(cancel_on_exit(nodes))
+                nodes.wait()
+
+                notebook = nodes[0].deploy_notebook()
+                stack.enter_context(cancel_local_on_exit(notebook))
+
+                cluster.push_deployment(nodes)
+
+                cluster.push_deployment(notebook)
+
+                notebook.open_in_browser()
+                sleep_until_allocation_ends(nodes=nodes)
+        except:  # noqa, pylint: disable=broad-except
+            if log is not None:
+                log.error("Exception raised.", exc_info=1)
+                return 1
+            raise
+        return 0
 
     @addToClass(IdactApp)
     def open_new_native_argument(self):
