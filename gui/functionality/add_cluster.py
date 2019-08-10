@@ -2,6 +2,8 @@ from gui.decorators import addToClass
 from idact.core.auth import AuthMethod, KeyType
 from idact.core.add_cluster import add_cluster
 from idact import save_environment, load_environment
+from gui.idact_app import IdactApp
+from idact.detail.log.get_logger import get_logger
 from gui.idact_app import IdactApp, ErrorApp
 
 
@@ -32,17 +34,33 @@ class AddCluster:
         self.parameters['add_cluster_arguments']['key_type'] = self.ui.key_type_box.currentText()
         self.saver.save(self.parameters)
 
+        log = get_logger(__name__)
+
+        log.info("Loading environment...")
+        load_environment()
+
+        log.info("Adding cluster...")
+
         try:
             if auth == 'PUBLIC_KEY':
                 key = self.ui.key_type_box.currentText()
                 if key == 'RSA_KEY':
-                    add_cluster(name=cluster_name,
-                                user=user,
-                                host=host,
-                                port=port,
-                                auth=AuthMethod.PUBLIC_KEY,
-                                key=KeyType.RSA,
-                                install_key=True)
+                    cluster = add_cluster(name=cluster_name,
+                                          user=user,
+                                          host=host,
+                                          port=port,
+                                          auth=AuthMethod.PUBLIC_KEY,
+                                          key=KeyType.RSA,
+                                          install_key=True)
+
+                    node = cluster.get_access_node()
+                    node.connect()
+
+                    cluster.config.use_jupyter_lab = False
+
+                    actions = ["module load plgrid/tools/python-intel/3.6.2"]
+                    cluster.config.setup_actions.jupyter = actions
+
             elif auth == 'ASK_EVERYTIME':
                 add_cluster(name=cluster_name,
                             user=user,
@@ -52,5 +70,7 @@ class AddCluster:
         except ValueError as e:
             self.window = ErrorApp("Cluster already exists")
             self.window.show()
+
+        log.info("Saving environment...")
         save_environment()
 
