@@ -8,6 +8,7 @@ Ui_MainWindow, QtBaseClass = uic.loadUiType('../widgets_templates/gui.ui')
 Ui_AddNativeArgument, QtBaseClass = uic.loadUiType('../widgets_templates/add-native.ui')
 Ui_RemoveNativeArgument, QtBaseClass = uic.loadUiType('../widgets_templates/remove-native.ui')
 Ui_ShowNativeArgument, QtBaseClass = uic.loadUiType('../widgets_templates/show-native.ui')
+Ui_Error, QtBaseClass = uic.loadUiType('../widgets_templates/error.ui')
 
 
 class IdactApp(QMainWindow):
@@ -43,3 +44,9 @@ class ShowNativeArgumentsApp(QMainWindow):
         self.ui = Ui_ShowNativeArgument()
         self.ui.setupUi(self)
 
+class ErrorApp(QMainWindow):
+    def __init__(self, message="Error occured"):
+        super(ErrorApp, self).__init__()
+        self.ui = Ui_Error()
+        self.ui.setupUi(self)
+        self.ui.label.setText(message)

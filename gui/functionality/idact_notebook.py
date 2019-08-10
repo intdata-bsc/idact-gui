@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QTableWidgetItem
 
 from gui.decorators import addToClass
-from gui.idact_app import IdactApp
+from gui.idact_app import IdactApp, ErrorApp
 from idact import load_environment, show_cluster, Walltime
 from idact.detail.config.client.client_cluster_config import ClusterConfigImpl
 from idact.detail.deployment.cancel_local_on_exit import cancel_local_on_exit
@@ -114,6 +114,8 @@ class IdactNotebook:
                 notebook.open_in_browser()
                 sleep_until_allocation_ends(nodes=nodes)
         except:  # noqa, pylint: disable=broad-except
+            self.window = ErrorApp()
+            self.window.show()
             if log is not None:
                 log.error("Exception raised.", exc_info=1)
                 return 1
