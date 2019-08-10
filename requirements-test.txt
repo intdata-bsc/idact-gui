@@ -1,5 +1,8 @@
-PyQt5>=5.12.2
-pytest>=4.6.2
-pytest-qt>=3.2.2
+pytest
+pytest-timeout
+pytest-cov
+pytest-qt
 pytest-xvfb
-pyvirtualdisplay
+tox
+pyvirtualdisplay<0.2.3; os_name == 'nt'
+pyvirtualdisplay ; os_name != 'nt'
