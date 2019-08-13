@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QMainWindow, QWidget, QMessageBox
 from PyQt5 import uic
 
 from gui.native_saver import NativeArgsSaver
@@ -22,6 +22,7 @@ class IdactApp(QMainWindow):
         self.remove_argument_window = RemoveArgumentApp()
         self.show_native_arguments_window = ShowNativeArgumentsApp()
         self.parameters = self.saver.get_map()
+        self.successWindow = SuccessWindow()
 
 
 class AddArgumentApp(QMainWindow):
@@ -44,9 +45,28 @@ class ShowNativeArgumentsApp(QMainWindow):
         self.ui = Ui_ShowNativeArgument()
         self.ui.setupUi(self)
 
+
 class ErrorApp(QMainWindow):
     def __init__(self, message="Error occured"):
         super(ErrorApp, self).__init__()
         self.ui = Ui_Error()
         self.ui.setupUi(self)
         self.ui.label.setText(message)
+
+
+class SuccessWindow(QWidget):
+    def __init__(self):
+        QWidget.__init__(self)
+        self.box = QMessageBox(self)
+        self.box.setIcon(QMessageBox.Information)
+        self.box.addButton(QMessageBox.OK)
+        self.box.setDefaultButton(QMessageBox.OK)
+
+    def show_message(self, message):
+        self.box.setText(message)
+        ret = self.box.exec_()
+        if ret == QMessageBox.OK:
+            print("Yes")
+            return
+
+
