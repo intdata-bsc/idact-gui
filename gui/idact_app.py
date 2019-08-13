@@ -50,13 +50,13 @@ class SuccessWindow(QWidget):
         QWidget.__init__(self)
         self.box = QMessageBox(self)
         self.box.setIcon(QMessageBox.Information)
-        self.box.addButton(QMessageBox.OK)
-        self.box.setDefaultButton(QMessageBox.OK)
+        self.box.addButton(QMessageBox.Ok)
+        self.box.setDefaultButton(QMessageBox.Ok)
 
     def show_message(self, message):
         self.box.setText(message)
         ret = self.box.exec_()
-        if ret == QMessageBox.OK:
+        if ret == QMessageBox.Ok:
             print("Yes")
             return
 

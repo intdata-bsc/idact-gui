@@ -18,4 +18,4 @@ class RemoveCluster:
         self.saver.save(self.parameters)
         remove_cluster(cluster_name)
         save_environment()
-        self.success_window.show("The cluster has been successfully deleted")
+        self.successWindow.show_message("The cluster has been successfully deleted")
