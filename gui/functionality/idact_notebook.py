@@ -75,7 +75,6 @@ class IdactNotebook:
 
         walltime = Walltime(days=days, hours=hours, minutes=minutes, seconds=seconds)
 
-        log = None
         try:
             with ExitStack() as stack:
                 load_environment()
@@ -114,11 +113,8 @@ class IdactNotebook:
                 notebook.open_in_browser()
                 sleep_until_allocation_ends(nodes=nodes)
         except:  # noqa, pylint: disable=broad-except
-            self.window = ErrorApp()
+            self.window = ErrorApp("An error occured while deploing notebook")
             self.window.show()
-            if log is not None:
-                log.error("Exception raised.", exc_info=1)
-                return 1
             raise
         return 0
 

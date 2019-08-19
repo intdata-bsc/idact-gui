@@ -19,7 +19,7 @@ class RemoveCluster:
         try:
             remove_cluster(cluster_name)
         except KeyError as e:
-            self.window = ErrorApp("Cluster not exists")
+            self.window = ErrorApp("Cluster does not exist")
             self.window.show()
 
         save_environment()

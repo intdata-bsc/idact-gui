@@ -4,11 +4,11 @@ from PyQt5 import uic
 from gui.native_saver import NativeArgsSaver
 from gui.saver import ParameterSaver
 
-Ui_MainWindow, QtBaseClass = uic.loadUiType('../widgets_templates/gui.ui')
-Ui_AddNativeArgument, QtBaseClass = uic.loadUiType('../widgets_templates/add-native.ui')
-Ui_RemoveNativeArgument, QtBaseClass = uic.loadUiType('../widgets_templates/remove-native.ui')
-Ui_ShowNativeArgument, QtBaseClass = uic.loadUiType('../widgets_templates/show-native.ui')
-Ui_Error, QtBaseClass = uic.loadUiType('../widgets_templates/error.ui')
+Ui_MainWindow, _QtBaseClass = uic.loadUiType('../widgets_templates/gui.ui')
+Ui_AddNativeArgument, _QtBaseClass = uic.loadUiType('../widgets_templates/add-native.ui')
+Ui_RemoveNativeArgument, _QtBaseClass = uic.loadUiType('../widgets_templates/remove-native.ui')
+Ui_ShowNativeArgument, _QtBaseClass = uic.loadUiType('../widgets_templates/show-native.ui')
+Ui_Error, _QtBaseClass = uic.loadUiType('../widgets_templates/error.ui')
 
 
 class IdactApp(QMainWindow):
