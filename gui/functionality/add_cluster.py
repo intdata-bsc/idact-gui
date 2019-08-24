@@ -1,14 +1,16 @@
+from PyQt5.QtWidgets import QLineEdit
+
 from gui.decorators import addToClass
 from idact.core.auth import AuthMethod, KeyType
 from idact.core.add_cluster import add_cluster
 from idact import save_environment, load_environment
 from gui.idact_app import IdactApp
 from idact.detail.log.get_logger import get_logger
-from gui.idact_app import IdactApp, ErrorApp
 
 
 class AddCluster:
     def __init__(self, idact_app):
+        idact_app.ui.password_edit.setEchoMode(QLineEdit.Password)
         idact_app.ui.add_cluster_button.clicked.connect(idact_app.add_cluster)
         idact_app.ui.cluster_name_addc_edit.setText(idact_app.parameters['add_cluster_arguments']['cluster_name'])
         idact_app.ui.user_edit.setText(idact_app.parameters['add_cluster_arguments']['user'])
@@ -33,6 +35,7 @@ class AddCluster:
         self.parameters['add_cluster_arguments']['authentication'] = auth
         self.parameters['add_cluster_arguments']['key_type'] = self.ui.key_type_box.currentText()
         self.saver.save(self.parameters)
+        password = self.ui.password_edit.text()
 
         log = get_logger(__name__)
 
@@ -40,37 +43,31 @@ class AddCluster:
         load_environment()
 
         log.info("Adding cluster...")
+        if auth == 'PUBLIC_KEY':
+            key = self.ui.key_type_box.currentText()
+            if key == 'RSA_KEY':
+                cluster = add_cluster(name=cluster_name,
+                                      user=user,
+                                      host=host,
+                                      port=port,
+                                      auth=AuthMethod.PUBLIC_KEY,
+                                      key=KeyType.RSA,
+                                      install_key=True)
 
-        try:
-            if auth == 'PUBLIC_KEY':
-                key = self.ui.key_type_box.currentText()
-                if key == 'RSA_KEY':
-                    cluster = add_cluster(name=cluster_name,
-                                          user=user,
-                                          host=host,
-                                          port=port,
-                                          auth=AuthMethod.PUBLIC_KEY,
-                                          key=KeyType.RSA,
-                                          install_key=True)
+        elif auth == 'ASK_EVERYTIME':
+            cluster = add_cluster(name=cluster_name,
+                                  user=user,
+                                  host=host,
+                                  port=port,
+                                  auth=AuthMethod.ASK)
+        cluster.config.use_jupyter_lab = False
+        actions = ["module load plgrid/tools/python-intel/3.6.2"]
+        cluster.config.setup_actions.jupyter = actions
 
-                    node = cluster.get_access_node()
-                    node.connect()
+        node = cluster.get_access_node()
+        node.connect(password=password)
 
-                    cluster.config.use_jupyter_lab = False
-
-                    actions = ["module load plgrid/tools/python-intel/3.6.2"]
-                    cluster.config.setup_actions.jupyter = actions
-
-            elif auth == 'ASK_EVERYTIME':
-                add_cluster(name=cluster_name,
-                            user=user,
-                            host=host,
-                            port=port,
-                            auth=AuthMethod.ASK)
-        except ValueError as e:
-            self.window = ErrorApp("Cluster already exists")
-            self.window.show()
-
-        log.info("Saving environment...")
         save_environment()
+
+        self.successWindow.show_message("The cluster has been successfully added")
 
