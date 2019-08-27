@@ -2,7 +2,7 @@ from gui.decorators import addToClass
 from idact.core.auth import AuthMethod, KeyType
 from idact.core.add_cluster import add_cluster
 from idact import save_environment, load_environment
-from gui.idact_app import IdactApp
+from gui.idact_app import IdactApp, ErrorApp
 
 
 class AddCluster:
@@ -32,22 +32,25 @@ class AddCluster:
         self.parameters['add_cluster_arguments']['key_type'] = self.ui.key_type_box.currentText()
         self.saver.save(self.parameters)
 
-        if auth == 'PUBLIC_KEY':
-            key = self.ui.key_type_box.currentText()
-            if key == 'RSA_KEY':
+        try:
+            if auth == 'PUBLIC_KEY':
+                key = self.ui.key_type_box.currentText()
+                if key == 'RSA_KEY':
+                    add_cluster(name=cluster_name,
+                                user=user,
+                                host=host,
+                                port=port,
+                                auth=AuthMethod.PUBLIC_KEY,
+                                key=KeyType.RSA,
+                                install_key=True)
+            elif auth == 'ASK_EVERYTIME':
                 add_cluster(name=cluster_name,
                             user=user,
                             host=host,
                             port=port,
-                            auth=AuthMethod.PUBLIC_KEY,
-                            key=KeyType.RSA,
-                            install_key=True)
-        elif auth == 'ASK_EVERYTIME':
-            add_cluster(name=cluster_name,
-                        user=user,
-                        host=host,
-                        port=port,
-                        auth=AuthMethod.ASK)
-
+                            auth=AuthMethod.ASK)
+        except ValueError as e:
+            self.window = ErrorApp("Cluster already exists")
+            self.window.show()
         save_environment()
 
