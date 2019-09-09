@@ -55,25 +55,40 @@ class IdactNotebook:
         self.parameters['deploy_notebook_arguments']['walltime'] = walltime
         self.saver.save(self.parameters)
 
-        walltime_elements = walltime.split(" ")
+        if len(walltime) == 0:
+            raise ValueError('Walltime cannot be empty.')
 
-        days = 0
-        hours = 0
-        minutes = 0
-        seconds = 0
+        if ':' not in walltime:
+            walltime_elements = walltime.split(" ")
 
-        for element in walltime_elements:
-            letter = element[len(element) - 1]
-            if letter == 'd':
-                days = int(element[0:len(element)-1])
-            elif letter == 'h':
-                hours = int(element[0:len(element) - 1])
-            elif letter == 'm':
-                minutes = int(element[0:len(element) - 1])
-            elif letter == 's':
-                seconds = int(element[0:len(element) - 1])
+            days = 0
+            hours = 0
+            minutes = 0
+            seconds = 0
 
-        walltime = Walltime(days=days, hours=hours, minutes=minutes, seconds=seconds)
+            for element in walltime_elements:
+                letter = element[len(element) - 1]
+
+                if letter == 'd':
+                    if days != 0:
+                        raise ValueError('Wrong walltime format. Days parameter is multiple defined.')
+                    days = int(element[0:len(element)-1])
+                elif letter == 'h':
+                    if hours != 0:
+                        raise ValueError('Wrong walltime format. Hours parameter is multiple defined.')
+                    hours = int(element[0:len(element) - 1])
+                elif letter == 'm':
+                    if minutes != 0:
+                        raise ValueError('Wrong walltime format. Minutes parameter is multiple defined.')
+                    minutes = int(element[0:len(element) - 1])
+                elif letter == 's':
+                    if seconds != 0:
+                        raise ValueError('Wrong walltime format. Seconds parameter is multiple defined.')
+                    seconds = int(element[0:len(element) - 1])
+                else:
+                    raise ValueError('Wrong walltime format.')
+
+            walltime = Walltime(days=days, hours=hours, minutes=minutes, seconds=seconds)
 
         try:
             with ExitStack() as stack:
