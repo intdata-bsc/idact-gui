@@ -23,3 +23,4 @@ class RemoveCluster:
             self.window.show()
 
         save_environment()
+        self.successWindow.show_message("The cluster has been successfully deleted")

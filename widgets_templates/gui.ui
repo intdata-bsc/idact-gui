@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="deploy_notebook_tab">
     <attribute name="title">
@@ -161,7 +161,17 @@
      <string>Add cluster</string>
     </attribute>
     <layout class="QGridLayout" name="gridLayout_3">
-     <item row="6" column="2">
+     <item row="4" column="1">
+      <widget class="QLabel" name="port_label">
+       <property name="text">
+        <string>Port</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QLineEdit" name="user_edit"/>
+     </item>
+     <item row="7" column="2">
       <widget class="QComboBox" name="key_type_box">
        <item>
         <property name="text">
@@ -169,6 +179,23 @@
         </property>
        </item>
       </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLabel" name="host_label">
+       <property name="text">
+        <string>Host</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="1" colspan="2">
+      <widget class="QPushButton" name="add_cluster_button">
+       <property name="text">
+        <string>Add cluster</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="2">
+      <widget class="QSpinBox" name="port_edit"/>
      </item>
      <item row="0" column="2">
       <widget class="QLineEdit" name="cluster_name_addc_edit"/>
@@ -187,41 +214,10 @@
        </item>
       </widget>
      </item>
-     <item row="4" column="2">
-      <widget class="QSpinBox" name="port_edit"/>
-     </item>
-     <item row="6" column="1">
-      <widget class="QLabel" name="key_type_label">
-       <property name="text">
-        <string>Key type</string>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="1">
       <widget class="QLabel" name="cluster_name_addc_label">
        <property name="text">
         <string>Cluster name</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLabel" name="host_label">
-       <property name="text">
-        <string>Host</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="1">
-      <widget class="QLabel" name="port_label">
-       <property name="text">
-        <string>Port</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QLabel" name="user_label">
-       <property name="text">
-        <string>User</string>
        </property>
       </widget>
      </item>
@@ -232,18 +228,32 @@
        </property>
       </widget>
      </item>
-     <item row="7" column="1" colspan="2">
-      <widget class="QPushButton" name="add_cluster_button">
+     <item row="7" column="1">
+      <widget class="QLabel" name="key_type_label">
        <property name="text">
-        <string>Add cluster</string>
+        <string>Key type</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLabel" name="user_label">
+       <property name="text">
+        <string>User</string>
        </property>
       </widget>
      </item>
      <item row="1" column="2">
       <widget class="QLineEdit" name="host_edit"/>
      </item>
-     <item row="2" column="2">
-      <widget class="QLineEdit" name="user_edit"/>
+     <item row="6" column="2">
+      <widget class="QLineEdit" name="password_edit"/>
+     </item>
+     <item row="6" column="1">
+      <widget class="QLabel" name="port_label_2">
+       <property name="text">
+        <string>Password</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
