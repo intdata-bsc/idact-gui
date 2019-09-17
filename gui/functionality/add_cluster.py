@@ -4,7 +4,7 @@ from gui.decorators import addToClass
 from idact.core.auth import AuthMethod, KeyType
 from idact.core.add_cluster import add_cluster
 from idact import save_environment, load_environment
-from gui.idact_app import IdactApp
+from gui.idact_app import IdactApp, ErrorApp
 from idact.detail.log.get_logger import get_logger
 
 
@@ -43,23 +43,30 @@ class AddCluster:
         load_environment()
 
         log.info("Adding cluster...")
-        if auth == 'PUBLIC_KEY':
-            key = self.ui.key_type_box.currentText()
-            if key == 'RSA_KEY':
+
+        try:
+            if auth == 'PUBLIC_KEY':
+                key = self.ui.key_type_box.currentText()
+                if key == 'RSA_KEY':
+                    cluster = add_cluster(name=cluster_name,
+                                          user=user,
+                                          host=host,
+                                          port=port,
+                                          auth=AuthMethod.PUBLIC_KEY,
+                                          key=KeyType.RSA,
+                                          install_key=True)
+
+            elif auth == 'ASK_EVERYTIME':
                 cluster = add_cluster(name=cluster_name,
                                       user=user,
                                       host=host,
                                       port=port,
-                                      auth=AuthMethod.PUBLIC_KEY,
-                                      key=KeyType.RSA,
-                                      install_key=True)
+                                      auth=AuthMethod.ASK)
 
-        elif auth == 'ASK_EVERYTIME':
-            cluster = add_cluster(name=cluster_name,
-                                  user=user,
-                                  host=host,
-                                  port=port,
-                                  auth=AuthMethod.ASK)
+        except ValueError as e:
+            self.window = ErrorApp("Cluster already exists")
+            self.window.show()
+
         cluster.config.use_jupyter_lab = False
         actions = ["module load plgrid/tools/python-intel/3.6.2"]
         cluster.config.setup_actions.jupyter = actions
