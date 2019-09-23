@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QTableWidgetItem
 
 from gui.helpers.decorators import addToClass
 from gui.functionality.idact_app import IdactApp, WindowType
+from gui.helpers.worker import Worker
 from idact import load_environment, show_cluster, Walltime
 from idact.detail.config.client.client_cluster_config import ClusterConfigImpl
 from idact.detail.deployment.cancel_local_on_exit import cancel_local_on_exit
@@ -20,7 +21,7 @@ from contextlib import ExitStack
 
 class IdactNotebook:
     def __init__(self, idact_app):
-        idact_app.ui.deploy_button.clicked.connect(idact_app.deploy_notebook)
+        idact_app.ui.deploy_button.clicked.connect(idact_app.concurrent_deploy_notebook)
         idact_app.ui.add_native_argument_button.clicked.connect(idact_app.open_new_native_argument)
         idact_app.ui.remove_native_argument_button.clicked.connect(idact_app.open_remove_native_argument)
         idact_app.ui.show_native_arguments_button.clicked.connect(idact_app.open_show_native_argument)
@@ -38,6 +39,22 @@ class IdactNotebook:
 
         idact_app.remove_argument_window.ui.remove_native_button.clicked.connect(idact_app.remove_native_argument)
         idact_app.remove_argument_window.ui.argument_name_edit.setText(idact_app.parameters['remove_native_arguments']['argument_name'])
+
+    @addToClass(IdactApp)
+    def concurrent_deploy_notebook(self):
+        worker = Worker(self.deploy_notebook)
+        worker.signals.result.connect(self.handle_complete_deploy_notebook)
+        worker.signals.error.connect(self.handle_error_deploy_notebook)
+        self.threadpool.start(worker)
+    
+    @addToClass(IdactApp)
+    def handle_complete_deploy_notebook(self):
+        self.popup_window.show_message("Notebook has been closed", WindowType.success)
+    
+    @addToClass(IdactApp)
+    def handle_error_deploy_notebook(self):
+        self.popup_window.show_message("An error occured while deploing notebook", WindowType.error)
+
 
     @addToClass(IdactApp)
     def deploy_notebook(self):
@@ -90,48 +107,44 @@ class IdactNotebook:
 
             walltime = Walltime(days=days, hours=hours, minutes=minutes, seconds=seconds)
 
-        try:
-            with ExitStack() as stack:
-                load_environment()
+        
+        with ExitStack() as stack:
+            load_environment()
 
-                cluster = show_cluster(name=cluster_name)
+            cluster = show_cluster(name=cluster_name)
 
-                config = cluster.config
-                assert isinstance(config, ClusterConfigImpl)
-                parameters = AppAllocationParameters.deserialize(
-                    serialized=config.notebook_defaults)
+            config = cluster.config
+            assert isinstance(config, ClusterConfigImpl)
+            parameters = AppAllocationParameters.deserialize(
+                serialized=config.notebook_defaults)
 
-                native = self.native_args_saver.get_native_args_list()
-                override_parameters_if_possible(parameters=parameters,
-                                                nodes=nodes,
-                                                cores=cores,
-                                                memory_per_node=memory+unit,
-                                                walltime=walltime,
-                                                native_args=native)
-                nodes = cluster.allocate_nodes(
-                    nodes=parameters.nodes,
-                    cores=parameters.cores,
-                    memory_per_node=parameters.memory_per_node,
-                    walltime=parameters.walltime,
-                    native_args=convert_native_args_from_command_line_to_dict(
-                        native_args=parameters.native_args))
-                stack.enter_context(cancel_on_exit(nodes))
-                nodes.wait()
+            native = self.native_args_saver.get_native_args_list()
+            override_parameters_if_possible(parameters=parameters,
+                                            nodes=nodes,
+                                            cores=cores,
+                                            memory_per_node=memory+unit,
+                                            walltime=walltime,
+                                            native_args=native)
+            nodes = cluster.allocate_nodes(
+                nodes=parameters.nodes,
+                cores=parameters.cores,
+                memory_per_node=parameters.memory_per_node,
+                walltime=parameters.walltime,
+                native_args=convert_native_args_from_command_line_to_dict(
+                    native_args=parameters.native_args))
+            stack.enter_context(cancel_on_exit(nodes))
+            nodes.wait()
 
-                notebook = nodes[0].deploy_notebook()
-                stack.enter_context(cancel_local_on_exit(notebook))
+            notebook = nodes[0].deploy_notebook()
+            stack.enter_context(cancel_local_on_exit(notebook))
 
-                cluster.push_deployment(nodes)
+            cluster.push_deployment(nodes)
 
-                cluster.push_deployment(notebook)
+            cluster.push_deployment(notebook)
 
-                notebook.open_in_browser()
-                sleep_until_allocation_ends(nodes=nodes)
-        except:  # noqa, pylint: disable=broad-except
-            self.popup_window.show_message("An error occured while deploing notebook", WindowType.error)
-
-            raise
-        return 0
+            notebook.open_in_browser()
+            sleep_until_allocation_ends(nodes=nodes)
+        return
 
     @addToClass(IdactApp)
     def open_new_native_argument(self):
