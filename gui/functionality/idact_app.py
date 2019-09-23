@@ -1,14 +1,16 @@
+import os
 from PyQt5.QtWidgets import QMainWindow, QWidget, QMessageBox
 from PyQt5 import uic
 
-from gui.native_saver import NativeArgsSaver
-from gui.saver import ParameterSaver
+from gui.helpers.native_saver import NativeArgsSaver
+from gui.helpers.saver import ParameterSaver
 
-Ui_MainWindow, _QtBaseClass = uic.loadUiType('../widgets_templates/gui.ui')
-Ui_AddNativeArgument, _QtBaseClass = uic.loadUiType('../widgets_templates/add-native.ui')
-Ui_RemoveNativeArgument, _QtBaseClass = uic.loadUiType('../widgets_templates/remove-native.ui')
-Ui_ShowNativeArgument, _QtBaseClass = uic.loadUiType('../widgets_templates/show-native.ui')
-Ui_Error, _QtBaseClass = uic.loadUiType('../widgets_templates/error.ui')
+ui_path = os.path.dirname(os.path.abspath(__file__))
+Ui_MainWindow, _QtBaseClass = uic.loadUiType(os.path.join(ui_path, '../widgets_templates/gui.ui'))
+Ui_AddNativeArgument, _QtBaseClass = uic.loadUiType(os.path.join(ui_path,'../widgets_templates/add-native.ui'))
+Ui_RemoveNativeArgument, _QtBaseClass = uic.loadUiType(os.path.join(ui_path,'../widgets_templates/remove-native.ui'))
+Ui_ShowNativeArgument, _QtBaseClass = uic.loadUiType(os.path.join(ui_path,'../widgets_templates/show-native.ui'))
+Ui_Error, _QtBaseClass = uic.loadUiType(os.path.join(ui_path,'../widgets_templates/error.ui'))
 
 
 class IdactApp(QMainWindow):

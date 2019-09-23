@@ -1,7 +1,7 @@
-from gui.decorators import addToClass
+from gui.helpers.decorators import addToClass
 from idact.core.remove_cluster import remove_cluster
 from idact import save_environment, load_environment
-from gui.idact_app import IdactApp, ErrorApp
+from gui.functionality.idact_app import IdactApp, ErrorApp
 
 
 class RemoveCluster:
