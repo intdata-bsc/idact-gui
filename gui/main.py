@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QApplication
 from gui.functionality.add_cluster import AddCluster
 from gui.functionality.idact_notebook import IdactNotebook
 from gui.functionality.remove_cluster import RemoveCluster
-from gui.idact_app import IdactApp
+from gui.functionality.idact_app import IdactApp
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QTableWidgetItem
 
-from gui.decorators import addToClass
-from gui.idact_app import IdactApp, ErrorApp
+from gui.helpers.decorators import addToClass
+from gui.functionality.idact_app import IdactApp, ErrorApp
 from idact import load_environment, show_cluster, Walltime
 from idact.detail.config.client.client_cluster_config import ClusterConfigImpl
 from idact.detail.deployment.cancel_local_on_exit import cancel_local_on_exit

@@ -1,10 +1,10 @@
 from PyQt5.QtWidgets import QLineEdit
 
-from gui.decorators import addToClass
+from gui.helpers.decorators import addToClass
 from idact.core.auth import AuthMethod, KeyType
 from idact.core.add_cluster import add_cluster
 from idact import save_environment, load_environment
-from gui.idact_app import IdactApp, ErrorApp
+from gui.functionality.idact_app import IdactApp, ErrorApp
 from idact.detail.log.get_logger import get_logger
 
 
