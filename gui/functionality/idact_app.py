@@ -1,4 +1,5 @@
 import os
+from enum import Enum
 from PyQt5.QtWidgets import QMainWindow, QWidget, QMessageBox
 from PyQt5 import uic
 
@@ -19,30 +20,30 @@ class IdactApp(QMainWindow):
         self.ui.setupUi(self)
         self.saver = ParameterSaver()
         self.native_args_saver = NativeArgsSaver()
-        self.add_argument_window = AddArgumentApp()
-        self.remove_argument_window = RemoveArgumentApp()
-        self.show_native_arguments_window = ShowNativeArgumentsApp()
+        self.add_argument_window = AddArgumentWindow()
+        self.remove_argument_window = RemoveArgumentWindow()
+        self.show_native_arguments_window = ShowNativeArgumentsWindow()
         self.parameters = self.saver.get_map()
         self.popUpWindow = PopUpWindow()
 
 
-class AddArgumentApp(QMainWindow):
+class AddArgumentWindow(QMainWindow):
     def __init__(self):
-        super(AddArgumentApp, self).__init__()
+        super(AddArgumentWindow, self).__init__()
         self.ui = Ui_AddNativeArgument()
         self.ui.setupUi(self)
 
 
-class RemoveArgumentApp(QMainWindow):
+class RemoveArgumentWindow(QMainWindow):
     def __init__(self):
-        super(RemoveArgumentApp, self).__init__()
+        super(RemoveArgumentWindow, self).__init__()
         self.ui = Ui_RemoveNativeArgument()
         self.ui.setupUi(self)
 
 
-class ShowNativeArgumentsApp(QMainWindow):
+class ShowNativeArgumentsWindow(QMainWindow):
     def __init__(self):
-        super(ShowNativeArgumentsApp, self).__init__()
+        super(ShowNativeArgumentsWindow, self).__init__()
         self.ui = Ui_ShowNativeArgument()
         self.ui.setupUi(self)
 
@@ -51,15 +52,25 @@ class PopUpWindow(QWidget):
     def __init__(self):
         QWidget.__init__(self)
         self.box = QMessageBox(self)
-    #    self.box.setIcon(QMessageBox.Information)
         self.box.addButton(QMessageBox.Ok)
         self.box.setDefaultButton(QMessageBox.Ok)
 
     def show_message(self, message, window_title):
-        self.box.setWindowTitle(window_title)
+        if window_title == WindowTitle.success:
+            self.box.setWindowTitle("Success")
+            self.box.setIcon(QMessageBox.Information)
+        elif window_title == WindowTitle.error:
+            self.box.setWindowTitle("Error")
+            self.box.setIcon(QMessageBox.Critical)
+        else:
+            self.box.setIcon(QMessageBox.NoIcon)
+
         self.box.setText(message)
         ret = self.box.exec_()
         if ret == QMessageBox.Ok:
             return
 
 
+class WindowTitle(Enum):
+    success = 1
+    error = 2
