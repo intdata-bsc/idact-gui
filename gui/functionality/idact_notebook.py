@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QTableWidgetItem
 
 from gui.helpers.decorators import addToClass
-from gui.functionality.idact_app import IdactApp, ErrorApp
+from gui.functionality.idact_app import IdactApp
 from idact import load_environment, show_cluster, Walltime
 from idact.detail.config.client.client_cluster_config import ClusterConfigImpl
 from idact.detail.deployment.cancel_local_on_exit import cancel_local_on_exit
@@ -128,8 +128,8 @@ class IdactNotebook:
                 notebook.open_in_browser()
                 sleep_until_allocation_ends(nodes=nodes)
         except:  # noqa, pylint: disable=broad-except
-            self.window = ErrorApp("An error occured while deploing notebook")
-            self.window.show()
+            self.popUpWindow.show_message("An error occured while deploing notebook", "Error")
+
             raise
         return 0
 

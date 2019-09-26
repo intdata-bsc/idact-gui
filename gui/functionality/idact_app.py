@@ -10,7 +10,6 @@ Ui_MainWindow, _QtBaseClass = uic.loadUiType(os.path.join(ui_path, '../widgets_t
 Ui_AddNativeArgument, _QtBaseClass = uic.loadUiType(os.path.join(ui_path,'../widgets_templates/add-native.ui'))
 Ui_RemoveNativeArgument, _QtBaseClass = uic.loadUiType(os.path.join(ui_path,'../widgets_templates/remove-native.ui'))
 Ui_ShowNativeArgument, _QtBaseClass = uic.loadUiType(os.path.join(ui_path,'../widgets_templates/show-native.ui'))
-Ui_Error, _QtBaseClass = uic.loadUiType(os.path.join(ui_path,'../widgets_templates/error.ui'))
 
 
 class IdactApp(QMainWindow):
@@ -24,7 +23,7 @@ class IdactApp(QMainWindow):
         self.remove_argument_window = RemoveArgumentApp()
         self.show_native_arguments_window = ShowNativeArgumentsApp()
         self.parameters = self.saver.get_map()
-        self.successWindow = SuccessWindow()
+        self.popUpWindow = PopUpWindow()
 
 
 class AddArgumentApp(QMainWindow):
@@ -48,24 +47,16 @@ class ShowNativeArgumentsApp(QMainWindow):
         self.ui.setupUi(self)
 
 
-class ErrorApp(QMainWindow):
-    def __init__(self, message="Error occured"):
-        super(ErrorApp, self).__init__()
-        self.ui = Ui_Error()
-        self.ui.setupUi(self)
-        self.ui.label.setText(message)
-
-
-class SuccessWindow(QWidget):
+class PopUpWindow(QWidget):
     def __init__(self):
         QWidget.__init__(self)
         self.box = QMessageBox(self)
-        self.box.setIcon(QMessageBox.Information)
+    #    self.box.setIcon(QMessageBox.Information)
         self.box.addButton(QMessageBox.Ok)
         self.box.setDefaultButton(QMessageBox.Ok)
-        self.box.setWindowTitle("Success")
 
-    def show_message(self, message):
+    def show_message(self, message, window_title):
+        self.box.setWindowTitle(window_title)
         self.box.setText(message)
         ret = self.box.exec_()
         if ret == QMessageBox.Ok:
