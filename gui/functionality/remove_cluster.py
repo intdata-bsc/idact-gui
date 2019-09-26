@@ -1,7 +1,7 @@
 from gui.helpers.decorators import addToClass
 from idact.core.remove_cluster import remove_cluster
 from idact import save_environment, load_environment
-from gui.functionality.idact_app import IdactApp, ErrorApp
+from gui.functionality.idact_app import IdactApp, WindowType
 
 
 class RemoveCluster:
@@ -18,9 +18,9 @@ class RemoveCluster:
         self.saver.save(self.parameters)
         try:
             remove_cluster(cluster_name)
+            save_environment()
+            self.popup_window.show_message("The cluster has been successfully deleted", WindowType.success)
         except KeyError as e:
-            self.window = ErrorApp("Cluster does not exist")
-            self.window.show()
+            self.popup_window.show_message("The cluster does not exist", WindowType.error)
 
-        save_environment()
-        self.successWindow.show_message("The cluster has been successfully deleted")
+
