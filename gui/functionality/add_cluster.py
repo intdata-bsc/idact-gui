@@ -3,11 +3,10 @@ from PyQt5.QtWidgets import QLineEdit
 from gui.helpers.decorators import addToClass
 from PyQt5.QtWidgets import QFileDialog
 from idact.detail.config.client.setup_actions_config import SetupActionsConfigImpl
-from gui.decorators import addToClass
 from idact.core.auth import AuthMethod, KeyType
 from idact.core.add_cluster import add_cluster
 from idact import save_environment, load_environment
-from gui.idact_app import IdactApp, WindowType
+from gui.functionality.idact_app import IdactApp, WindowType
 from idact.detail.add_cluster_app import actions_parser as parser
 
 
@@ -55,32 +54,31 @@ class AddCluster:
                 key = self.ui.key_type_box.currentText()
                 if key == 'RSA_KEY':
                     cluster = add_cluster(name=cluster_name,
-                                user=user,
-                                host=host,
-                                port=port,
-                                auth=AuthMethod.PUBLIC_KEY,
-                                key=KeyType.RSA,
-                                install_key=True,
-                                setup_actions=setup_actions,
-                                use_jupyter_lab=use_jupyter_lab)
+                                          user=user,
+                                          host=host,
+                                          port=port,
+                                          auth=AuthMethod.PUBLIC_KEY,
+                                          key=KeyType.RSA,
+                                          install_key=True,
+                                          setup_actions=setup_actions,
+                                          use_jupyter_lab=use_jupyter_lab)
             elif auth == 'ASK_EVERYTIME':
                 cluster = add_cluster(name=cluster_name,
-                            user=user,
-                            host=host,
-                            port=port,
-                            auth=AuthMethod.ASK,
-                            setup_actions=setup_actions,
-                            use_jupyter_lab=use_jupyter_lab)
+                                      user=user,
+                                      host=host,
+                                      port=port,
+                                      auth=AuthMethod.ASK,
+                                      setup_actions=setup_actions,
+                                      use_jupyter_lab=use_jupyter_lab)
 
-                node = cluster.get_access_node()
-                node.connect(password=password)
+            node = cluster.get_access_node()
+            node.connect(password=password)
 
-                save_environment()
-                self.popup_window.show_message("The cluster has been successfully added", WindowType.success)
+            save_environment()
+            self.popup_window.show_message("The cluster has been successfully added", WindowType.success)
 
-    except ValueError as e:
-            self.popup_window.show_message("Cluster already exists", WindowType.error)
-
+        except ValueError as e:
+                self.popup_window.show_message("Cluster already exists", WindowType.error)
 
     @addToClass(IdactApp)
     def open_actions_file_dialog(self):
