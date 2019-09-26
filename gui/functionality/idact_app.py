@@ -24,7 +24,7 @@ class IdactApp(QMainWindow):
         self.remove_argument_window = RemoveArgumentWindow()
         self.show_native_arguments_window = ShowNativeArgumentsWindow()
         self.parameters = self.saver.get_map()
-        self.popUpWindow = PopUpWindow()
+        self.popup_window = PopUpWindow()
 
 
 class AddArgumentWindow(QMainWindow):
@@ -55,11 +55,11 @@ class PopUpWindow(QWidget):
         self.box.addButton(QMessageBox.Ok)
         self.box.setDefaultButton(QMessageBox.Ok)
 
-    def show_message(self, message, window_title):
-        if window_title == WindowTitle.success:
+    def show_message(self, message, window_type):
+        if window_type == WindowType.success:
             self.box.setWindowTitle("Success")
             self.box.setIcon(QMessageBox.Information)
-        elif window_title == WindowTitle.error:
+        elif window_type == WindowType.error:
             self.box.setWindowTitle("Error")
             self.box.setIcon(QMessageBox.Critical)
         else:
@@ -71,6 +71,6 @@ class PopUpWindow(QWidget):
             return
 
 
-class WindowTitle(Enum):
+class WindowType(Enum):
     success = 1
     error = 2

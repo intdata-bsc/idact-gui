@@ -128,7 +128,7 @@ class IdactNotebook:
                 notebook.open_in_browser()
                 sleep_until_allocation_ends(nodes=nodes)
         except:  # noqa, pylint: disable=broad-except
-            self.popUpWindow.show_message("An error occured while deploing notebook", WindowTitle.error)
+            self.popup_window.show_message("An error occured while deploing notebook", WindowType.error)
 
             raise
         return 0

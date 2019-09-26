@@ -4,7 +4,7 @@ from gui.helpers.decorators import addToClass
 from idact.core.auth import AuthMethod, KeyType
 from idact.core.add_cluster import add_cluster
 from idact import save_environment, load_environment
-from gui.functionality.idact_app import IdactApp, WindowTitle
+from gui.functionality.idact_app import IdactApp, WindowType
 from idact.detail.log.get_logger import get_logger
 
 
@@ -64,7 +64,7 @@ class AddCluster:
                                       auth=AuthMethod.ASK)
 
         except ValueError as e:
-            self.popUpWindow.show_message("Cluster already exists", WindowTitle.error)
+            self.popup_window.show_message("Cluster already exists", WindowType.error)
 
 
         cluster.config.use_jupyter_lab = False
@@ -76,5 +76,5 @@ class AddCluster:
 
         save_environment()
 
-        self.popUpWindow.show_message("The cluster has been successfully added", WindowTitle.success)
+        self.popup_window.show_message("The cluster has been successfully added", WindowType.success)
 
