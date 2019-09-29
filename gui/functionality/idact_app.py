@@ -28,6 +28,7 @@ class IdactApp(QMainWindow):
         self.popup_window = PopUpWindow()
         self.actions_file_name = None
         self.threadpool = QThreadPool()
+        self.current_cluster = ''
 
 
 class AddArgumentWindow(QMainWindow):
