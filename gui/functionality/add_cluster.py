@@ -22,8 +22,6 @@ class AddCluster:
         idact_app.ui.key_type_box.setCurrentText(idact_app.parameters['add_cluster_arguments']['key_type'])
         idact_app.ui.add_actions_file_button.clicked.connect(idact_app.open_actions_file_dialog)
 
-        self.actions_file_name = None
-
     @addToClass(IdactApp)
     def add_cluster(self):
         load_environment()

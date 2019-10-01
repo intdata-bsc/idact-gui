@@ -25,6 +25,7 @@ class IdactApp(QMainWindow):
         self.show_native_arguments_window = ShowNativeArgumentsWindow()
         self.parameters = self.saver.get_map()
         self.popup_window = PopUpWindow()
+        self.actions_file_name = None
 
 
 class AddArgumentWindow(QMainWindow):
