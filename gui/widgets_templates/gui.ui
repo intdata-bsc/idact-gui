@@ -161,72 +161,67 @@
      <string>Add cluster</string>
     </attribute>
     <layout class="QGridLayout" name="gridLayout_3">
-     <item row="0" column="2">
-      <widget class="QLineEdit" name="cluster_name_addc_edit"/>
+     <item row="9" column="0">
+      <widget class="QLabel" name="actions_file_label">
+       <property name="text">
+        <string>Actions file</string>
+       </property>
+      </widget>
      </item>
-     <item row="9" column="1">
+     <item row="10" column="1">
+      <widget class="QLabel" name="currently_selected_file_label">
+       <property name="font">
+        <font>
+         <italic>false</italic>
+        </font>
+       </property>
+       <property name="text">
+        <string>Currently selected:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="host_label">
+       <property name="text">
+        <string>Host</string>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="0">
       <widget class="QCheckBox" name="use_jupyter_lab_check_box">
        <property name="text">
         <string>Use JupyterLab</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="2">
-      <widget class="QLineEdit" name="user_edit"/>
-     </item>
-     <item row="7" column="1">
-      <widget class="QLabel" name="key_type_label">
-       <property name="text">
-        <string>Key type</string>
-       </property>
-      </widget>
+     <item row="5" column="1" colspan="2">
+      <widget class="QLineEdit" name="password_edit"/>
      </item>
      <item row="9" column="2">
-      <widget class="QPushButton" name="add_actions_file_button">
+      <widget class="QPushButton" name="delete_actions_file_button">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="text">
-        <string>Add actions file</string>
+        <string>Delete</string>
        </property>
       </widget>
      </item>
-     <item row="6" column="1">
-      <widget class="QLabel" name="auth_method_label">
-       <property name="text">
-        <string>Authentication Method</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QLineEdit" name="host_edit"/>
-     </item>
-     <item row="0" column="1">
+     <item row="0" column="0">
       <widget class="QLabel" name="cluster_name_addc_label">
        <property name="text">
         <string>Cluster name</string>
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
+     <item row="4" column="0">
       <widget class="QLabel" name="port_label">
        <property name="text">
         <string>Port</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
-      <widget class="QLabel" name="user_label">
-       <property name="text">
-        <string>User</string>
-       </property>
-      </widget>
-     </item>
-     <item row="21" column="1" colspan="2">
-      <widget class="QPushButton" name="add_cluster_button">
-       <property name="text">
-        <string>Add cluster</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="2">
+     <item row="6" column="1" colspan="2">
       <widget class="QComboBox" name="auth_method_box">
        <item>
         <property name="text">
@@ -240,7 +235,61 @@
        </item>
       </widget>
      </item>
-     <item row="7" column="2">
+     <item row="0" column="1" colspan="2">
+      <widget class="QLineEdit" name="cluster_name_addc_edit"/>
+     </item>
+     <item row="1" column="1" colspan="2">
+      <widget class="QLineEdit" name="host_edit"/>
+     </item>
+     <item row="4" column="1" colspan="2">
+      <widget class="QSpinBox" name="port_edit"/>
+     </item>
+     <item row="9" column="1">
+      <widget class="QPushButton" name="add_actions_file_button">
+       <property name="text">
+        <string>Add</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="port_label_2">
+       <property name="text">
+        <string>Password</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="user_label">
+       <property name="text">
+        <string>User</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="0">
+      <widget class="QLabel" name="key_type_label">
+       <property name="text">
+        <string>Key type</string>
+       </property>
+      </widget>
+     </item>
+     <item row="22" column="0" colspan="3">
+      <widget class="QPushButton" name="add_cluster_button">
+       <property name="text">
+        <string>Add cluster</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1" colspan="2">
+      <widget class="QLineEdit" name="user_edit"/>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="auth_method_label">
+       <property name="text">
+        <string>Authentication Method</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1" colspan="2">
       <widget class="QComboBox" name="key_type_box">
        <item>
         <property name="text">
@@ -249,23 +298,10 @@
        </item>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QLabel" name="host_label">
-       <property name="text">
-        <string>Host</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="2">
-      <widget class="QSpinBox" name="port_edit"/>
-     </item>
-     <item row="5" column="2">
-      <widget class="QLineEdit" name="password_edit"/>
-     </item>
-     <item row="5" column="1">
-      <widget class="QLabel" name="port_label_2">
-       <property name="text">
-        <string>Password</string>
+     <item row="10" column="2" rowspan="2">
+      <widget class="QTextBrowser" name="selected_file_path_browser">
+       <property name="enabled">
+        <bool>false</bool>
        </property>
       </widget>
      </item>
