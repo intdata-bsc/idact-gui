@@ -22,6 +22,7 @@ class AddCluster:
         idact_app.ui.auth_method_box.setCurrentText(idact_app.parameters['add_cluster_arguments']['authentication'])
         idact_app.ui.key_type_box.setCurrentText(idact_app.parameters['add_cluster_arguments']['key_type'])
         idact_app.ui.add_actions_file_button.clicked.connect(idact_app.open_actions_file_dialog)
+        idact_app.ui.delete_actions_file_button.clicked.connect(idact_app.delete_actions_file)
 
     @addToClass(IdactApp)
     def concurrent_add_cluster(self):
@@ -96,5 +97,15 @@ class AddCluster:
     @addToClass(IdactApp)
     def open_actions_file_dialog(self):
         self.actions_file_name, _ = QFileDialog.getOpenFileName()
+        if self.actions_file_name:
+            self.ui.selected_file_path_browser.setText(self.actions_file_name)
+            self.ui.selected_file_path_browser.setEnabled(True)
+            self.ui.delete_actions_file_button.setEnabled(True)
 
+    @addToClass(IdactApp)
+    def delete_actions_file(self):
+        self.actions_file_name = None
+        self.ui.selected_file_path_browser.setText("")
+        self.ui.selected_file_path_browser.setEnabled(False)
+        self.ui.delete_actions_file_button.setEnabled(False)
 
