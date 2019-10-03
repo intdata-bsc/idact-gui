@@ -11,7 +11,7 @@ class AdjustTimeouts:
         load_environment()
 
         cluster_names = list(EnvironmentProvider().environment.clusters.keys())
-        idact_app.ui.cluster_list.addItems(cluster_names)
+        idact_app.ui.cluster_names_box.addItems(cluster_names)
 
         if len(cluster_names) > 0:
             idact_app.current_cluster = cluster_names[0]
@@ -19,7 +19,7 @@ class AdjustTimeouts:
         else:
             idact_app.current_cluster = ''
 
-        idact_app.ui.cluster_list.itemPressed.connect(idact_app.item_pressed)
+        idact_app.ui.cluster_names_box.activated[str].connect(idact_app.item_pressed)
         idact_app.ui.save_timeouts_button.clicked.connect(idact_app.save_timeouts)
 
     @addToClass(IdactApp)
@@ -100,5 +100,5 @@ class AdjustTimeouts:
 
     @addToClass(IdactApp)
     def item_pressed(self, item_pressed):
-        self.current_cluster = item_pressed.text()
-        self.refresh_timeouts(item_pressed.text())
+        self.current_cluster = item_pressed
+        self.refresh_timeouts(item_pressed)

@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>3</number>
    </property>
    <widget class="QWidget" name="deploy_notebook_tab">
     <attribute name="title">
@@ -803,13 +803,13 @@
       <string>Save timeouts</string>
      </property>
     </widget>
-    <widget class="QListWidget" name="cluster_list">
+    <widget class="QComboBox" name="cluster_names_box">
      <property name="geometry">
       <rect>
-       <x>90</x>
+       <x>50</x>
        <y>10</y>
-       <width>311</width>
-       <height>31</height>
+       <width>411</width>
+       <height>21</height>
       </rect>
      </property>
     </widget>
