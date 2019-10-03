@@ -1,6 +1,7 @@
 import os
 from enum import Enum
 from PyQt5.QtWidgets import QMainWindow, QWidget, QMessageBox
+from PyQt5.QtCore import QThreadPool
 from PyQt5 import uic
 
 from gui.helpers.native_saver import NativeArgsSaver
@@ -26,6 +27,7 @@ class IdactApp(QMainWindow):
         self.parameters = self.saver.get_map()
         self.popup_window = PopUpWindow()
         self.actions_file_name = None
+        self.threadpool = QThreadPool()
 
 
 class AddArgumentWindow(QMainWindow):
