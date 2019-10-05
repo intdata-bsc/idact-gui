@@ -10,11 +10,10 @@ class AdjustTimeouts:
     def __init__(self, idact_app):
         load_environment()
 
-        cluster_names = list(EnvironmentProvider().environment.clusters.keys())
-        idact_app.ui.cluster_names_box.addItems(cluster_names)
+        idact_app.ui.cluster_names_box.addItems(idact_app.cluster_names)
 
-        if len(cluster_names) > 0:
-            idact_app.current_cluster = cluster_names[0]
+        if len(idact_app.cluster_names) > 0:
+            idact_app.current_cluster = idact_app.cluster_names[0]
             idact_app.refresh_timeouts(idact_app.current_cluster)
         else:
             idact_app.current_cluster = ''

@@ -33,6 +33,7 @@ class AddCluster:
     
     @addToClass(IdactApp)
     def handle_complete_add_cluster(self):
+        self.ui.cluster_names_box.addItem(self.ui.cluster_name_addc_edit.text())
         self.popup_window.show_message("The cluster has been successfully added", WindowType.success)
     
     @addToClass(IdactApp)
