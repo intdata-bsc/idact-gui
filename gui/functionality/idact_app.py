@@ -1,4 +1,5 @@
 import os
+import sys
 from enum import Enum
 from PyQt5.QtWidgets import QMainWindow, QWidget, QMessageBox
 from PyQt5.QtCore import QThreadPool
@@ -12,6 +13,7 @@ Ui_MainWindow, _QtBaseClass = uic.loadUiType(os.path.join(ui_path, '../widgets_t
 Ui_AddNativeArgument, _QtBaseClass = uic.loadUiType(os.path.join(ui_path,'../widgets_templates/add-native.ui'))
 Ui_RemoveNativeArgument, _QtBaseClass = uic.loadUiType(os.path.join(ui_path,'../widgets_templates/remove-native.ui'))
 Ui_ShowNativeArgument, _QtBaseClass = uic.loadUiType(os.path.join(ui_path,'../widgets_templates/show-native.ui'))
+Ui_ShowLogs, _QtBaseClass = uic.loadUiType(os.path.join(ui_path,'../widgets_templates/logs.ui'))
 
 
 class IdactApp(QMainWindow):
@@ -24,6 +26,7 @@ class IdactApp(QMainWindow):
         self.add_argument_window = AddArgumentWindow()
         self.remove_argument_window = RemoveArgumentWindow()
         self.show_native_arguments_window = ShowNativeArgumentsWindow()
+        self.show_logs_window = ShowLogsWindow()
         self.parameters = self.saver.get_map()
         self.popup_window = PopUpWindow()
         self.actions_file_name = None
@@ -49,6 +52,17 @@ class ShowNativeArgumentsWindow(QMainWindow):
         super(ShowNativeArgumentsWindow, self).__init__()
         self.ui = Ui_ShowNativeArgument()
         self.ui.setupUi(self)
+
+
+class ShowLogsWindow(QMainWindow):
+    def __init__(self):
+        super(ShowLogsWindow, self).__init__()
+        self.ui = Ui_ShowLogs()
+        self.ui.setupUi(self)
+        sys.stdout = self
+
+    def write(self, text):
+        self.ui.logs_browser.append(text)
 
 
 class PopUpWindow(QWidget):

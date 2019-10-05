@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>406</width>
-    <height>325</height>
+    <height>337</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <x>0</x>
      <y>10</y>
      <width>401</width>
-     <height>311</height>
+     <height>301</height>
     </rect>
    </property>
    <property name="currentIndex">
@@ -168,25 +168,6 @@
        </property>
       </widget>
      </item>
-     <item row="10" column="1">
-      <widget class="QLabel" name="currently_selected_file_label">
-       <property name="font">
-        <font>
-         <italic>false</italic>
-        </font>
-       </property>
-       <property name="text">
-        <string>Currently selected:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="host_label">
-       <property name="text">
-        <string>Host</string>
-       </property>
-      </widget>
-     </item>
      <item row="11" column="0">
       <widget class="QCheckBox" name="use_jupyter_lab_check_box">
        <property name="text">
@@ -194,8 +175,56 @@
        </property>
       </widget>
      </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="user_label">
+       <property name="text">
+        <string>User</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1" colspan="2">
+      <widget class="QLineEdit" name="cluster_name_addc_edit"/>
+     </item>
+     <item row="6" column="1" colspan="2">
+      <widget class="QComboBox" name="auth_method_box">
+       <item>
+        <property name="text">
+         <string>PUBLIC_KEY</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>ASK_EVERYTIME</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="1" column="1" colspan="2">
+      <widget class="QLineEdit" name="host_edit"/>
+     </item>
+     <item row="9" column="1">
+      <widget class="QPushButton" name="add_actions_file_button">
+       <property name="text">
+        <string>Add</string>
+       </property>
+      </widget>
+     </item>
      <item row="5" column="1" colspan="2">
       <widget class="QLineEdit" name="password_edit"/>
+     </item>
+     <item row="7" column="0">
+      <widget class="QLabel" name="key_type_label">
+       <property name="text">
+        <string>Key type</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="auth_method_label">
+       <property name="text">
+        <string>Authentication Method</string>
+       </property>
+      </widget>
      </item>
      <item row="9" column="2">
       <widget class="QPushButton" name="delete_actions_file_button">
@@ -214,40 +243,22 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="port_label">
+     <item row="1" column="0">
+      <widget class="QLabel" name="host_label">
        <property name="text">
-        <string>Port</string>
+        <string>Host</string>
        </property>
       </widget>
      </item>
-     <item row="6" column="1" colspan="2">
-      <widget class="QComboBox" name="auth_method_box">
-       <item>
-        <property name="text">
-         <string>PUBLIC_KEY</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>ASK_EVERYTIME</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item row="0" column="1" colspan="2">
-      <widget class="QLineEdit" name="cluster_name_addc_edit"/>
-     </item>
-     <item row="1" column="1" colspan="2">
-      <widget class="QLineEdit" name="host_edit"/>
-     </item>
-     <item row="4" column="1" colspan="2">
-      <widget class="QSpinBox" name="port_edit"/>
-     </item>
-     <item row="9" column="1">
-      <widget class="QPushButton" name="add_actions_file_button">
+     <item row="10" column="1">
+      <widget class="QLabel" name="currently_selected_file_label">
+       <property name="font">
+        <font>
+         <italic>false</italic>
+        </font>
+       </property>
        <property name="text">
-        <string>Add</string>
+        <string>Currently selected:</string>
        </property>
       </widget>
      </item>
@@ -258,17 +269,10 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="user_label">
+     <item row="4" column="0">
+      <widget class="QLabel" name="port_label">
        <property name="text">
-        <string>User</string>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="0">
-      <widget class="QLabel" name="key_type_label">
-       <property name="text">
-        <string>Key type</string>
+        <string>Port</string>
        </property>
       </widget>
      </item>
@@ -276,16 +280,6 @@
       <widget class="QPushButton" name="add_cluster_button">
        <property name="text">
         <string>Add cluster</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1" colspan="2">
-      <widget class="QLineEdit" name="user_edit"/>
-     </item>
-     <item row="6" column="0">
-      <widget class="QLabel" name="auth_method_label">
-       <property name="text">
-        <string>Authentication Method</string>
        </property>
       </widget>
      </item>
@@ -297,6 +291,12 @@
         </property>
        </item>
       </widget>
+     </item>
+     <item row="4" column="1" colspan="2">
+      <widget class="QSpinBox" name="port_edit"/>
+     </item>
+     <item row="2" column="1" colspan="2">
+      <widget class="QLineEdit" name="user_edit"/>
      </item>
      <item row="10" column="2" rowspan="2">
       <widget class="QTextBrowser" name="selected_file_path_browser">
@@ -331,6 +331,22 @@
      </item>
     </layout>
    </widget>
+  </widget>
+  <widget class="QPushButton" name="show_logs_button">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>310</y>
+     <width>109</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(243, 243, 243)</string>
+   </property>
+   <property name="text">
+    <string>Show logs</string>
+   </property>
   </widget>
  </widget>
  <tabstops>

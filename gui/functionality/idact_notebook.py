@@ -25,6 +25,7 @@ class IdactNotebook:
         idact_app.ui.add_native_argument_button.clicked.connect(idact_app.open_new_native_argument)
         idact_app.ui.remove_native_argument_button.clicked.connect(idact_app.open_remove_native_argument)
         idact_app.ui.show_native_arguments_button.clicked.connect(idact_app.open_show_native_argument)
+        idact_app.ui.show_logs_button.clicked.connect(idact_app.open_show_logs)
 
         idact_app.ui.cluster_name_deployn_edit.setText(idact_app.parameters['deploy_notebook_arguments']['cluster_name'])
         idact_app.ui.nodes_edit.setValue(idact_app.parameters['deploy_notebook_arguments']['nodes'])
@@ -54,10 +55,12 @@ class IdactNotebook:
     @addToClass(IdactApp)
     def handle_error_deploy_notebook(self):
         self.popup_window.show_message("An error occured while deploing notebook", WindowType.error)
-
+        self.ui.deploy_button.setEnabled(True)
 
     @addToClass(IdactApp)
     def deploy_notebook(self):
+        self.ui.deploy_button.setEnabled(False)
+
         cluster_name = self.ui.cluster_name_deployn_edit.text()
         self.parameters['deploy_notebook_arguments']['cluster_name'] = cluster_name
         nodes = int(self.ui.nodes_edit.text())
@@ -143,6 +146,7 @@ class IdactNotebook:
             cluster.push_deployment(notebook)
 
             notebook.open_in_browser()
+            self.ui.deploy_button.setEnabled(True)
             sleep_until_allocation_ends(nodes=nodes)
         return
 
@@ -183,3 +187,7 @@ class IdactNotebook:
             self.show_native_arguments_window.ui.table_widget.setItem(i, 0, QTableWidgetItem(native_args_list[i][0]))
             self.show_native_arguments_window.ui.table_widget.setItem(i, 1, QTableWidgetItem(native_args_list[i][1]))
         self.show_native_arguments_window.show()
+
+    @addToClass(IdactApp)
+    def open_show_logs(self):
+        self.show_logs_window.show()
