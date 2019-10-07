@@ -6,6 +6,7 @@ from gui.functionality.add_cluster import AddCluster
 from gui.functionality.idact_notebook import IdactNotebook
 from gui.functionality.remove_cluster import RemoveCluster
 from gui.functionality.idact_app import IdactApp
+from gui.functionality.show_logs import ShowLogs
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
@@ -16,5 +17,6 @@ if __name__ == '__main__':
     AddCluster(window)
     RemoveCluster(window)
     IdactNotebook(window)
+    ShowLogs(window)
     window.show()
     sys.exit(app.exec_())

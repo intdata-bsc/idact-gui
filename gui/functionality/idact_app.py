@@ -60,6 +60,7 @@ class ShowLogsWindow(QMainWindow):
         self.ui = Ui_ShowLogs()
         self.ui.setupUi(self)
         sys.stdout = self
+        sys.stderr = self
 
     def write(self, text):
         self.ui.logs_browser.append(text)
