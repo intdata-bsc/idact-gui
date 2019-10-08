@@ -11,9 +11,10 @@ from gui.helpers.saver import ParameterSaver
 
 ui_path = os.path.dirname(os.path.abspath(__file__))
 Ui_MainWindow, _QtBaseClass = uic.loadUiType(os.path.join(ui_path, '../widgets_templates/gui.ui'))
-Ui_AddNativeArgument, _QtBaseClass = uic.loadUiType(os.path.join(ui_path,'../widgets_templates/add-native.ui'))
-Ui_RemoveNativeArgument, _QtBaseClass = uic.loadUiType(os.path.join(ui_path,'../widgets_templates/remove-native.ui'))
-Ui_ShowNativeArgument, _QtBaseClass = uic.loadUiType(os.path.join(ui_path,'../widgets_templates/show-native.ui'))
+Ui_AddNativeArgument, _QtBaseClass = uic.loadUiType(os.path.join(ui_path, '../widgets_templates/add-native.ui'))
+Ui_RemoveNativeArgument, _QtBaseClass = uic.loadUiType(os.path.join(ui_path, '../widgets_templates/remove-native.ui'))
+Ui_ShowNativeArgument, _QtBaseClass = uic.loadUiType(os.path.join(ui_path, '../widgets_templates/show-native.ui'))
+Ui_ShowJobs, _QtBaseClass = uic.loadUiType(os.path.join(ui_path, '../widgets_templates/show-jobs.ui'))
 
 
 class IdactApp(QMainWindow):
@@ -26,6 +27,7 @@ class IdactApp(QMainWindow):
         self.add_argument_window = AddArgumentWindow()
         self.remove_argument_window = RemoveArgumentWindow()
         self.show_native_arguments_window = ShowNativeArgumentsWindow()
+        self.show_jobs_window = ShowJobsWindow()
         self.parameters = self.saver.get_map()
         self.popup_window = PopUpWindow()
         self.actions_file_name = None
@@ -57,6 +59,13 @@ class ShowNativeArgumentsWindow(QMainWindow):
     def __init__(self):
         super(ShowNativeArgumentsWindow, self).__init__()
         self.ui = Ui_ShowNativeArgument()
+        self.ui.setupUi(self)
+
+
+class ShowJobsWindow(QMainWindow):
+    def __init__(self):
+        super(ShowJobsWindow, self).__init__()
+        self.ui = Ui_ShowJobs()
         self.ui.setupUi(self)
 
 
