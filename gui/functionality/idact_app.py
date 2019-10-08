@@ -3,6 +3,8 @@ from enum import Enum
 from PyQt5.QtWidgets import QMainWindow, QWidget, QMessageBox
 from PyQt5.QtCore import QThreadPool
 from PyQt5 import uic
+from idact.detail.environment.environment_provider import EnvironmentProvider
+from idact import load_environment
 
 from gui.helpers.native_saver import NativeArgsSaver
 from gui.helpers.saver import ParameterSaver
@@ -28,6 +30,13 @@ class IdactApp(QMainWindow):
         self.popup_window = PopUpWindow()
         self.actions_file_name = None
         self.threadpool = QThreadPool()
+        self.cluster_names = []
+        self.current_cluster = ''
+        self.load_cluster_names()
+
+    def load_cluster_names(self):
+        load_environment()
+        self.cluster_names = list(EnvironmentProvider().environment.clusters.keys())
 
 
 class AddArgumentWindow(QMainWindow):
