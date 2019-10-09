@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QApplication
 
 from gui.configuration_provider import ConfigurationProvider
 from gui.functionality.add_cluster import AddCluster
+from gui.functionality.adjust_timeouts import AdjustTimeouts
 from gui.functionality.idact_notebook import IdactNotebook
 from gui.functionality.remove_cluster import RemoveCluster
 from gui.functionality.idact_app import IdactApp
@@ -18,5 +19,6 @@ if __name__ == '__main__':
     RemoveCluster(window)
     IdactNotebook(window)
     ShowLogs(window)
+    AdjustTimeouts(window)
     window.show()
     sys.exit(app.exec_())
