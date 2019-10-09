@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>537</width>
-    <height>538</height>
+    <width>512</width>
+    <height>544</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <x>10</x>
      <y>10</y>
      <width>493</width>
-     <height>477</height>
+     <height>501</height>
     </rect>
    </property>
    <property name="tabShape">
@@ -821,94 +821,72 @@
     <attribute name="title">
      <string>Manage jobs</string>
     </attribute>
-    <widget class="QLabel" name="label">
-     <property name="geometry">
-      <rect>
-       <x>12</x>
-       <y>191</y>
-       <width>31</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Job ID</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="job_id_edit">
-     <property name="geometry">
-      <rect>
-       <x>80</x>
-       <y>190</y>
-       <width>261</width>
-       <height>20</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="cluster_name_jobs_edit">
-     <property name="geometry">
-      <rect>
-       <x>80</x>
-       <y>160</y>
-       <width>261</width>
-       <height>20</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QLabel" name="cluster_name_deployn_label_2">
-     <property name="geometry">
-      <rect>
-       <x>11</x>
-       <y>160</y>
-       <width>63</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Cluster name</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="show_jobs_button">
-     <property name="geometry">
-      <rect>
-       <x>350</x>
-       <y>160</y>
-       <width>121</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Show jobs in queue</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="cancel_job_button">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>241</y>
-       <width>451</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Cancel job</string>
-     </property>
-     <property name="autoDefault">
-      <bool>false</bool>
-     </property>
-     <property name="default">
-      <bool>false</bool>
-     </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
-    </widget>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="1" column="2">
+      <widget class="QPushButton" name="show_jobs_button">
+       <property name="text">
+        <string>Show jobs in queue</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="cluster_name_deployn_label_2">
+       <property name="text">
+        <string>Cluster name</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="job_id_edit"/>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Job ID</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0" colspan="3">
+      <widget class="QPushButton" name="cancel_job_button">
+       <property name="text">
+        <string>Cancel job</string>
+       </property>
+       <property name="autoDefault">
+        <bool>false</bool>
+       </property>
+       <property name="default">
+        <bool>false</bool>
+       </property>
+       <property name="flat">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="cluster_name_jobs_edit"/>
+     </item>
+     <item row="0" column="0" colspan="3">
+      <widget class="Line" name="line">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0" colspan="3">
+      <widget class="Line" name="line_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QPushButton" name="show_logs_button">
    <property name="geometry">
     <rect>
-     <x>420</x>
-     <y>510</y>
+     <x>390</x>
+     <y>520</y>
      <width>109</width>
      <height>21</height>
     </rect>
