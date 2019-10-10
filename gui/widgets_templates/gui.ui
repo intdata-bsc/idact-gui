@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>537</width>
-    <height>509</height>
+    <width>512</width>
+    <height>544</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,12 +18,15 @@
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>521</width>
+     <width>493</width>
      <height>501</height>
     </rect>
    </property>
+   <property name="tabShape">
+    <enum>QTabWidget::Rounded</enum>
+   </property>
    <property name="currentIndex">
-    <number>3</number>
+    <number>4</number>
    </property>
    <widget class="QWidget" name="deploy_notebook_tab">
     <attribute name="title">
@@ -161,29 +164,27 @@
      <string>Add cluster</string>
     </attribute>
     <layout class="QGridLayout" name="gridLayout_3">
+     <item row="9" column="1">
+      <widget class="QPushButton" name="add_actions_file_button">
+       <property name="text">
+        <string>Add</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1" colspan="2">
+      <widget class="QLineEdit" name="password_edit"/>
+     </item>
+     <item row="7" column="0">
+      <widget class="QLabel" name="key_type_label">
+       <property name="text">
+        <string>Key type</string>
+       </property>
+      </widget>
+     </item>
      <item row="9" column="0">
       <widget class="QLabel" name="actions_file_label">
        <property name="text">
         <string>Actions file</string>
-       </property>
-      </widget>
-     </item>
-     <item row="10" column="1">
-      <widget class="QLabel" name="currently_selected_file_label">
-       <property name="font">
-        <font>
-         <italic>false</italic>
-        </font>
-       </property>
-       <property name="text">
-        <string>Currently selected:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="host_label">
-       <property name="text">
-        <string>Host</string>
        </property>
       </widget>
      </item>
@@ -194,32 +195,15 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="1" colspan="2">
-      <widget class="QLineEdit" name="password_edit"/>
-     </item>
-     <item row="9" column="2">
-      <widget class="QPushButton" name="delete_actions_file_button">
-       <property name="enabled">
-        <bool>false</bool>
-       </property>
+     <item row="2" column="0">
+      <widget class="QLabel" name="user_label">
        <property name="text">
-        <string>Delete</string>
+        <string>User</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="cluster_name_addc_label">
-       <property name="text">
-        <string>Cluster name</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="port_label">
-       <property name="text">
-        <string>Port</string>
-       </property>
-      </widget>
+     <item row="0" column="1" colspan="2">
+      <widget class="QLineEdit" name="cluster_name_addc_edit"/>
      </item>
      <item row="6" column="1" colspan="2">
       <widget class="QComboBox" name="auth_method_box">
@@ -235,19 +219,32 @@
        </item>
       </widget>
      </item>
-     <item row="0" column="1" colspan="2">
-      <widget class="QLineEdit" name="cluster_name_addc_edit"/>
-     </item>
      <item row="1" column="1" colspan="2">
       <widget class="QLineEdit" name="host_edit"/>
      </item>
-     <item row="4" column="1" colspan="2">
-      <widget class="QSpinBox" name="port_edit"/>
-     </item>
-     <item row="9" column="1">
-      <widget class="QPushButton" name="add_actions_file_button">
+     <item row="10" column="1">
+      <widget class="QLabel" name="currently_selected_file_label">
+       <property name="font">
+        <font>
+         <italic>false</italic>
+        </font>
+       </property>
        <property name="text">
-        <string>Add</string>
+        <string>Currently selected:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="port_label">
+       <property name="text">
+        <string>Port</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="cluster_name_addc_label">
+       <property name="text">
+        <string>Cluster name</string>
        </property>
       </widget>
      </item>
@@ -255,37 +252,6 @@
       <widget class="QLabel" name="port_label_2">
        <property name="text">
         <string>Password</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="user_label">
-       <property name="text">
-        <string>User</string>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="0">
-      <widget class="QLabel" name="key_type_label">
-       <property name="text">
-        <string>Key type</string>
-       </property>
-      </widget>
-     </item>
-     <item row="22" column="0" colspan="3">
-      <widget class="QPushButton" name="add_cluster_button">
-       <property name="text">
-        <string>Add cluster</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1" colspan="2">
-      <widget class="QLineEdit" name="user_edit"/>
-     </item>
-     <item row="6" column="0">
-      <widget class="QLabel" name="auth_method_label">
-       <property name="text">
-        <string>Authentication Method</string>
        </property>
       </widget>
      </item>
@@ -305,6 +271,43 @@
        </property>
       </widget>
      </item>
+     <item row="2" column="1" colspan="2">
+      <widget class="QLineEdit" name="user_edit"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="host_label">
+       <property name="text">
+        <string>Host</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="auth_method_label">
+       <property name="text">
+        <string>Authentication Method</string>
+       </property>
+      </widget>
+     </item>
+     <item row="22" column="0" colspan="3">
+      <widget class="QPushButton" name="add_cluster_button">
+       <property name="text">
+        <string>Add cluster</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1" colspan="2">
+      <widget class="QSpinBox" name="port_edit"/>
+     </item>
+     <item row="9" column="2">
+      <widget class="QPushButton" name="delete_actions_file_button">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>Delete</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
    <widget class="QWidget" name="remove_cluster_tab">
@@ -312,9 +315,6 @@
      <string>Remove cluster</string>
     </attribute>
     <layout class="QGridLayout" name="gridLayout_4">
-     <item row="0" column="1">
-      <widget class="QLineEdit" name="cluster_name_removec_edit"/>
-     </item>
      <item row="0" column="0">
       <widget class="QLabel" name="cluster_name_removec_label">
        <property name="text">
@@ -328,6 +328,9 @@
         <string>Remove cluster</string>
        </property>
       </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="cluster_name_removec_edit"/>
      </item>
     </layout>
    </widget>
@@ -814,6 +817,86 @@
      </property>
     </widget>
    </widget>
+   <widget class="QWidget" name="manage_jobs_tab">
+    <attribute name="title">
+     <string>Manage jobs</string>
+    </attribute>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="1" column="2">
+      <widget class="QPushButton" name="show_jobs_button">
+       <property name="text">
+        <string>Show jobs in queue</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="cluster_name_deployn_label_2">
+       <property name="text">
+        <string>Cluster name</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="job_id_edit"/>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Job ID</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0" colspan="3">
+      <widget class="QPushButton" name="cancel_job_button">
+       <property name="text">
+        <string>Cancel job</string>
+       </property>
+       <property name="autoDefault">
+        <bool>false</bool>
+       </property>
+       <property name="default">
+        <bool>false</bool>
+       </property>
+       <property name="flat">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="cluster_name_jobs_edit"/>
+     </item>
+     <item row="0" column="0" colspan="3">
+      <widget class="Line" name="line">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0" colspan="3">
+      <widget class="Line" name="line_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QPushButton" name="show_logs_button">
+   <property name="geometry">
+    <rect>
+     <x>390</x>
+     <y>520</y>
+     <width>109</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(243, 243, 243)</string>
+   </property>
+   <property name="text">
+    <string>Show logs</string>
+   </property>
   </widget>
  </widget>
  <tabstops>
