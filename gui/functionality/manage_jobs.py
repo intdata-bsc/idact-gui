@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import QVBoxLayout, QWidget, QTableWidgetItem
 from idact.core.remove_cluster import remove_cluster
 from idact.detail.slurm.run_scancel import run_scancel
 from idact.detail.slurm.run_squeue import run_squeue
-from idact import save_environment, load_environment
+from idact import show_cluster, load_environment
 
 from gui.functionality.popup_window import WindowType, PopUpWindow
 from gui.helpers.saver import ParameterSaver

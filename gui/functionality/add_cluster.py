@@ -45,7 +45,6 @@ class AddCluster(QWidget):
         self.parent.threadpool.start(worker) 
     
     def handle_complete_add_cluster(self):
-        self.ui.cluster_names_box.addItem(self.ui.cluster_name_addc_edit.text())
         self.popup_window.show_message("The cluster has been successfully added", WindowType.success)
     
     def handle_error_add_cluster(self, exception):

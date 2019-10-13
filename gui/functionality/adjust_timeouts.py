@@ -12,22 +12,24 @@ from gui.functionality.popup_window import WindowType, PopUpWindow
 class AdjustTimeouts(QWidget):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent=parent)
-        self.parent = parent
         
         self.popup_window = PopUpWindow()
+        self.cluster_names = []
+        self.current_cluster = ''
+        self.load_cluster_names()
 
         ui_path = os.path.dirname(os.path.abspath(__file__))
         self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/adjust-timeouts.ui'))
         
         load_environment()
 
-        self.ui.cluster_names_box.addItems(self.parent.cluster_names)
+        self.ui.cluster_names_box.addItems(self.cluster_names)
 
-        if len(self.parent.cluster_names) > 0:
-            self.parent.current_cluster = self.parent.cluster_names[0]
-            self.refresh_timeouts(self.parent.current_cluster)
+        if len(self.cluster_names) > 0:
+            self.current_cluster = self.cluster_names[0]
+            self.refresh_timeouts(self.current_cluster)
         else:
-            self.parent.current_cluster = ''
+            self.current_cluster = ''
 
         self.ui.cluster_names_box.activated[str].connect(self.item_pressed)
         self.ui.save_timeouts_button.clicked.connect(self.save_timeouts)
@@ -73,7 +75,7 @@ class AdjustTimeouts(QWidget):
             default_retries[Retry.TUNNEL_TRY_AGAIN_WITH_ANY_PORT].seconds_between)
 
     def save_timeouts(self):
-        if self.parent.current_cluster == '':
+        if self.current_cluster == '':
             self.popup_window.show_message("There are no added clusters", WindowType.error)
         else:
             default_retries = EnvironmentProvider().environment.clusters[self.current_cluster].config.retries
@@ -110,5 +112,9 @@ class AdjustTimeouts(QWidget):
             self.popup_window.show_message("Timeouts have been saved", WindowType.success)
 
     def item_pressed(self, item_pressed):
-        self.parent.current_cluster = item_pressed
+        self.current_cluster = item_pressed
         self.refresh_timeouts(item_pressed)
+    
+    def load_cluster_names(self):
+        load_environment()
+        self.cluster_names = list(EnvironmentProvider().environment.clusters.keys())

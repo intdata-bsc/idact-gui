@@ -35,8 +35,6 @@ class RemoveCluster(QWidget):
         self.parent.threadpool.start(worker) 
     
     def handle_complete_remove_cluster(self):
-        index = self.ui.cluster_names_box.findText(self.ui.cluster_name_removec_edit.text())
-        self.ui.cluster_names_box.removeItem(index)
         self.popup_window.show_message("The cluster has been successfully removed", WindowType.success)
     
     def handle_error_remove_cluster(self, exception):

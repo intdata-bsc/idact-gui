@@ -2,7 +2,6 @@ import os
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QTabWidget
 from PyQt5.QtCore import QThreadPool
 from PyQt5 import uic
-from idact.detail.environment.environment_provider import EnvironmentProvider
 from idact import load_environment
 
 from gui.functionality.idact_notebook import IdactNotebook
@@ -12,16 +11,13 @@ from gui.functionality.manage_jobs import ManageJobs
 from gui.functionality.adjust_timeouts import AdjustTimeouts
 
 class IdactApp(QWidget):
-    def __init__(self):
-        super(IdactApp, self).__init__()
+    def __init__(self, parent=None):
+        QWidget.__init__(self, parent=parent)
+        self.setWindowTitle("Idact GUI")
 
         self.threadpool = QThreadPool()
 
         self.actions_file_name = None
-        
-        self.cluster_names = []
-        self.current_cluster = ''
-        self.load_cluster_names()
 
         lay = QVBoxLayout(self)
         self.tabs = QTabWidget(self)
@@ -37,9 +33,6 @@ class IdactApp(QWidget):
         self.tabs.addTab(self.tab5,"Manage Jobs")
         lay.addWidget(self.tabs)
     
-    def load_cluster_names(self):
-        load_environment()
-        self.cluster_names = list(EnvironmentProvider().environment.clusters.keys())
 
 
 
