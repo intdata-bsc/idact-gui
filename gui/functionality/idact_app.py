@@ -1,13 +1,16 @@
 import os
 from enum import Enum
-from PyQt5.QtWidgets import QMainWindow, QWidget, QMessageBox, QStackedWidget, QVBoxLayout, QTabWidget
+from PyQt5.QtWidgets import QWidget, QMessageBox, QVBoxLayout, QTabWidget
 from PyQt5.QtCore import QThreadPool
 from PyQt5 import uic
 from idact.detail.environment.environment_provider import EnvironmentProvider
 from idact import load_environment
 
 from gui.functionality.idact_notebook import IdactNotebook
+from gui.functionality.add_cluster import AddCluster
 from gui.functionality.remove_cluster import RemoveCluster
+from gui.functionality.manage_jobs import ManageJobs
+from gui.functionality.adjust_timeouts import AdjustTimeouts
 from gui.helpers.native_saver import NativeArgsSaver
 from gui.helpers.saver import ParameterSaver
 
