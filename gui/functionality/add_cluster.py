@@ -8,13 +8,16 @@ from idact.detail.config.client.setup_actions_config import SetupActionsConfigIm
 from idact.detail.add_cluster_app import actions_parser as parser
 from idact import save_environment, load_environment
 
-from gui.functionality.idact_app import WindowType
+from gui.functionality.popup_window import WindowType, PopUpWindow
 from gui.helpers.worker import Worker
 
 class AddCluster(QWidget):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent=parent)
         self.parent = parent
+
+        self.popup_window = PopUpWindow()
+
         ui_path = os.path.dirname(os.path.abspath(__file__))
         self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/add-cluster.ui'))
         
@@ -40,13 +43,13 @@ class AddCluster(QWidget):
     
     def handle_complete_add_cluster(self):
         self.ui.cluster_names_box.addItem(self.ui.cluster_name_addc_edit.text())
-        self.parent.popup_window.show_message("The cluster has been successfully added", WindowType.success)
+        self.popup_window.show_message("The cluster has been successfully added", WindowType.success)
     
     def handle_error_add_cluster(self, exception):
         if isinstance(exception, ValueError):
-            self.parent.popup_window.show_message("Cluster already exists", WindowType.error)
+            self.popup_window.show_message("Cluster already exists", WindowType.error)
         else:
-            self.parent.popup_window.show_message("An error occured while adding cluster", WindowType.error)
+            self.popup_window.show_message("An error occured while adding cluster", WindowType.error)
 
     def add_cluster(self):
         load_environment()

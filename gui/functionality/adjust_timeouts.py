@@ -7,24 +7,21 @@ from idact.core.retry import Retry
 from idact.detail.environment.environment_provider import EnvironmentProvider
 from idact import save_environment, load_environment
 
-from gui.functionality.idact_app import WindowType
+from gui.functionality.popup_window import WindowType, PopUpWindow
 
 class AdjustTimeouts(QWidget):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent=parent)
         self.parent = parent
+        
+        self.popup_window = PopUpWindow()
+
         ui_path = os.path.dirname(os.path.abspath(__file__))
         self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/adjust-timeouts.ui'))
         
-        self.ui.cluster_names_box.addItems(self.parent.cluster_names)
-
-        lay = QVBoxLayout(self)
-        lay.addWidget(self.ui)
-class AdjustTimeouts:
-    def __init__(self, idact_app):
         load_environment()
 
-        self.ui.cluster_names_box.addItems(idact_app.cluster_names)
+        self.ui.cluster_names_box.addItems(self.parent.cluster_names)
 
         if len(self.parent.cluster_names) > 0:
             self.parent.current_cluster = self.parent.cluster_names[0]
@@ -34,6 +31,10 @@ class AdjustTimeouts:
 
         self.ui.cluster_names_box.activated[str].connect(self.item_pressed)
         self.ui.save_timeouts_button.clicked.connect(self.save_timeouts)
+
+        lay = QVBoxLayout(self)
+        lay.addWidget(self.ui)
+        
 
     def refresh_timeouts(self, cluster_name):
         load_environment()
@@ -73,7 +74,7 @@ class AdjustTimeouts:
 
     def save_timeouts(self):
         if self.parent.current_cluster == '':
-            self.parent.popup_window.show_message("There are no added clusters", WindowType.error)
+            self.popup_window.show_message("There are no added clusters", WindowType.error)
         else:
             default_retries = EnvironmentProvider().environment.clusters[self.current_cluster].config.retries
 
@@ -106,7 +107,7 @@ class AdjustTimeouts:
             default_retries[Retry.TUNNEL_TRY_AGAIN_WITH_ANY_PORT].seconds_between = int(self.ui.tunnel_try_again_with_any_port_seconds.text())
 
             save_environment()
-            self.parent.popup_window.show_message("Timeouts have been saved", WindowType.success)
+            self.popup_window.show_message("Timeouts have been saved", WindowType.success)
 
     def item_pressed(self, item_pressed):
         self.parent.current_cluster = item_pressed

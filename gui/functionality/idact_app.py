@@ -1,6 +1,5 @@
 import os
-from enum import Enum
-from PyQt5.QtWidgets import QWidget, QMessageBox, QVBoxLayout, QTabWidget
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QTabWidget
 from PyQt5.QtCore import QThreadPool
 from PyQt5 import uic
 from idact.detail.environment.environment_provider import EnvironmentProvider
@@ -19,7 +18,6 @@ class IdactApp(QWidget):
         super(IdactApp, self).__init__()
 
         self.threadpool = QThreadPool()
-        self.popup_window = PopUpWindow()
 
         self.actions_file_name = None
         self.saver = ParameterSaver()
@@ -49,29 +47,5 @@ class IdactApp(QWidget):
 
 
 
-class PopUpWindow(QWidget):
-    def __init__(self):
-        QWidget.__init__(self)
-        self.box = QMessageBox(self)
-        self.box.addButton(QMessageBox.Ok)
-        self.box.setDefaultButton(QMessageBox.Ok)
-
-    def show_message(self, message, window_type):
-        if window_type == WindowType.success:
-            self.box.setWindowTitle("Success")
-            self.box.setIcon(QMessageBox.Information)
-        elif window_type == WindowType.error:
-            self.box.setWindowTitle("Error")
-            self.box.setIcon(QMessageBox.Critical)
-        else:
-            self.box.setIcon(QMessageBox.NoIcon)
-
-        self.box.setText(message)
-        ret = self.box.exec_()
-        if ret == QMessageBox.Ok:
-            return
 
 
-class WindowType(Enum):
-    success = 1
-    error = 2

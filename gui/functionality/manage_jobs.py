@@ -7,7 +7,7 @@ from idact.detail.slurm.run_scancel import run_scancel
 from idact.detail.slurm.run_squeue import run_squeue
 from idact import save_environment, load_environment
 
-from gui.functionality.idact_app import WindowType
+from gui.functionality.popup_window import WindowType, PopUpWindow
 from gui.helpers.worker import Worker
 
 class ManageJobs(QWidget):
@@ -16,6 +16,7 @@ class ManageJobs(QWidget):
         self.parent = parent
         
         self.show_jobs_window = ShowJobsWindow()
+        self.popup_window = PopUpWindow()
 
         ui_path = os.path.dirname(os.path.abspath(__file__))
         self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/manage-jobs.ui'))
@@ -51,9 +52,9 @@ class ManageJobs(QWidget):
 
     def handle_error_show_jobs(self, exception):
         if isinstance(exception, KeyError):
-            self.parent.popup_window.show_message("The cluster does not exist", WindowType.error)
+            self.popup_window.show_message("The cluster does not exist", WindowType.error)
         else:
-            self.parent.popup_window.show_message("An error occured while listing jobs", WindowType.error)
+            self.popup_window.show_message("An error occured while listing jobs", WindowType.error)
 
         self.ui.show_jobs_button.setEnabled(True)
 
@@ -75,13 +76,13 @@ class ManageJobs(QWidget):
         self.parent.threadpool.start(worker)
 
     def handle_complete_cancel_job(self):
-        self.parent.popup_window.show_message("Cancel command has been successfully executed", WindowType.success)
+        self.popup_window.show_message("Cancel command has been successfully executed", WindowType.success)
 
     def handle_error_cancel_job(self, exception):
         if isinstance(exception, KeyError):
-            self.parent.popup_window.show_message("The cluster does not exist", WindowType.error)
+            self.popup_window.show_message("The cluster does not exist", WindowType.error)
         else:
-            self.parent.popup_window.show_message("An error occured while cancelling job", WindowType.error)
+            self.popup_window.show_message("An error occured while cancelling job", WindowType.error)
 
         self.ui.cancel_job_button.setEnabled(True)
 
