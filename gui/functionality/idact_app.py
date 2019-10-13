@@ -36,9 +36,9 @@ class IdactApp(QWidget):
         self.tab5 = ManageJobs(self)
         self.tabs.addTab(self.tab1,"Deploy Notebook")
         self.tabs.addTab(self.tab2,"Add Cluster")
-        self.tabs.addTab(self.tab2,"Remove Cluster")
-        self.tabs.addTab(self.tab2,"Adjust Timeouts")
-        self.tabs.addTab(self.tab2,"Manage Jobs")
+        self.tabs.addTab(self.tab3,"Remove Cluster")
+        self.tabs.addTab(self.tab4,"Adjust Timeouts")
+        self.tabs.addTab(self.tab5,"Manage Jobs")
         lay.addWidget(self.tabs)
     
     def load_cluster_names(self):

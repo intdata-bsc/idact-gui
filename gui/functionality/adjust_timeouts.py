@@ -25,7 +25,7 @@ class AdjustTimeouts(QWidget):
 
         if len(self.parent.cluster_names) > 0:
             self.parent.current_cluster = self.parent.cluster_names[0]
-            self.parent.refresh_timeouts(self.parent.current_cluster)
+            self.refresh_timeouts(self.parent.current_cluster)
         else:
             self.parent.current_cluster = ''
 
