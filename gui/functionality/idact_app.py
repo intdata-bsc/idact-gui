@@ -1,65 +1,49 @@
 import os
 from enum import Enum
-from PyQt5.QtWidgets import QMainWindow, QWidget, QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QWidget, QMessageBox, QStackedWidget, QVBoxLayout, QTabWidget
 from PyQt5.QtCore import QThreadPool
 from PyQt5 import uic
 from idact.detail.environment.environment_provider import EnvironmentProvider
 from idact import load_environment
 
+from gui.functionality.idact_notebook import IdactNotebook
+from gui.functionality.remove_cluster import RemoveCluster
 from gui.helpers.native_saver import NativeArgsSaver
 from gui.helpers.saver import ParameterSaver
 
-ui_path = os.path.dirname(os.path.abspath(__file__))
-Ui_MainWindow, _QtBaseClass = uic.loadUiType(os.path.join(ui_path, '../widgets_templates/gui.ui'))
-Ui_AddNativeArgument, _QtBaseClass = uic.loadUiType(os.path.join(ui_path, '../widgets_templates/add-native.ui'))
-Ui_RemoveNativeArgument, _QtBaseClass = uic.loadUiType(os.path.join(ui_path, '../widgets_templates/remove-native.ui'))
-Ui_ShowNativeArgument, _QtBaseClass = uic.loadUiType(os.path.join(ui_path, '../widgets_templates/show-native.ui'))
-Ui_ShowJobs, _QtBaseClass = uic.loadUiType(os.path.join(ui_path, '../widgets_templates/show-jobs.ui'))
-
-
-class IdactApp(QMainWindow):
+class IdactApp(QWidget):
     def __init__(self):
         super(IdactApp, self).__init__()
-        self.ui = Ui_MainWindow()
-        self.ui.setupUi(self)
+
+        self.threadpool = QThreadPool()
+        self.popup_window = PopUpWindow()
+        self.show_jobs_window = ShowJobsWindow()
+
+        self.actions_file_name = None
         self.saver = ParameterSaver()
         self.native_args_saver = NativeArgsSaver()
-        self.add_argument_window = AddArgumentWindow()
-        self.remove_argument_window = RemoveArgumentWindow()
-        self.show_native_arguments_window = ShowNativeArgumentsWindow()
-        self.show_jobs_window = ShowJobsWindow()
         self.parameters = self.saver.get_map()
-        self.popup_window = PopUpWindow()
-        self.actions_file_name = None
-        self.threadpool = QThreadPool()
         self.cluster_names = []
         self.current_cluster = ''
         self.load_cluster_names()
 
+        lay = QVBoxLayout(self)
+        self.tabs = QTabWidget(self)
+        self.tab1 = IdactNotebook(self)
+        self.tab2 = AddCluster(self)
+        self.tab3 = RemoveCluster(self)
+        self.tab4 = AdjustTimeouts(self)
+        self.tab5 = ManageJobs(self)
+        self.tabs.addTab(self.tab1,"Deploy Notebook")
+        self.tabs.addTab(self.tab2,"Add Cluster")
+        self.tabs.addTab(self.tab2,"Remove Cluster")
+        self.tabs.addTab(self.tab2,"Adjust Timeouts")
+        self.tabs.addTab(self.tab2,"Manage Jobs")
+        lay.addWidget(self.tabs)
+    
     def load_cluster_names(self):
         load_environment()
         self.cluster_names = list(EnvironmentProvider().environment.clusters.keys())
-
-
-class AddArgumentWindow(QMainWindow):
-    def __init__(self):
-        super(AddArgumentWindow, self).__init__()
-        self.ui = Ui_AddNativeArgument()
-        self.ui.setupUi(self)
-
-
-class RemoveArgumentWindow(QMainWindow):
-    def __init__(self):
-        super(RemoveArgumentWindow, self).__init__()
-        self.ui = Ui_RemoveNativeArgument()
-        self.ui.setupUi(self)
-
-
-class ShowNativeArgumentsWindow(QMainWindow):
-    def __init__(self):
-        super(ShowNativeArgumentsWindow, self).__init__()
-        self.ui = Ui_ShowNativeArgument()
-        self.ui.setupUi(self)
 
 
 class ShowJobsWindow(QMainWindow):
