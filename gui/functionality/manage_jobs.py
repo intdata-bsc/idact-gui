@@ -8,6 +8,7 @@ from idact.detail.slurm.run_squeue import run_squeue
 from idact import save_environment, load_environment
 
 from gui.functionality.popup_window import WindowType, PopUpWindow
+from gui.helpers.saver import ParameterSaver
 from gui.helpers.worker import Worker
 
 class ManageJobs(QWidget):
@@ -17,11 +18,13 @@ class ManageJobs(QWidget):
         
         self.show_jobs_window = ShowJobsWindow()
         self.popup_window = PopUpWindow()
+        self.saver = ParameterSaver()
+        self.parameters = self.saver.get_map()
 
         ui_path = os.path.dirname(os.path.abspath(__file__))
         self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/manage-jobs.ui'))
         
-        self.ui.cluster_name_jobs_edit.setText(self.parent.parameters['manage_jobs_arguments']['cluster_name'])
+        self.ui.cluster_name_jobs_edit.setText(self.parameters['manage_jobs_arguments']['cluster_name'])
         self.ui.show_jobs_button.clicked.connect(self.concurrent_show_jobs)
         self.ui.cancel_job_button.clicked.connect(self.concurrent_cancel_job)
         
@@ -62,7 +65,7 @@ class ManageJobs(QWidget):
         self.ui.show_jobs_button.setEnabled(False)
         load_environment()
         cluster_name = self.ui.cluster_name_jobs_edit.text()
-        self.parent.parameters['manage_jobs_arguments']['cluster_name'] = cluster_name
+        self.parameters['manage_jobs_arguments']['cluster_name'] = cluster_name
         cluster = show_cluster(name=cluster_name)
         node = cluster.get_access_node()
         jobs = list(run_squeue(node).values())
@@ -90,8 +93,8 @@ class ManageJobs(QWidget):
         self.ui.cancel_job_button.setEnabled(False)
         load_environment()
         cluster_name = self.ui.cluster_name_jobs_edit.text()
-        self.parent.parameters['manage_jobs_arguments']['cluster_name'] = cluster_name
-        self.parent.saver.save(self.parameters)
+        self.parameters['manage_jobs_arguments']['cluster_name'] = cluster_name
+        self.saver.save(self.parameters)
         job_id = int(self.ui.job_id_edit.text())
         cluster = show_cluster(name=cluster_name)
         node = cluster.get_access_node()

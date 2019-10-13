@@ -9,6 +9,7 @@ from idact.detail.add_cluster_app import actions_parser as parser
 from idact import save_environment, load_environment
 
 from gui.functionality.popup_window import WindowType, PopUpWindow
+from gui.helpers.saver import ParameterSaver
 from gui.helpers.worker import Worker
 
 class AddCluster(QWidget):
@@ -17,18 +18,20 @@ class AddCluster(QWidget):
         self.parent = parent
 
         self.popup_window = PopUpWindow()
+        self.saver = ParameterSaver()
+        self.parameters = self.saver.get_map()
 
         ui_path = os.path.dirname(os.path.abspath(__file__))
         self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/add-cluster.ui'))
         
         self.ui.password_edit.setEchoMode(QLineEdit.Password)
         self.ui.add_cluster_button.clicked.connect(self.concurrent_add_cluster)
-        self.ui.cluster_name_addc_edit.setText(self.parent.parameters['add_cluster_arguments']['cluster_name'])
-        self.ui.user_edit.setText(self.parent.parameters['add_cluster_arguments']['user'])
-        self.ui.host_edit.setText(self.parent.parameters['add_cluster_arguments']['host'])
-        self.ui.port_edit.setValue(self.parent.parameters['add_cluster_arguments']['port'])
-        self.ui.auth_method_box.setCurrentText(self.parent.parameters['add_cluster_arguments']['authentication'])
-        self.ui.key_type_box.setCurrentText(self.parent.parameters['add_cluster_arguments']['key_type'])
+        self.ui.cluster_name_addc_edit.setText(self.parameters['add_cluster_arguments']['cluster_name'])
+        self.ui.user_edit.setText(self.parameters['add_cluster_arguments']['user'])
+        self.ui.host_edit.setText(self.parameters['add_cluster_arguments']['host'])
+        self.ui.port_edit.setValue(self.parameters['add_cluster_arguments']['port'])
+        self.ui.auth_method_box.setCurrentText(self.parameters['add_cluster_arguments']['authentication'])
+        self.ui.key_type_box.setCurrentText(self.parameters['add_cluster_arguments']['key_type'])
         self.ui.add_actions_file_button.clicked.connect(self.open_actions_file_dialog)
         self.ui.delete_actions_file_button.clicked.connect(self.delete_actions_file)
 
@@ -55,17 +58,17 @@ class AddCluster(QWidget):
         load_environment()
 
         cluster_name = self.ui.cluster_name_addc_edit.text()
-        self.parent.parameters['add_cluster_arguments']['cluster_name'] = cluster_name
+        self.parameters['add_cluster_arguments']['cluster_name'] = cluster_name
         user = self.ui.user_edit.text()
-        self.parent.parameters['add_cluster_arguments']['user'] = user
+        self.parameters['add_cluster_arguments']['user'] = user
         host = self.ui.host_edit.text()
-        self.parent.parameters['add_cluster_arguments']['host'] = host
+        self.parameters['add_cluster_arguments']['host'] = host
         port = int(self.ui.port_edit.text())
-        self.parent.parameters['add_cluster_arguments']['port'] = port
+        self.parameters['add_cluster_arguments']['port'] = port
         auth = self.ui.auth_method_box.currentText()
-        self.parent.parameters['add_cluster_arguments']['authentication'] = auth
-        self.parent.parameters['add_cluster_arguments']['key_type'] = self.ui.key_type_box.currentText()
-        self.parent.saver.save(self.parameters)
+        self.parameters['add_cluster_arguments']['authentication'] = auth
+        self.parameters['add_cluster_arguments']['key_type'] = self.ui.key_type_box.currentText()
+        self.saver.save(self.parameters)
         password = self.ui.password_edit.text()
         use_jupyter_lab = self.ui.use_jupyter_lab_check_box.isChecked()
 

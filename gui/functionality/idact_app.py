@@ -10,8 +10,6 @@ from gui.functionality.add_cluster import AddCluster
 from gui.functionality.remove_cluster import RemoveCluster
 from gui.functionality.manage_jobs import ManageJobs
 from gui.functionality.adjust_timeouts import AdjustTimeouts
-from gui.helpers.native_saver import NativeArgsSaver
-from gui.helpers.saver import ParameterSaver
 
 class IdactApp(QWidget):
     def __init__(self):
@@ -20,9 +18,7 @@ class IdactApp(QWidget):
         self.threadpool = QThreadPool()
 
         self.actions_file_name = None
-        self.saver = ParameterSaver()
-        self.native_args_saver = NativeArgsSaver()
-        self.parameters = self.saver.get_map()
+        
         self.cluster_names = []
         self.current_cluster = ''
         self.load_cluster_names()
