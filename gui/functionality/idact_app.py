@@ -17,7 +17,6 @@ class IdactApp(QWidget):
 
         self.threadpool = QThreadPool()
         self.popup_window = PopUpWindow()
-        self.show_jobs_window = ShowJobsWindow()
 
         self.actions_file_name = None
         self.saver = ParameterSaver()
@@ -45,12 +44,6 @@ class IdactApp(QWidget):
         load_environment()
         self.cluster_names = list(EnvironmentProvider().environment.clusters.keys())
 
-
-class ShowJobsWindow(QMainWindow):
-    def __init__(self):
-        super(ShowJobsWindow, self).__init__()
-        self.ui = Ui_ShowJobs()
-        self.ui.setupUi(self)
 
 
 class PopUpWindow(QWidget):
