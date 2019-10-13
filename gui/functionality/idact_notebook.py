@@ -190,22 +190,34 @@ class IdactNotebook(QWidget):
         self.parent.native_args_saver.remove_native_arg(argument_name)
 
 
-class AddArgumentWindow(QMainWindow):
-    def __init__(self):
-        super(AddArgumentWindow, self).__init__()
-        self.ui = Ui_AddNativeArgument()
-        self.ui.setupUi(self)
 
+class AddArgumentWindow(QWidget):
+    def __init__(self, parent=None):
+        QWidget.__init__(self, parent=parent)
+        
+        ui_path = os.path.dirname(os.path.abspath(__file__))
+        self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/add-native.ui'))
+        
+        lay = QVBoxLayout(self)
+        lay.addWidget(self.ui)
 
-class RemoveArgumentWindow(QMainWindow):
-    def __init__(self):
-        super(RemoveArgumentWindow, self).__init__()
-        self.ui = Ui_RemoveNativeArgument()
-        self.ui.setupUi(self)
+class RemoveArgumentWindow(QWidget):
+    def __init__(self, parent=None):
+        QWidget.__init__(self, parent=parent)
+        
+        ui_path = os.path.dirname(os.path.abspath(__file__))
+        self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/remove-native.ui'))
+        
+        lay = QVBoxLayout(self)
+        lay.addWidget(self.ui)
 
+class ShowNativeArgumentsWindow(QWidget):
+    def __init__(self, parent=None):
+        QWidget.__init__(self, parent=parent)
+        
+        ui_path = os.path.dirname(os.path.abspath(__file__))
+        self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/show-native.ui'))
+        
+        lay = QVBoxLayout(self)
+        lay.addWidget(self.ui)
 
-class ShowNativeArgumentsWindow(QMainWindow):
-    def __init__(self):
-        super(ShowNativeArgumentsWindow, self).__init__()
-        self.ui = Ui_ShowNativeArgument()
-        self.ui.setupUi(self)

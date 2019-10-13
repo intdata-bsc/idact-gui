@@ -98,8 +98,13 @@ class ManageJobs(QWidget):
         run_scancel(job_id, node)
         self.ui.cancel_job_button.setEnabled(True)
 
-class ShowJobsWindow(QMainWindow):
-    def __init__(self):
-        super(ShowJobsWindow, self).__init__()
-        self.ui = Ui_ShowJobs()
-        self.ui.setupUi(self)
+
+class ShowJobsWindow(QWidget):
+    def __init__(self, parent=None):
+        QWidget.__init__(self, parent=parent)
+        
+        ui_path = os.path.dirname(os.path.abspath(__file__))
+        self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/show-jobs.ui'))
+        
+        lay = QVBoxLayout(self)
+        lay.addWidget(self.ui)
