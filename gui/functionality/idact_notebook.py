@@ -1,5 +1,5 @@
 import os
-from enum import Enum
+
 from PyQt5 import uic
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QTableWidgetItem
 from contextlib import ExitStack
@@ -10,8 +10,6 @@ from idact.detail.deployment.cancel_local_on_exit import cancel_local_on_exit
 from idact.detail.deployment.cancel_on_exit import cancel_on_exit
 from idact.detail.jupyter_app.app_allocation_parameters import \
     AppAllocationParameters
-from idact.detail.jupyter_app.native_args_conversion import \
-    convert_native_args_from_command_line_to_dict
 from idact.detail.jupyter_app.override_parameters_if_possible import \
     override_parameters_if_possible
 from idact.detail.jupyter_app.sleep_until_allocation_ends import \
@@ -22,13 +20,12 @@ from gui.helpers.native_saver import NativeArgsSaver
 from gui.helpers.saver import ParameterSaver
 from gui.helpers.worker import Worker
 
+
 class IdactNotebook(QWidget):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent=parent)
         self.parent = parent
 
-        self.add_argument_window = AddArgumentWindow()
-        self.remove_argument_window = RemoveArgumentWindow()
         self.show_native_arguments_window = ShowNativeArgumentsWindow()
         self.popup_window = PopUpWindow()
         self.native_args_saver = NativeArgsSaver()
@@ -39,8 +36,6 @@ class IdactNotebook(QWidget):
         self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/deploy-notebook.ui'))
 
         self.ui.deploy_button.clicked.connect(self.concurrent_deploy_notebook)
-        self.ui.add_native_argument_button.clicked.connect(self.open_new_native_argument)
-        self.ui.remove_native_argument_button.clicked.connect(self.open_remove_native_argument)
         self.ui.show_native_arguments_button.clicked.connect(self.open_show_native_argument)
 
         self.ui.cluster_name_deployn_edit.setText(self.parameters['deploy_notebook_arguments']['cluster_name'])
@@ -50,13 +45,12 @@ class IdactNotebook(QWidget):
         self.ui.memory_unit_box.setCurrentText(self.parameters['deploy_notebook_arguments']['memory_unit'])
         self.ui.walltime_edit.setText(self.parameters['deploy_notebook_arguments']['walltime'])
 
-        self.add_argument_window.ui.add_native_button.clicked.connect(self.add_new_native_argument)
-        self.add_argument_window.ui.argument_name_edit.setText(self.parameters['add_native_arguments']['argument_name'])
-        self.add_argument_window.ui.value_name_edit.setText(self.parameters['add_native_arguments']['value'])
-
-        self.remove_argument_window.ui.remove_native_button.clicked.connect(self.remove_native_argument)
-        self.remove_argument_window.ui.argument_name_edit.setText(self.parameters['remove_native_arguments']['argument_name'])
-
+        self.show_native_arguments_window.ui.add_argument_button.clicked.connect(self.add_argument_row)
+        self.show_native_arguments_window.ui.remove_arguments_button.clicked.connect(self.remove_arguments)
+        self.show_native_arguments_window.ui.table_widget.itemSelectionChanged.connect(
+            lambda: self.show_native_arguments_window.ui.remove_arguments_button.setEnabled(
+                len(self.show_native_arguments_window.ui.table_widget.selectedIndexes()) > 0))
+        self.show_native_arguments_window.ui.save_arguments_button.clicked.connect(self.save_arguments)
 
         lay = QVBoxLayout(self)
         lay.addWidget(self.ui)
@@ -132,20 +126,19 @@ class IdactNotebook(QWidget):
             parameters = AppAllocationParameters.deserialize(
                 serialized=config.notebook_defaults)
 
-            native = self.native_args_saver.get_native_args_list()
+            native_args = self.prepare_native_args(self.native_args_saver.get_native_args())
             override_parameters_if_possible(parameters=parameters,
                                             nodes=nodes,
                                             cores=cores,
                                             memory_per_node=memory+unit,
                                             walltime=walltime,
-                                            native_args=native)
+                                            native_args=native_args.items())
             nodes = cluster.allocate_nodes(
                 nodes=parameters.nodes,
                 cores=parameters.cores,
                 memory_per_node=parameters.memory_per_node,
                 walltime=parameters.walltime,
-                native_args=convert_native_args_from_command_line_to_dict(
-                    native_args=parameters.native_args))
+                native_args=native_args)
             stack.enter_context(cancel_on_exit(nodes))
             nodes.wait()
 
@@ -160,60 +153,51 @@ class IdactNotebook(QWidget):
             sleep_until_allocation_ends(nodes=nodes)
         return
 
-    def open_new_native_argument(self):
-        self.add_argument_window.show()
-    
-    def open_remove_native_argument(self):
-        self.remove_argument_window.show()
-    
-    def open_show_native_argument(self):
-        native_args_list = self.native_args_saver.get_native_args_list()
-        counter = len(native_args_list)
-        self.show_native_arguments_window.ui.table_widget.setRowCount(counter)
-        self.show_native_arguments_window.ui.table_widget.setColumnCount(2)
+    def prepare_native_args(self, args):
+        prepared_args = args.copy()
+        keys = list(prepared_args)
 
-        for i in range(counter):
-            self.show_native_arguments_window.ui.table_widget.setItem(i, 0, QTableWidgetItem(native_args_list[i][0]))
-            self.show_native_arguments_window.ui.table_widget.setItem(i, 1, QTableWidgetItem(native_args_list[i][1]))
+        for key in keys:
+            if not key.startswith('--'):
+                prepared_args['--'+key] = prepared_args.pop(key)
+        return prepared_args
+
+    def open_show_native_argument(self):
+        native_args = self.native_args_saver.get_native_args()
+        counter = len(native_args)
+
+        self.show_native_arguments_window.ui.table_widget.setRowCount(counter)
+        self.show_native_arguments_window.ui.remove_arguments_button.setEnabled(False)
+
+        row = 0
+        for key in native_args.keys():
+            self.show_native_arguments_window.ui.table_widget.setItem(row, 0, QTableWidgetItem(key))
+            self.show_native_arguments_window.ui.table_widget.setItem(row, 1, QTableWidgetItem(native_args[key]))
+            row += 1
+
         self.show_native_arguments_window.show()
 
-    def add_new_native_argument(self):
-        argument_name = self.add_argument_window.ui.argument_name_edit.text()
-        self.parameters['add_native_arguments']['argument_name'] = argument_name
-        value = self.add_argument_window.ui.value_name_edit.text()
-        self.parameters['add_native_arguments']['value'] = value
-        self.saver.save(self.parameters)
+    def add_argument_row(self):
+        self.show_native_arguments_window.ui.table_widget.setRowCount(
+            self.show_native_arguments_window.ui.table_widget.rowCount() + 1)
 
-        self.native_args_saver.add_to_list(('--'+argument_name, value))
+    def remove_arguments(self):
+        indexes = self.show_native_arguments_window.ui.table_widget.selectedIndexes()
 
-    def remove_native_argument(self):
-        argument_name = self.remove_argument_window.ui.argument_name_edit.text()
-        self.parameters['remove_native_arguments']['argument_name'] = argument_name
-        self.saver.save(self.parameters)
+        for index in indexes:
+            self.show_native_arguments_window.ui.table_widget.removeRow(index.row())
 
-        self.native_args_saver.remove_native_arg(argument_name)
+    def save_arguments(self):
+        native_args = dict()
 
+        for i in range(self.show_native_arguments_window.ui.table_widget.rowCount()):
+            name = str(self.show_native_arguments_window.ui.table_widget.item(i, 0).text())
+            value = str(self.show_native_arguments_window.ui.table_widget.item(i, 1).text())
+            native_args[name] = value
 
+        self.native_args_saver.save(native_args)
+        self.show_native_arguments_window.close()
 
-class AddArgumentWindow(QWidget):
-    def __init__(self, parent=None):
-        QWidget.__init__(self, parent=parent)
-        
-        ui_path = os.path.dirname(os.path.abspath(__file__))
-        self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/add-native.ui'))
-        
-        lay = QVBoxLayout(self)
-        lay.addWidget(self.ui)
-
-class RemoveArgumentWindow(QWidget):
-    def __init__(self, parent=None):
-        QWidget.__init__(self, parent=parent)
-        
-        ui_path = os.path.dirname(os.path.abspath(__file__))
-        self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/remove-native.ui'))
-        
-        lay = QVBoxLayout(self)
-        lay.addWidget(self.ui)
 
 class ShowNativeArgumentsWindow(QWidget):
     def __init__(self, parent=None):
