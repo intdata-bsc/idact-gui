@@ -1,5 +1,4 @@
 import os
-from enum import Enum
 from PyQt5 import uic
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QTableWidgetItem
 from contextlib import ExitStack
@@ -19,8 +18,9 @@ from idact.detail.jupyter_app.sleep_until_allocation_ends import \
 
 from gui.functionality.popup_window import WindowType, PopUpWindow
 from gui.helpers.native_saver import NativeArgsSaver
-from gui.helpers.saver import ParameterSaver
+from gui.helpers.parameter_saver import ParameterSaver
 from gui.helpers.worker import Worker
+
 
 class IdactNotebook(QWidget):
     def __init__(self, parent=None):
@@ -194,10 +194,10 @@ class IdactNotebook(QWidget):
         self.native_args_saver.remove_native_arg(argument_name)
 
 
-
 class AddArgumentWindow(QWidget):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent=parent)
+        self.setWindowTitle('Add native argument')
         
         ui_path = os.path.dirname(os.path.abspath(__file__))
         self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/add-native.ui'))
@@ -205,9 +205,11 @@ class AddArgumentWindow(QWidget):
         lay = QVBoxLayout(self)
         lay.addWidget(self.ui)
 
+
 class RemoveArgumentWindow(QWidget):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent=parent)
+        self.setWindowTitle('Remove native argument')
         
         ui_path = os.path.dirname(os.path.abspath(__file__))
         self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/remove-native.ui'))
@@ -215,13 +217,14 @@ class RemoveArgumentWindow(QWidget):
         lay = QVBoxLayout(self)
         lay.addWidget(self.ui)
 
+
 class ShowNativeArgumentsWindow(QWidget):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent=parent)
+        self.setWindowTitle('Show native arguments')
         
         ui_path = os.path.dirname(os.path.abspath(__file__))
         self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/show-native.ui'))
         
         lay = QVBoxLayout(self)
         lay.addWidget(self.ui)
-

@@ -1,9 +1,11 @@
 import json
+import os
 
 
 class NativeArgsSaver:
     def __init__(self):
-        self.filename = 'native_args.json'
+        current_directory = os.path.dirname(os.path.abspath(__file__))
+        self.filename = os.path.join(current_directory, '../../native_args.json')
         with open(self.filename) as json_file:
             self.native_list = json.load(json_file)
 

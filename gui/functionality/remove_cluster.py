@@ -6,7 +6,7 @@ from idact.core.remove_cluster import remove_cluster
 from idact import save_environment, load_environment
 
 from gui.functionality.popup_window import WindowType, PopUpWindow
-from gui.helpers.saver import ParameterSaver
+from gui.helpers.parameter_saver import ParameterSaver
 from gui.helpers.worker import Worker
 
 
@@ -53,6 +53,3 @@ class RemoveCluster(QWidget):
         remove_cluster(cluster_name)
         save_environment()
         return
-
-
-
