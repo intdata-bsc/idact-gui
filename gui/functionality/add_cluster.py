@@ -1,49 +1,61 @@
-from PyQt5.QtWidgets import QLineEdit
+import os
+from PyQt5 import uic
+from PyQt5.QtWidgets import QVBoxLayout, QWidget, QLineEdit, QFileDialog
 
-from gui.helpers.decorators import addToClass
-from PyQt5.QtWidgets import QFileDialog
-from idact.detail.config.client.setup_actions_config import SetupActionsConfigImpl
-from gui.helpers.worker import Worker
 from idact.core.auth import AuthMethod, KeyType
 from idact.core.add_cluster import add_cluster
-from idact import save_environment, load_environment
-from gui.functionality.idact_app import IdactApp, WindowType
+from idact.detail.config.client.setup_actions_config import SetupActionsConfigImpl
 from idact.detail.add_cluster_app import actions_parser as parser
+from idact import save_environment, load_environment
+
+from gui.functionality.popup_window import WindowType, PopUpWindow
+from gui.helpers.parameter_saver import ParameterSaver
+from gui.helpers.worker import Worker
 
 
-class AddCluster:
-    def __init__(self, idact_app):
-        idact_app.ui.password_edit.setEchoMode(QLineEdit.Password)
-        idact_app.ui.add_cluster_button.clicked.connect(idact_app.concurrent_add_cluster)
-        idact_app.ui.cluster_name_addc_edit.setText(idact_app.parameters['add_cluster_arguments']['cluster_name'])
-        idact_app.ui.user_edit.setText(idact_app.parameters['add_cluster_arguments']['user'])
-        idact_app.ui.host_edit.setText(idact_app.parameters['add_cluster_arguments']['host'])
-        idact_app.ui.port_edit.setValue(idact_app.parameters['add_cluster_arguments']['port'])
-        idact_app.ui.auth_method_box.setCurrentText(idact_app.parameters['add_cluster_arguments']['authentication'])
-        idact_app.ui.key_type_box.setCurrentText(idact_app.parameters['add_cluster_arguments']['key_type'])
-        idact_app.ui.add_actions_file_button.clicked.connect(idact_app.open_actions_file_dialog)
-        idact_app.ui.delete_actions_file_button.clicked.connect(idact_app.delete_actions_file)
+class AddCluster(QWidget):
+    def __init__(self, parent=None):
+        QWidget.__init__(self, parent=parent)
+        self.parent = parent
 
-    @addToClass(IdactApp)
+        self.popup_window = PopUpWindow()
+        self.saver = ParameterSaver()
+        self.parameters = self.saver.get_map()
+
+        ui_path = os.path.dirname(os.path.abspath(__file__))
+        self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/add-cluster.ui'))
+        
+        self.ui.password_edit.setEchoMode(QLineEdit.Password)
+        self.ui.add_cluster_button.clicked.connect(self.concurrent_add_cluster)
+        self.ui.cluster_name_addc_edit.setText(self.parameters['add_cluster_arguments']['cluster_name'])
+        self.ui.user_edit.setText(self.parameters['add_cluster_arguments']['user'])
+        self.ui.host_edit.setText(self.parameters['add_cluster_arguments']['host'])
+        self.ui.port_edit.setValue(self.parameters['add_cluster_arguments']['port'])
+        self.ui.auth_method_box.setCurrentText(self.parameters['add_cluster_arguments']['authentication'])
+        self.ui.key_type_box.setCurrentText(self.parameters['add_cluster_arguments']['key_type'])
+        self.ui.add_actions_file_button.clicked.connect(self.open_actions_file_dialog)
+        self.ui.delete_actions_file_button.clicked.connect(self.delete_actions_file)
+
+        self.actions_file_name = None
+
+        lay = QVBoxLayout(self)
+        lay.addWidget(self.ui)
+
     def concurrent_add_cluster(self):
         worker = Worker(self.add_cluster)
         worker.signals.result.connect(self.handle_complete_add_cluster)
         worker.signals.error.connect(self.handle_error_add_cluster)
-        self.threadpool.start(worker) 
+        self.parent.threadpool.start(worker) 
     
-    @addToClass(IdactApp)
     def handle_complete_add_cluster(self):
-        self.ui.cluster_names_box.addItem(self.ui.cluster_name_addc_edit.text())
         self.popup_window.show_message("The cluster has been successfully added", WindowType.success)
     
-    @addToClass(IdactApp)
     def handle_error_add_cluster(self, exception):
         if isinstance(exception, ValueError):
             self.popup_window.show_message("Cluster already exists", WindowType.error)
         else:
             self.popup_window.show_message("An error occured while adding cluster", WindowType.error)
 
-    @addToClass(IdactApp)
     def add_cluster(self):
         load_environment()
 
@@ -60,7 +72,6 @@ class AddCluster:
         self.parameters['add_cluster_arguments']['key_type'] = self.ui.key_type_box.currentText()
         self.saver.save(self.parameters)
         password = self.ui.password_edit.text()
-
         use_jupyter_lab = self.ui.use_jupyter_lab_check_box.isChecked()
 
         setup_actions = None
@@ -95,7 +106,6 @@ class AddCluster:
         save_environment()
         return
 
-    @addToClass(IdactApp)
     def open_actions_file_dialog(self):
         self.actions_file_name, _ = QFileDialog.getOpenFileName()
         if self.actions_file_name:
@@ -103,10 +113,8 @@ class AddCluster:
             self.ui.selected_file_path_browser.setEnabled(True)
             self.ui.delete_actions_file_button.setEnabled(True)
 
-    @addToClass(IdactApp)
     def delete_actions_file(self):
         self.actions_file_name = None
         self.ui.selected_file_path_browser.setText("")
         self.ui.selected_file_path_browser.setEnabled(False)
         self.ui.delete_actions_file_button.setEnabled(False)
-

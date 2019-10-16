@@ -1,28 +1,42 @@
-from PyQt5.QtWidgets import QTableWidgetItem
-from idact import show_cluster, load_environment
+import os
+from PyQt5 import uic
+from PyQt5.QtWidgets import QVBoxLayout, QWidget, QTableWidgetItem
+
 from idact.detail.slurm.run_scancel import run_scancel
 from idact.detail.slurm.run_squeue import run_squeue
+from idact import show_cluster, load_environment
 
-from gui.functionality.idact_app import IdactApp, WindowType
-from gui.helpers.decorators import addToClass
+from gui.functionality.popup_window import WindowType, PopUpWindow
+from gui.helpers.parameter_saver import ParameterSaver
 from gui.helpers.worker import Worker
 
 
-class ManageJobs:
-    def __init__(self, idact_app):
-        self.idact_app = idact_app
-        idact_app.ui.cluster_name_jobs_edit.setText(idact_app.parameters['manage_jobs_arguments']['cluster_name'])
-        idact_app.ui.show_jobs_button.clicked.connect(idact_app.concurrent_show_jobs)
-        idact_app.ui.cancel_job_button.clicked.connect(idact_app.concurrent_cancel_job)
+class ManageJobs(QWidget):
+    def __init__(self, parent=None):
+        QWidget.__init__(self, parent=parent)
+        self.parent = parent
+        
+        self.show_jobs_window = ShowJobsWindow()
+        self.popup_window = PopUpWindow()
+        self.saver = ParameterSaver()
+        self.parameters = self.saver.get_map()
 
-    @addToClass(IdactApp)
+        ui_path = os.path.dirname(os.path.abspath(__file__))
+        self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/manage-jobs.ui'))
+        
+        self.ui.cluster_name_jobs_edit.setText(self.parameters['manage_jobs_arguments']['cluster_name'])
+        self.ui.show_jobs_button.clicked.connect(self.concurrent_show_jobs)
+        self.ui.cancel_job_button.clicked.connect(self.concurrent_cancel_job)
+        
+        lay = QVBoxLayout(self)
+        lay.addWidget(self.ui)
+
     def concurrent_show_jobs(self):
         worker = Worker(self.show_jobs)
         worker.signals.result.connect(self.handle_complete_show_jobs)
         worker.signals.error.connect(self.handle_error_show_jobs)
-        self.threadpool.start(worker)
+        self.parent.threadpool.start(worker)
 
-    @addToClass(IdactApp)
     def handle_complete_show_jobs(self, jobs):
         counter = len(jobs)
         self.show_jobs_window.ui.jobs_table.setRowCount(counter)
@@ -39,7 +53,6 @@ class ManageJobs:
 
         self.show_jobs_window.show()
 
-    @addToClass(IdactApp)
     def handle_error_show_jobs(self, exception):
         if isinstance(exception, KeyError):
             self.popup_window.show_message("The cluster does not exist", WindowType.error)
@@ -48,7 +61,6 @@ class ManageJobs:
 
         self.ui.show_jobs_button.setEnabled(True)
 
-    @addToClass(IdactApp)
     def show_jobs(self):
         self.ui.show_jobs_button.setEnabled(False)
         load_environment()
@@ -60,18 +72,15 @@ class ManageJobs:
         self.ui.show_jobs_button.setEnabled(True)
         return jobs
 
-    @addToClass(IdactApp)
     def concurrent_cancel_job(self):
         worker = Worker(self.cancel_job)
         worker.signals.result.connect(self.handle_complete_cancel_job)
         worker.signals.error.connect(self.handle_error_cancel_job)
-        self.threadpool.start(worker)
+        self.parent.threadpool.start(worker)
 
-    @addToClass(IdactApp)
     def handle_complete_cancel_job(self):
         self.popup_window.show_message("Cancel command has been successfully executed", WindowType.success)
 
-    @addToClass(IdactApp)
     def handle_error_cancel_job(self, exception):
         if isinstance(exception, KeyError):
             self.popup_window.show_message("The cluster does not exist", WindowType.error)
@@ -80,7 +89,6 @@ class ManageJobs:
 
         self.ui.cancel_job_button.setEnabled(True)
 
-    @addToClass(IdactApp)
     def cancel_job(self):
         self.ui.cancel_job_button.setEnabled(False)
         load_environment()
@@ -92,3 +100,15 @@ class ManageJobs:
         node = cluster.get_access_node()
         run_scancel(job_id, node)
         self.ui.cancel_job_button.setEnabled(True)
+
+
+class ShowJobsWindow(QWidget):
+    def __init__(self, parent=None):
+        QWidget.__init__(self, parent=parent)
+        self.setWindowTitle('Jobs')
+        
+        ui_path = os.path.dirname(os.path.abspath(__file__))
+        self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/show-jobs.ui'))
+        
+        lay = QVBoxLayout(self)
+        lay.addWidget(self.ui)

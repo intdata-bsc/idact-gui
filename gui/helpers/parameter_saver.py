@@ -1,9 +1,11 @@
 import json
+import os
 
 
 class ParameterSaver:
     def __init__(self):
-        self.filename = 'args.json'
+        current_directory = os.path.dirname(os.path.abspath(__file__))
+        self.filename = os.path.join(current_directory, '../../args.json')
         with open(self.filename) as json_file:
             self.data = json.load(json_file)
 
