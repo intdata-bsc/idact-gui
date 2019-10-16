@@ -35,7 +35,7 @@ class IdactNotebook(QWidget):
         self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/deploy-notebook.ui'))
 
         self.ui.deploy_button.clicked.connect(self.concurrent_deploy_notebook)
-        self.ui.show_native_arguments_button.clicked.connect(self.open_show_native_argument)
+        self.ui.edit_native_arguments_button.clicked.connect(self.open_show_native_argument)
 
         self.ui.cluster_name_deployn_edit.setText(self.parameters['deploy_notebook_arguments']['cluster_name'])
         self.ui.nodes_edit.setValue(self.parameters['deploy_notebook_arguments']['nodes'])
@@ -212,10 +212,10 @@ class IdactNotebook(QWidget):
 class ShowNativeArgumentsWindow(QWidget):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent=parent)
-        self.setWindowTitle('Show native arguments')
+        self.setWindowTitle('Edit native arguments')
         
         ui_path = os.path.dirname(os.path.abspath(__file__))
-        self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/show-native.ui'))
+        self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/edit-native.ui'))
         
         lay = QVBoxLayout(self)
         lay.addWidget(self.ui)
