@@ -184,15 +184,26 @@ class IdactNotebook(QWidget):
     def remove_arguments(self):
         indexes = self.show_native_arguments_window.ui.table_widget.selectedIndexes()
 
-        for index in indexes:
+        for index in sorted(indexes, reverse=True):
             self.show_native_arguments_window.ui.table_widget.removeRow(index.row())
 
     def save_arguments(self):
         native_args = dict()
 
         for i in range(self.show_native_arguments_window.ui.table_widget.rowCount()):
-            name = str(self.show_native_arguments_window.ui.table_widget.item(i, 0).text())
-            value = str(self.show_native_arguments_window.ui.table_widget.item(i, 1).text())
+            name_item = self.show_native_arguments_window.ui.table_widget.item(i, 0)
+            value_item = self.show_native_arguments_window.ui.table_widget.item(i, 1)
+
+            name = None
+            value = None
+            if name_item is not None and value_item is not None:
+                name = str(name_item.text())
+                value = str(value_item.text())
+
+            if not name or not value:
+                self.popup_window.show_message("Name or value is empty", WindowType.error)
+                return
+
             native_args[name] = value
 
         self.native_args_saver.save(native_args)
