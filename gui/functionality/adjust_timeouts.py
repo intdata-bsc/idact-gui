@@ -2,12 +2,12 @@ import os
 from PyQt5 import uic
 from PyQt5.QtWidgets import QVBoxLayout, QWidget
 
-from idact.core.remove_cluster import remove_cluster
 from idact.core.retry import Retry
 from idact.detail.environment.environment_provider import EnvironmentProvider
 from idact import save_environment, load_environment
 
 from gui.functionality.popup_window import WindowType, PopUpWindow
+
 
 class AdjustTimeouts(QWidget):
     def __init__(self, parent=None):
@@ -36,7 +36,6 @@ class AdjustTimeouts(QWidget):
 
         lay = QVBoxLayout(self)
         lay.addWidget(self.ui)
-        
 
     def refresh_timeouts(self, cluster_name):
         load_environment()

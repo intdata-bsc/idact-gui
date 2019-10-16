@@ -2,14 +2,14 @@ import os
 from PyQt5 import uic
 from PyQt5.QtWidgets import QVBoxLayout, QWidget, QTableWidgetItem
 
-from idact.core.remove_cluster import remove_cluster
 from idact.detail.slurm.run_scancel import run_scancel
 from idact.detail.slurm.run_squeue import run_squeue
 from idact import show_cluster, load_environment
 
 from gui.functionality.popup_window import WindowType, PopUpWindow
-from gui.helpers.saver import ParameterSaver
+from gui.helpers.parameter_saver import ParameterSaver
 from gui.helpers.worker import Worker
+
 
 class ManageJobs(QWidget):
     def __init__(self, parent=None):
@@ -105,6 +105,7 @@ class ManageJobs(QWidget):
 class ShowJobsWindow(QWidget):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent=parent)
+        self.setWindowTitle('Jobs')
         
         ui_path = os.path.dirname(os.path.abspath(__file__))
         self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/show-jobs.ui'))

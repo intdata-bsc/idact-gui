@@ -18,4 +18,3 @@ class ConfigurationProvider:
 
     def check_if_conf_file_exists(self):
         return os.path.exists(self.conf_file_path)
-

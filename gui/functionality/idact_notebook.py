@@ -1,5 +1,4 @@
 import os
-
 from PyQt5 import uic
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QTableWidgetItem
 from contextlib import ExitStack
@@ -17,7 +16,7 @@ from idact.detail.jupyter_app.sleep_until_allocation_ends import \
 
 from gui.functionality.popup_window import WindowType, PopUpWindow
 from gui.helpers.native_saver import NativeArgsSaver
-from gui.helpers.saver import ParameterSaver
+from gui.helpers.parameter_saver import ParameterSaver
 from gui.helpers.worker import Worker
 
 
@@ -213,10 +212,10 @@ class IdactNotebook(QWidget):
 class ShowNativeArgumentsWindow(QWidget):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent=parent)
+        self.setWindowTitle('Show native arguments')
         
         ui_path = os.path.dirname(os.path.abspath(__file__))
         self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/show-native.ui'))
         
         lay = QVBoxLayout(self)
         lay.addWidget(self.ui)
-

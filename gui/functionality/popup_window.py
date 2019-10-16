@@ -1,9 +1,11 @@
 from enum import Enum
 from PyQt5.QtWidgets import QWidget, QMessageBox
 
+
 class WindowType(Enum):
     success = 1
     error = 2
+
 
 class PopUpWindow(QWidget):
     def __init__(self):

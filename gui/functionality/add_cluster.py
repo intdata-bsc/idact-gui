@@ -9,8 +9,9 @@ from idact.detail.add_cluster_app import actions_parser as parser
 from idact import save_environment, load_environment
 
 from gui.functionality.popup_window import WindowType, PopUpWindow
-from gui.helpers.saver import ParameterSaver
+from gui.helpers.parameter_saver import ParameterSaver
 from gui.helpers.worker import Worker
+
 
 class AddCluster(QWidget):
     def __init__(self, parent=None):
@@ -34,6 +35,8 @@ class AddCluster(QWidget):
         self.ui.key_type_box.setCurrentText(self.parameters['add_cluster_arguments']['key_type'])
         self.ui.add_actions_file_button.clicked.connect(self.open_actions_file_dialog)
         self.ui.delete_actions_file_button.clicked.connect(self.delete_actions_file)
+
+        self.actions_file_name = None
 
         lay = QVBoxLayout(self)
         lay.addWidget(self.ui)
@@ -115,4 +118,3 @@ class AddCluster(QWidget):
         self.ui.selected_file_path_browser.setText("")
         self.ui.selected_file_path_browser.setEnabled(False)
         self.ui.delete_actions_file_button.setEnabled(False)
-

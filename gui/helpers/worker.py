@@ -1,5 +1,6 @@
 from PyQt5.QtCore import QRunnable, QObject, pyqtSignal, pyqtSlot
 
+
 class WorkerSignals(QObject):
     finished = pyqtSignal()
     error = pyqtSignal(object)
@@ -24,4 +25,4 @@ class Worker(QRunnable):
         else:
             self.signals.result.emit(result) 
         finally:
-            self.signals.finished.emit() 
+            self.signals.finished.emit()
