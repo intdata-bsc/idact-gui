@@ -12,9 +12,10 @@ from gui.helpers.worker import Worker
 
 
 class ManageJobs(QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, data_provider, parent=None):
         QWidget.__init__(self, parent=parent)
         self.parent = parent
+        self.data_provider = data_provider
 
         self.show_jobs_window = ShowJobsWindow()
         self.popup_window = PopUpWindow()
@@ -23,8 +24,7 @@ class ManageJobs(QWidget):
 
         ui_path = os.path.dirname(os.path.abspath(__file__))
         self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/manage-jobs.ui'))
-
-        self.ui.cluster_name_jobs_edit.setText(self.parameters['manage_jobs_arguments']['cluster_name'])
+        
         self.ui.show_jobs_button.clicked.connect(self.concurrent_show_jobs)
         self.ui.refresh_button.clicked.connect(self.concurrent_show_jobs)
         self.ui.cancel_job_button.clicked.connect(self.concurrent_cancel_job)
@@ -33,6 +33,19 @@ class ManageJobs(QWidget):
                 len(self.ui.jobs_table.selectedIndexes()) > 0))
 
         self.ui.cancel_job_button.setEnabled(False)
+
+        self.current_cluster = ''
+        self.cluster_names = self.data_provider.get_cluster_names()
+
+        if len(self.cluster_names) > 0:
+            self.current_cluster = self.cluster_names[0]
+        else:
+            self.current_cluster = ''
+
+        self.data_provider.remove_cluster_signal.connect(self.handle_cluster_name_change)
+        self.data_provider.add_cluster_signal.connect(self.handle_cluster_name_change)
+        self.ui.cluster_names_box.activated[str].connect(self.item_pressed)
+        self.ui.cluster_names_box.addItems(self.cluster_names)
 
         lay = QVBoxLayout(self)
         lay.addWidget(self.ui)
@@ -108,7 +121,7 @@ class ManageJobs(QWidget):
     def cancel_job(self):
         self.ui.cancel_job_button.setEnabled(False)
         load_environment()
-        cluster_name = self.ui.cluster_name_jobs_edit.text()
+        cluster_name = self.current_cluster
         self.parameters['manage_jobs_arguments']['cluster_name'] = cluster_name
         self.saver.save(self.parameters)
 
@@ -120,6 +133,14 @@ class ManageJobs(QWidget):
             run_scancel(job_id, node)
 
         self.ui.cancel_job_button.setEnabled(True)
+
+    def handle_cluster_name_change(self):
+        self.cluster_names = self.data_provider.get_cluster_names()
+        self.ui.cluster_names_box.clear()
+        self.ui.cluster_names_box.addItems(self.cluster_names)
+
+    def item_pressed(self, item_pressed):
+        self.current_cluster = item_pressed
 
 
 class ShowJobsWindow(QWidget):

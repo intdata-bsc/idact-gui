@@ -8,6 +8,7 @@ from gui.functionality.add_cluster import AddCluster
 from gui.functionality.remove_cluster import RemoveCluster
 from gui.functionality.manage_jobs import ManageJobs
 from gui.functionality.adjust_timeouts import AdjustTimeouts
+from gui.helpers.data_provider import DataProvider
 from gui.functionality.show_logs_window import ShowLogsWindow
 
 
@@ -15,10 +16,9 @@ class IdactApp(QWidget):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent=parent)
         self.setWindowTitle("Idact GUI")
-
         self.threadpool = QThreadPool()
-
         self.actions_file_name = None
+        data_provider = DataProvider()
 
         self.show_logs_window = ShowLogsWindow()
         sys.stdout = self.show_logs_window
@@ -26,11 +26,11 @@ class IdactApp(QWidget):
 
         lay = QVBoxLayout(self)
         self.tabs = QTabWidget(self)
-        self.tab1 = IdactNotebook(self)
-        self.tab2 = AddCluster(self)
-        self.tab3 = RemoveCluster(self)
-        self.tab4 = AdjustTimeouts(self)
-        self.tab5 = ManageJobs(self)
+        self.tab1 = IdactNotebook(data_provider, self)
+        self.tab2 = AddCluster(data_provider, self)
+        self.tab3 = RemoveCluster(data_provider, self)
+        self.tab4 = AdjustTimeouts(data_provider, self)
+        self.tab5 = ManageJobs(data_provider, self)
         self.tabs.addTab(self.tab1, "Deploy Notebook")
         self.tabs.addTab(self.tab2, "Add Cluster")
         self.tabs.addTab(self.tab3, "Remove Cluster")

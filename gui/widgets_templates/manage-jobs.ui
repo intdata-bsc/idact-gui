@@ -91,6 +91,23 @@
      </property>
     </widget>
    </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Job ID</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="3">
+    <widget class="QPushButton" name="show_jobs_button">
+     <property name="text">
+      <string>Show jobs in queue</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1" colspan="2">
+    <widget class="QComboBox" name="cluster_names_box"/>
+   </item>
   </layout>
  </widget>
  <resources/>
