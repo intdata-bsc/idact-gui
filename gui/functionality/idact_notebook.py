@@ -1,6 +1,6 @@
 import os
 from PyQt5 import uic
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QTableWidgetItem
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QTableWidgetItem, QMessageBox
 from contextlib import ExitStack
 
 from idact import load_environment, show_cluster, Walltime
@@ -15,6 +15,7 @@ from idact.detail.jupyter_app.sleep_until_allocation_ends import \
     sleep_until_allocation_ends
 
 from gui.functionality.popup_window import WindowType, PopUpWindow
+from gui.functionality.yes_or_no_window import YesOrNoWindow
 from gui.helpers.native_saver import NativeArgsSaver
 from gui.helpers.parameter_saver import ParameterSaver
 from gui.helpers.worker import Worker
@@ -125,7 +126,7 @@ class IdactNotebook(QWidget):
             parameters = AppAllocationParameters.deserialize(
                 serialized=config.notebook_defaults)
 
-            native_args = self.prepare_native_args(self.native_args_saver.get_native_args())
+            native_args = self.get_prepared_native_args()
             override_parameters_if_possible(parameters=parameters,
                                             nodes=nodes,
                                             cores=cores,
@@ -152,14 +153,14 @@ class IdactNotebook(QWidget):
             sleep_until_allocation_ends(nodes=nodes)
         return
 
-    def prepare_native_args(self, args):
-        prepared_args = args.copy()
-        keys = list(prepared_args)
+    def get_prepared_native_args(self):
+        args = self.native_args_saver.get_native_args().copy()
+        keys = list(args)
 
         for key in keys:
             if not key.startswith('--'):
-                prepared_args['--'+key] = prepared_args.pop(key)
-        return prepared_args
+                args['--'+key] = args.pop(key)
+        return args
 
     def open_edit_native_argument(self):
         native_args = self.native_args_saver.get_native_args()
@@ -175,6 +176,9 @@ class IdactNotebook(QWidget):
             row += 1
 
         self.edit_native_arguments_window.show()
+        self.edit_native_arguments_window.data_changed = False
+        self.edit_native_arguments_window.ui.table_widget.cellChanged.connect(
+            self.edit_native_arguments_window.set_that_data_changed)
 
     def add_argument_row(self):
         self.edit_native_arguments_window.ui.table_widget.setRowCount(
@@ -185,6 +189,8 @@ class IdactNotebook(QWidget):
 
         for index in sorted(indexes, reverse=True):
             self.edit_native_arguments_window.ui.table_widget.removeRow(index.row())
+
+        self.edit_native_arguments_window.set_that_data_changed()
 
     def save_arguments(self):
         native_args = dict()
@@ -206,6 +212,7 @@ class IdactNotebook(QWidget):
             native_args[name] = value
 
         self.native_args_saver.save(native_args)
+        self.edit_native_arguments_window.data_changed = False
         self.edit_native_arguments_window.close()
 
 
@@ -216,6 +223,22 @@ class EditNativeArgumentsWindow(QWidget):
         
         ui_path = os.path.dirname(os.path.abspath(__file__))
         self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/edit-native.ui'))
+
+        self.data_changed = False
+        self.yes_or_no_window = YesOrNoWindow()
         
         lay = QVBoxLayout(self)
         lay.addWidget(self.ui)
+
+    def set_that_data_changed(self):
+        self.data_changed = True
+
+    def show_warning_window(self, event):
+        close_window = self.yes_or_no_window.show_message("Some changes may not have been saved. \nDo you want to quit anyway?")
+        self.yes_or_no_window.box.setDefaultButton(QMessageBox.No)
+        if not close_window:
+            event.ignore()
+
+    def closeEvent(self, QCloseEvent):
+        if self.data_changed:
+            self.show_warning_window(QCloseEvent)

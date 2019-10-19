@@ -16,8 +16,3 @@ class NativeArgsSaver:
 
     def get_native_args(self):
         return self.native_args
-
-    def clear(self):
-        self.native_args = []
-        self.save(self.native_args)
-
