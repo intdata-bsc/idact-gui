@@ -32,12 +32,16 @@ class ManageJobs(QWidget):
         lay.addWidget(self.ui)
 
     def concurrent_show_jobs(self):
+        self.ui.show_jobs_button.setEnabled(False)
+
         worker = Worker(self.show_jobs)
         worker.signals.result.connect(self.handle_complete_show_jobs)
         worker.signals.error.connect(self.handle_error_show_jobs)
         self.parent.threadpool.start(worker)
 
     def handle_complete_show_jobs(self, jobs):
+        self.ui.show_jobs_button.setEnabled(True)
+
         counter = len(jobs)
         self.show_jobs_window.ui.jobs_table.setRowCount(counter)
 
@@ -54,43 +58,43 @@ class ManageJobs(QWidget):
         self.show_jobs_window.show()
 
     def handle_error_show_jobs(self, exception):
+        self.ui.show_jobs_button.setEnabled(True)
+
         if isinstance(exception, KeyError):
             self.popup_window.show_message("The cluster does not exist", WindowType.error)
         else:
             self.popup_window.show_message("An error occured while listing jobs", WindowType.error)
 
-        self.ui.show_jobs_button.setEnabled(True)
-
     def show_jobs(self):
-        self.ui.show_jobs_button.setEnabled(False)
         load_environment()
         cluster_name = self.ui.cluster_name_jobs_edit.text()
         self.parameters['manage_jobs_arguments']['cluster_name'] = cluster_name
         cluster = show_cluster(name=cluster_name)
         node = cluster.get_access_node()
         jobs = list(run_squeue(node).values())
-        self.ui.show_jobs_button.setEnabled(True)
         return jobs
 
     def concurrent_cancel_job(self):
+        self.ui.cancel_job_button.setEnabled(False)
+
         worker = Worker(self.cancel_job)
         worker.signals.result.connect(self.handle_complete_cancel_job)
         worker.signals.error.connect(self.handle_error_cancel_job)
         self.parent.threadpool.start(worker)
 
     def handle_complete_cancel_job(self):
+        self.ui.cancel_job_button.setEnabled(True)
         self.popup_window.show_message("Cancel command has been successfully executed", WindowType.success)
 
     def handle_error_cancel_job(self, exception):
+        self.ui.cancel_job_button.setEnabled(True)
+
         if isinstance(exception, KeyError):
             self.popup_window.show_message("The cluster does not exist", WindowType.error)
         else:
             self.popup_window.show_message("An error occured while cancelling job", WindowType.error)
 
-        self.ui.cancel_job_button.setEnabled(True)
-
     def cancel_job(self):
-        self.ui.cancel_job_button.setEnabled(False)
         load_environment()
         cluster_name = self.ui.cluster_name_jobs_edit.text()
         self.parameters['manage_jobs_arguments']['cluster_name'] = cluster_name
@@ -99,7 +103,6 @@ class ManageJobs(QWidget):
         cluster = show_cluster(name=cluster_name)
         node = cluster.get_access_node()
         run_scancel(job_id, node)
-        self.ui.cancel_job_button.setEnabled(True)
 
 
 class ShowJobsWindow(QWidget):
