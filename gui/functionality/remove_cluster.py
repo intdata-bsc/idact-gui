@@ -33,8 +33,8 @@ class RemoveCluster(QWidget):
         else:
             self.current_cluster = ''
 
-        self.data_provider.remove_cluster_signal.connect(self.handle_cluster_name_change)
-        self.data_provider.add_cluster_signal.connect(self.handle_cluster_name_change)
+        self.data_provider.remove_cluster_signal.connect(self.handle_cluster_list_modification)
+        self.data_provider.add_cluster_signal.connect(self.handle_cluster_list_modification)
         self.ui.cluster_names_box.activated[str].connect(self.item_pressed)
         self.ui.cluster_names_box.addItems(self.cluster_names)
 
@@ -68,7 +68,7 @@ class RemoveCluster(QWidget):
         save_environment()
         return
 
-    def handle_cluster_name_change(self):
+    def handle_cluster_list_modification(self):
         self.cluster_names = self.data_provider.get_cluster_names()
         self.ui.cluster_names_box.clear()
         self.ui.cluster_names_box.addItems(self.cluster_names)

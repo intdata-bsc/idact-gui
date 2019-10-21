@@ -42,8 +42,8 @@ class ManageJobs(QWidget):
         else:
             self.current_cluster = ''
 
-        self.data_provider.remove_cluster_signal.connect(self.handle_cluster_name_change)
-        self.data_provider.add_cluster_signal.connect(self.handle_cluster_name_change)
+        self.data_provider.remove_cluster_signal.connect(self.handle_cluster_list_modification)
+        self.data_provider.add_cluster_signal.connect(self.handle_cluster_list_modification)
         self.ui.cluster_names_box.activated[str].connect(self.item_pressed)
         self.ui.cluster_names_box.addItems(self.cluster_names)
 
@@ -87,8 +87,7 @@ class ManageJobs(QWidget):
 
     def show_jobs(self):
         load_environment()
-        cluster_name = self.ui.cluster_name_jobs_edit.text()
-        self.parameters['manage_jobs_arguments']['cluster_name'] = cluster_name
+        cluster_name = self.current_cluster
         cluster = show_cluster(name=cluster_name)
         node = cluster.get_access_node()
         jobs = list(run_squeue(node).values())
@@ -122,7 +121,6 @@ class ManageJobs(QWidget):
         self.ui.cancel_job_button.setEnabled(False)
         load_environment()
         cluster_name = self.current_cluster
-        self.parameters['manage_jobs_arguments']['cluster_name'] = cluster_name
         self.saver.save(self.parameters)
 
         indexes = self.ui.jobs_table.selectedIndexes()
@@ -134,7 +132,7 @@ class ManageJobs(QWidget):
 
         self.ui.cancel_job_button.setEnabled(True)
 
-    def handle_cluster_name_change(self):
+    def handle_cluster_list_modification(self):
         self.cluster_names = self.data_provider.get_cluster_names()
         self.ui.cluster_names_box.clear()
         self.ui.cluster_names_box.addItems(self.cluster_names)

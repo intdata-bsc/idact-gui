@@ -37,8 +37,8 @@ class AdjustTimeouts(QWidget):
         lay = QVBoxLayout(self)
         lay.addWidget(self.ui)
 
-        self.data_provider.add_cluster_signal.connect(self.handle_cluster_name_change)
-        self.data_provider.remove_cluster_signal.connect(self.handle_cluster_name_change)
+        self.data_provider.add_cluster_signal.connect(self.handle_cluster_list_modification)
+        self.data_provider.remove_cluster_signal.connect(self.handle_cluster_list_modification)
 
     def refresh_timeouts(self, cluster_name):
         load_environment()
@@ -123,7 +123,7 @@ class AdjustTimeouts(QWidget):
         self.current_cluster = item_pressed
         self.refresh_timeouts(item_pressed)
     
-    def handle_cluster_name_change(self):
+    def handle_cluster_list_modification(self):
         self.cluster_names = self.data_provider.get_cluster_names()
         self.ui.cluster_names_box.clear()
         self.ui.cluster_names_box.addItems(self.cluster_names)
