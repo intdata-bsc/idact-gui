@@ -2,6 +2,7 @@ from gui.functionality.idact_app import IdactApp
 from pytestqt.qt_compat import qt_api
 from gui.configuration_provider import ConfigurationProvider
 
+
 def test_basics(qtbot):
     assert qt_api.QApplication.instance() is not None
     conf_provider = ConfigurationProvider()
