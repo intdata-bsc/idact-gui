@@ -1,8 +1,6 @@
 pytest
-pytest-timeout
-pytest-cov
+pytest-flake8
 pytest-qt
 pytest-xvfb
 tox
-pyvirtualdisplay<0.2.3; os_name == 'nt'
-pyvirtualdisplay ; os_name != 'nt'
+pyvirtualdisplay
