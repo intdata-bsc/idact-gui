@@ -11,11 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Logs</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
-    <widget class="QTableWidget" name="table_widget"/>
+    <widget class="QTextBrowser" name="logs_browser"/>
    </item>
   </layout>
  </widget>
