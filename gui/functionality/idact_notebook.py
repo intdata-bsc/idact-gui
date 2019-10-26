@@ -72,8 +72,11 @@ class IdactNotebook(QWidget):
     
     def handle_error_deploy_notebook(self):
         self.popup_window.show_message("An error occured while deploing notebook", WindowType.error)
+        self.ui.deploy_button.setEnabled(True)
 
     def deploy_notebook(self):
+        self.ui.deploy_button.setEnabled(False)
+
         cluster_name = self.ui.cluster_name_deployn_edit.text()
         self.parameters['deploy_notebook_arguments']['cluster_name'] = cluster_name
         nodes = int(self.ui.nodes_edit.text())
@@ -157,6 +160,7 @@ class IdactNotebook(QWidget):
             cluster.push_deployment(notebook)
 
             notebook.open_in_browser()
+            self.ui.deploy_button.setEnabled(True)
             sleep_until_allocation_ends(nodes=nodes)
         return
 
