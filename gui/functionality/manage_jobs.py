@@ -26,7 +26,7 @@ class ManageJobs(QWidget):
         
         self.ui.cluster_name_jobs_edit.setText(self.parameters['manage_jobs_arguments']['cluster_name'])
         self.ui.show_jobs_button.clicked.connect(self.concurrent_show_jobs)
-        self.ui.refresh_button.clicked.connect(self.refresh_jobs_table)
+        self.ui.refresh_button.clicked.connect(self.concurrent_show_jobs)
         self.ui.cancel_job_button.clicked.connect(self.concurrent_cancel_job)
         self.ui.jobs_table.itemSelectionChanged.connect(
             lambda: self.ui.cancel_job_button.setEnabled(
@@ -39,6 +39,7 @@ class ManageJobs(QWidget):
 
     def concurrent_show_jobs(self):
         self.ui.show_jobs_button.setEnabled(False)
+        self.ui.refresh_button.setEnabled(False)
 
         worker = Worker(self.show_jobs)
         worker.signals.result.connect(self.handle_complete_show_jobs)
@@ -47,6 +48,7 @@ class ManageJobs(QWidget):
 
     def handle_complete_show_jobs(self, jobs):
         self.ui.show_jobs_button.setEnabled(True)
+        self.ui.refresh_button.setEnabled(True)
 
         counter = len(jobs)
         self.ui.jobs_table.setRowCount(counter)
@@ -63,6 +65,7 @@ class ManageJobs(QWidget):
 
     def handle_error_show_jobs(self, exception):
         self.ui.show_jobs_button.setEnabled(True)
+        self.ui.refresh_button.setEnabled(True)
 
         if isinstance(exception, KeyError):
             self.popup_window.show_message("The cluster does not exist", WindowType.error)
@@ -79,6 +82,7 @@ class ManageJobs(QWidget):
         return jobs
 
     def concurrent_cancel_job(self):
+        self.ui.cancel_job_button.setEnabled(False)
         self.ui.cancel_job_button.setEnabled(False)
 
         worker = Worker(self.cancel_job)
@@ -99,9 +103,6 @@ class ManageJobs(QWidget):
             self.popup_window.show_message("An error occured while cancelling job", WindowType.error)
 
         self.ui.cancel_job_button.setEnabled(True)
-
-    def refresh_jobs_table(self):
-       self.concurrent_show_jobs()
 
     def cancel_job(self):
         self.ui.cancel_job_button.setEnabled(False)
