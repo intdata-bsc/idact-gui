@@ -54,12 +54,6 @@ class IdactNotebook(QWidget):
                 len(self.edit_native_arguments_window.ui.table_widget.selectedIndexes()) > 0))
         self.edit_native_arguments_window.ui.save_arguments_button.clicked.connect(self.save_arguments)
 
-        self.add_argument_window.ui.add_native_button.clicked.connect(self.add_new_native_argument)
-        self.add_argument_window.ui.argument_name_edit.setText(self.parameters['add_native_arguments']['argument_name'])
-        self.add_argument_window.ui.value_name_edit.setText(self.parameters['add_native_arguments']['value'])
-
-        self.remove_argument_window.ui.remove_native_button.clicked.connect(self.remove_native_argument)
-        self.remove_argument_window.ui.argument_name_edit.setText(self.parameters['remove_native_arguments']['argument_name'])
 
         self.current_cluster = ''
         self.cluster_names = self.data_provider.get_cluster_names()
