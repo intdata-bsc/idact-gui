@@ -13,6 +13,6 @@ class ParameterSaver:
         self.data = data
         with open(self.filename, 'w') as json_file:
             json.dump(data, json_file)
-            
+
     def get_map(self):
         return self.data

@@ -1,17 +1,29 @@
 language: python
-dist: trusty
-sudo: true
+dist: bionic
+
 addons:
   apt:
     packages:
-      - xvfb
-      - dbus-x11
-      - xorg
-python: 3.6
-os: linux
+    - xvfb
+    - xorg
+    - dbus-x11
+
+matrix:
+    include:
+        - os: linux
+          python: 3.5
+          env: TOXENV=py35
+        - os: linux
+          python: 3.6
+          env: TOXENV=py36
+        - os: linux
+          python: 3.7
+          env: TOXENV=py37
+        - os: linux
+          python: 3.7-dev
+          env: TOXENV=py37
+
+
 script:
-  - sudo apt-get update
-  - pip install -r requirements.txt --upgrade
-  - pip install -r tests/requirements-test.txt --upgrade
-  - cd tests
-  - xvfb-run pytest
+  - pip install tox
+  - tox --recreate --notest && tox

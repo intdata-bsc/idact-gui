@@ -24,7 +24,7 @@ class AddCluster(QWidget):
 
         ui_path = os.path.dirname(os.path.abspath(__file__))
         self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/add-cluster.ui'))
-        
+
         self.ui.password_edit.setEchoMode(QLineEdit.Password)
         self.ui.add_cluster_button.clicked.connect(self.concurrent_add_cluster)
         self.ui.cluster_name_addc_edit.setText(self.parameters['add_cluster_arguments']['cluster_name'])
@@ -45,11 +45,11 @@ class AddCluster(QWidget):
         worker = Worker(self.add_cluster)
         worker.signals.result.connect(self.handle_complete_add_cluster)
         worker.signals.error.connect(self.handle_error_add_cluster)
-        self.parent.threadpool.start(worker) 
-    
+        self.parent.threadpool.start(worker)
+
     def handle_complete_add_cluster(self):
         self.popup_window.show_message("The cluster has been successfully added", WindowType.success)
-    
+
     def handle_error_add_cluster(self, exception):
         if isinstance(exception, ValueError):
             self.popup_window.show_message("Cluster already exists", WindowType.error)
@@ -83,22 +83,22 @@ class AddCluster(QWidget):
             key = self.ui.key_type_box.currentText()
             if key == 'RSA_KEY':
                 cluster = add_cluster(name=cluster_name,
-                                        user=user,
-                                        host=host,
-                                        port=port,
-                                        auth=AuthMethod.PUBLIC_KEY,
-                                        key=KeyType.RSA,
-                                        install_key=True,
-                                        setup_actions=setup_actions,
-                                        use_jupyter_lab=use_jupyter_lab)
+                                      user=user,
+                                      host=host,
+                                      port=port,
+                                      auth=AuthMethod.PUBLIC_KEY,
+                                      key=KeyType.RSA,
+                                      install_key=True,
+                                      setup_actions=setup_actions,
+                                      use_jupyter_lab=use_jupyter_lab)
         elif auth == 'ASK_EVERYTIME':
             cluster = add_cluster(name=cluster_name,
-                                    user=user,
-                                    host=host,
-                                    port=port,
-                                    auth=AuthMethod.ASK,
-                                    setup_actions=setup_actions,
-                                    use_jupyter_lab=use_jupyter_lab)
+                                  user=user,
+                                  host=host,
+                                  port=port,
+                                  auth=AuthMethod.ASK,
+                                  setup_actions=setup_actions,
+                                  use_jupyter_lab=use_jupyter_lab)
 
         node = cluster.get_access_node()
         node.connect(password=password)
