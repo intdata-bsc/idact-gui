@@ -24,7 +24,7 @@ class ManageJobs(QWidget):
 
         ui_path = os.path.dirname(os.path.abspath(__file__))
         self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/manage-jobs.ui'))
-        
+
         self.ui.show_jobs_button.clicked.connect(self.concurrent_show_jobs)
         self.ui.refresh_button.clicked.connect(self.concurrent_show_jobs)
         self.ui.cancel_job_button.clicked.connect(self.concurrent_cancel_job)

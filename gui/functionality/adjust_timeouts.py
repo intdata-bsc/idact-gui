@@ -20,7 +20,7 @@ class AdjustTimeouts(QWidget):
 
         ui_path = os.path.dirname(os.path.abspath(__file__))
         self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/adjust-timeouts.ui'))
-        
+
         load_environment()
 
         self.ui.cluster_names_box.addItems(self.cluster_names)
@@ -122,9 +122,8 @@ class AdjustTimeouts(QWidget):
     def item_pressed(self, item_pressed):
         self.current_cluster = item_pressed
         self.refresh_timeouts(item_pressed)
-    
+
     def handle_cluster_list_modification(self):
         self.cluster_names = self.data_provider.get_cluster_names()
         self.ui.cluster_names_box.clear()
         self.ui.cluster_names_box.addItems(self.cluster_names)
-

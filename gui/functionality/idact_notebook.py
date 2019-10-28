@@ -9,8 +9,6 @@ from idact.detail.deployment.cancel_local_on_exit import cancel_local_on_exit
 from idact.detail.deployment.cancel_on_exit import cancel_on_exit
 from idact.detail.jupyter_app.app_allocation_parameters import \
     AppAllocationParameters
-from idact.detail.jupyter_app.native_args_conversion import \
-    convert_native_args_from_command_line_to_dict
 from idact.detail.jupyter_app.override_parameters_if_possible import \
     override_parameters_if_possible
 from idact.detail.jupyter_app.sleep_until_allocation_ends import \
@@ -53,7 +51,6 @@ class IdactNotebook(QWidget):
             lambda: self.edit_native_arguments_window.ui.remove_arguments_button.setEnabled(
                 len(self.edit_native_arguments_window.ui.table_widget.selectedIndexes()) > 0))
         self.edit_native_arguments_window.ui.save_arguments_button.clicked.connect(self.save_arguments)
-
 
         self.current_cluster = ''
         self.cluster_names = self.data_provider.get_cluster_names()
@@ -242,6 +239,7 @@ class IdactNotebook(QWidget):
 
     def item_pressed(self, item_pressed):
         self.current_cluster = item_pressed
+
 
 class EditNativeArgumentsWindow(QWidget):
     def __init__(self, parent=None):
