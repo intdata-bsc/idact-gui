@@ -35,7 +35,6 @@ class RemoveCluster(QWidget):
 
         self.data_provider.remove_cluster_signal.connect(self.handle_cluster_list_modification)
         self.data_provider.add_cluster_signal.connect(self.handle_cluster_list_modification)
-        self.ui.cluster_names_box.activated[str].connect(self.item_pressed)
         self.ui.cluster_names_box.addItems(self.cluster_names)
 
         lay = QVBoxLayout(self)
@@ -55,12 +54,12 @@ class RemoveCluster(QWidget):
         if isinstance(exception, KeyError):
             self.popup_window.show_message("The cluster does not exist", WindowType.error)
         else:
-            self.popup_window.show_message("An error occured while removing cluster", WindowType.error)
+            self.popup_window.show_message("An error occurred while removing cluster", WindowType.error)
 
     def remove_cluster(self):
         load_environment()
 
-        cluster_name = self.current_cluster
+        cluster_name = str(self.ui.cluster_names_box.currentText())
         self.parameters['remove_cluster_arguments']['cluster_name'] = cluster_name
         self.saver.save(self.parameters)
 
@@ -72,6 +71,3 @@ class RemoveCluster(QWidget):
         self.cluster_names = self.data_provider.get_cluster_names()
         self.ui.cluster_names_box.clear()
         self.ui.cluster_names_box.addItems(self.cluster_names)
-
-    def item_pressed(self, item_pressed):
-        self.current_cluster = item_pressed

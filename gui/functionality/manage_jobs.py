@@ -44,7 +44,6 @@ class ManageJobs(QWidget):
 
         self.data_provider.remove_cluster_signal.connect(self.handle_cluster_list_modification)
         self.data_provider.add_cluster_signal.connect(self.handle_cluster_list_modification)
-        self.ui.cluster_names_box.activated[str].connect(self.item_pressed)
         self.ui.cluster_names_box.addItems(self.cluster_names)
 
         lay = QVBoxLayout(self)
@@ -87,7 +86,7 @@ class ManageJobs(QWidget):
 
     def show_jobs(self):
         load_environment()
-        cluster_name = self.current_cluster
+        cluster_name = str(self.ui.cluster_names_box.currentText())
         cluster = show_cluster(name=cluster_name)
         node = cluster.get_access_node()
         jobs = list(run_squeue(node).values())
@@ -136,9 +135,6 @@ class ManageJobs(QWidget):
         self.cluster_names = self.data_provider.get_cluster_names()
         self.ui.cluster_names_box.clear()
         self.ui.cluster_names_box.addItems(self.cluster_names)
-
-    def item_pressed(self, item_pressed):
-        self.current_cluster = item_pressed
 
 
 class ShowJobsWindow(QWidget):

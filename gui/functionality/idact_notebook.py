@@ -62,7 +62,6 @@ class IdactNotebook(QWidget):
 
         self.data_provider.remove_cluster_signal.connect(self.handle_cluster_list_modification)
         self.data_provider.add_cluster_signal.connect(self.handle_cluster_list_modification)
-        self.ui.cluster_names_box.activated[str].connect(self.item_pressed)
         self.ui.cluster_names_box.addItems(self.cluster_names)
 
         lay = QVBoxLayout(self)
@@ -82,7 +81,7 @@ class IdactNotebook(QWidget):
         self.ui.deploy_button.setEnabled(True)
 
     def deploy_notebook(self):
-        cluster_name = self.current_cluster
+        cluster_name = str(self.ui.cluster_names_box.currentText())
         self.ui.deploy_button.setEnabled(False)
 
         self.parameters['deploy_notebook_arguments']['cluster_name'] = cluster_name
@@ -236,9 +235,6 @@ class IdactNotebook(QWidget):
         self.cluster_names = self.data_provider.get_cluster_names()
         self.ui.cluster_names_box.clear()
         self.ui.cluster_names_box.addItems(self.cluster_names)
-
-    def item_pressed(self, item_pressed):
-        self.current_cluster = item_pressed
 
 
 class EditNativeArgumentsWindow(QWidget):
