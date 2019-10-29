@@ -54,16 +54,16 @@ class IdactNotebook(QWidget):
 
         lay = QVBoxLayout(self)
         lay.addWidget(self.ui)
- 
+
     def concurrent_deploy_notebook(self):
         worker = Worker(self.deploy_notebook)
         worker.signals.result.connect(self.handle_complete_deploy_notebook)
         worker.signals.error.connect(self.handle_error_deploy_notebook)
         self.parent.threadpool.start(worker)
-        
+
     def handle_complete_deploy_notebook(self):
         self.popup_window.show_message("Notebook has been closed", WindowType.success)
-    
+
     def handle_error_deploy_notebook(self):
         self.popup_window.show_message("An error occured while deploing notebook", WindowType.error)
         self.ui.deploy_button.setEnabled(True)
@@ -102,7 +102,7 @@ class IdactNotebook(QWidget):
                 if letter == 'd':
                     if days != 0:
                         raise ValueError('Wrong walltime format. Days parameter is multiple defined.')
-                    days = int(element[0:len(element)-1])
+                    days = int(element[0:len(element) - 1])
                 elif letter == 'h':
                     if hours != 0:
                         raise ValueError('Wrong walltime format. Hours parameter is multiple defined.')
@@ -133,7 +133,7 @@ class IdactNotebook(QWidget):
             override_parameters_if_possible(parameters=parameters,
                                             nodes=nodes,
                                             cores=cores,
-                                            memory_per_node=memory+unit,
+                                            memory_per_node=memory + unit,
                                             walltime=walltime,
                                             native_args=native_args.items())
             nodes = cluster.allocate_nodes(
@@ -163,7 +163,7 @@ class IdactNotebook(QWidget):
 
         for key in keys:
             if not key.startswith('--'):
-                args['--'+key] = args.pop(key)
+                args['--' + key] = args.pop(key)
         return args
 
     def open_edit_native_argument(self):
@@ -224,13 +224,13 @@ class EditNativeArgumentsWindow(QWidget):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent=parent)
         self.setWindowTitle('Edit native arguments')
-        
+
         ui_path = os.path.dirname(os.path.abspath(__file__))
         self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/edit-native.ui'))
 
         self.data_changed = False
         self.yes_or_no_window = YesOrNoWindow()
-        
+
         lay = QVBoxLayout(self)
         lay.addWidget(self.ui)
 
@@ -238,7 +238,8 @@ class EditNativeArgumentsWindow(QWidget):
         self.data_changed = True
 
     def show_warning_window(self, event):
-        close_window = self.yes_or_no_window.show_message("Some changes may not have been saved. \nDo you want to quit anyway?")
+        close_window = self.yes_or_no_window.show_message(
+            "Some changes may not have been saved. \nDo you want to quit anyway?")
         self.yes_or_no_window.box.setDefaultButton(QMessageBox.No)
         if not close_window:
             event.ignore()
