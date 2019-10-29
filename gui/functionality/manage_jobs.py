@@ -26,13 +26,20 @@ class ManageJobs(QWidget):
 
         self.ui.cluster_name_jobs_edit.setText(self.parameters['manage_jobs_arguments']['cluster_name'])
         self.ui.show_jobs_button.clicked.connect(self.concurrent_show_jobs)
+        self.ui.refresh_button.clicked.connect(self.concurrent_show_jobs)
         self.ui.cancel_job_button.clicked.connect(self.concurrent_cancel_job)
+        self.ui.jobs_table.itemSelectionChanged.connect(
+            lambda: self.ui.cancel_job_button.setEnabled(
+                len(self.ui.jobs_table.selectedIndexes()) > 0))
+
+        self.ui.cancel_job_button.setEnabled(False)
 
         lay = QVBoxLayout(self)
         lay.addWidget(self.ui)
 
     def concurrent_show_jobs(self):
         self.ui.show_jobs_button.setEnabled(False)
+        self.ui.refresh_button.setEnabled(False)
 
         worker = Worker(self.show_jobs)
         worker.signals.result.connect(self.handle_complete_show_jobs)
@@ -41,24 +48,24 @@ class ManageJobs(QWidget):
 
     def handle_complete_show_jobs(self, jobs):
         self.ui.show_jobs_button.setEnabled(True)
+        self.ui.refresh_button.setEnabled(True)
 
         counter = len(jobs)
-        self.show_jobs_window.ui.jobs_table.setRowCount(counter)
+        self.ui.jobs_table.setRowCount(counter)
 
         for i in range(counter):
-            self.show_jobs_window.ui.jobs_table.setItem(i, 0, QTableWidgetItem(str(jobs[i].job_id)))
-            self.show_jobs_window.ui.jobs_table.setItem(i, 1, QTableWidgetItem(str(jobs[i].end_time)))
-            self.show_jobs_window.ui.jobs_table.setItem(i, 2, QTableWidgetItem(str(jobs[i].node_count)))
-            self.show_jobs_window.ui.jobs_table.setItem(
+            self.ui.jobs_table.setItem(i, 0, QTableWidgetItem(str(jobs[i].job_id)))
+            self.ui.jobs_table.setItem(i, 1, QTableWidgetItem(str(jobs[i].end_time)))
+            self.ui.jobs_table.setItem(i, 2, QTableWidgetItem(str(jobs[i].node_count)))
+            self.ui.jobs_table.setItem(
                 i, 3, QTableWidgetItem(','.join(jobs[i].node_list)) if jobs[i].node_list else '')
-            self.show_jobs_window.ui.jobs_table.setItem(
+            self.ui.jobs_table.setItem(
                 i, 4, QTableWidgetItem(str(jobs[i].reason if jobs[i].reason else '')))
-            self.show_jobs_window.ui.jobs_table.setItem(i, 5, QTableWidgetItem(jobs[i].state))
-
-        self.show_jobs_window.show()
+            self.ui.jobs_table.setItem(i, 5, QTableWidgetItem(jobs[i].state))
 
     def handle_error_show_jobs(self, exception):
         self.ui.show_jobs_button.setEnabled(True)
+        self.ui.refresh_button.setEnabled(True)
 
         if isinstance(exception, KeyError):
             self.popup_window.show_message("The cluster does not exist", WindowType.error)
@@ -76,6 +83,7 @@ class ManageJobs(QWidget):
 
     def concurrent_cancel_job(self):
         self.ui.cancel_job_button.setEnabled(False)
+        self.ui.cancel_job_button.setEnabled(False)
 
         worker = Worker(self.cancel_job)
         worker.signals.result.connect(self.handle_complete_cancel_job)
@@ -84,7 +92,8 @@ class ManageJobs(QWidget):
 
     def handle_complete_cancel_job(self):
         self.ui.cancel_job_button.setEnabled(True)
-        self.popup_window.show_message("Cancel command has been successfully executed", WindowType.success)
+        self.popup_window.show_message("Cancel command has been successfully executed\nRefreshing table may be needed",
+                                       WindowType.success)
 
     def handle_error_cancel_job(self, exception):
         self.ui.cancel_job_button.setEnabled(True)
@@ -94,15 +103,23 @@ class ManageJobs(QWidget):
         else:
             self.popup_window.show_message("An error occured while cancelling job", WindowType.error)
 
+        self.ui.cancel_job_button.setEnabled(True)
+
     def cancel_job(self):
+        self.ui.cancel_job_button.setEnabled(False)
         load_environment()
         cluster_name = self.ui.cluster_name_jobs_edit.text()
         self.parameters['manage_jobs_arguments']['cluster_name'] = cluster_name
         self.saver.save(self.parameters)
-        job_id = int(self.ui.job_id_edit.text())
-        cluster = show_cluster(name=cluster_name)
-        node = cluster.get_access_node()
-        run_scancel(job_id, node)
+
+        indexes = self.ui.jobs_table.selectedIndexes()
+        for index in sorted(indexes, reverse=True):
+            job_id = int(self.ui.jobs_table.item(index.row(), 0).text())
+            cluster = show_cluster(name=cluster_name)
+            node = cluster.get_access_node()
+            run_scancel(job_id, node)
+
+        self.ui.cancel_job_button.setEnabled(True)
 
 
 class ShowJobsWindow(QWidget):
