@@ -15,7 +15,7 @@ class ManageJobs(QWidget):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent=parent)
         self.parent = parent
-        
+
         self.show_jobs_window = ShowJobsWindow()
         self.popup_window = PopUpWindow()
         self.saver = ParameterSaver()
@@ -23,7 +23,7 @@ class ManageJobs(QWidget):
 
         ui_path = os.path.dirname(os.path.abspath(__file__))
         self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/manage-jobs.ui'))
-        
+
         self.ui.cluster_name_jobs_edit.setText(self.parameters['manage_jobs_arguments']['cluster_name'])
         self.ui.show_jobs_button.clicked.connect(self.concurrent_show_jobs)
         self.ui.refresh_button.clicked.connect(self.concurrent_show_jobs)
@@ -33,7 +33,7 @@ class ManageJobs(QWidget):
                 len(self.ui.jobs_table.selectedIndexes()) > 0))
 
         self.ui.cancel_job_button.setEnabled(False)
-        
+
         lay = QVBoxLayout(self)
         lay.addWidget(self.ui)
 
@@ -126,9 +126,9 @@ class ShowJobsWindow(QWidget):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent=parent)
         self.setWindowTitle('Jobs')
-        
+
         ui_path = os.path.dirname(os.path.abspath(__file__))
         self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/show-jobs.ui'))
-        
+
         lay = QVBoxLayout(self)
         lay.addWidget(self.ui)
