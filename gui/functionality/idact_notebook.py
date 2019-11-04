@@ -22,9 +22,10 @@ from gui.helpers.worker import Worker
 
 
 class IdactNotebook(QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, data_provider, parent=None):
         QWidget.__init__(self, parent=parent)
         self.parent = parent
+        self.data_provider = data_provider
 
         self.edit_native_arguments_window = EditNativeArgumentsWindow()
         self.popup_window = PopUpWindow()
@@ -38,7 +39,6 @@ class IdactNotebook(QWidget):
         self.ui.deploy_button.clicked.connect(self.concurrent_deploy_notebook)
         self.ui.edit_native_arguments_button.clicked.connect(self.open_edit_native_argument)
 
-        self.ui.cluster_name_deployn_edit.setText(self.parameters['deploy_notebook_arguments']['cluster_name'])
         self.ui.nodes_edit.setValue(self.parameters['deploy_notebook_arguments']['nodes'])
         self.ui.cores_edit.setValue(self.parameters['deploy_notebook_arguments']['cores'])
         self.ui.memory_edit.setValue(int(self.parameters['deploy_notebook_arguments']['memory_value']))
@@ -51,6 +51,18 @@ class IdactNotebook(QWidget):
             lambda: self.edit_native_arguments_window.ui.remove_arguments_button.setEnabled(
                 len(self.edit_native_arguments_window.ui.table_widget.selectedIndexes()) > 0))
         self.edit_native_arguments_window.ui.save_arguments_button.clicked.connect(self.save_arguments)
+
+        self.current_cluster = ''
+        self.cluster_names = self.data_provider.get_cluster_names()
+
+        if len(self.cluster_names) > 0:
+            self.current_cluster = self.cluster_names[0]
+        else:
+            self.current_cluster = ''
+
+        self.data_provider.remove_cluster_signal.connect(self.handle_cluster_list_modification)
+        self.data_provider.add_cluster_signal.connect(self.handle_cluster_list_modification)
+        self.ui.cluster_names_box.addItems(self.cluster_names)
 
         lay = QVBoxLayout(self)
         lay.addWidget(self.ui)
@@ -69,9 +81,9 @@ class IdactNotebook(QWidget):
         self.ui.deploy_button.setEnabled(True)
 
     def deploy_notebook(self):
+        cluster_name = str(self.ui.cluster_names_box.currentText())
         self.ui.deploy_button.setEnabled(False)
 
-        cluster_name = self.ui.cluster_name_deployn_edit.text()
         self.parameters['deploy_notebook_arguments']['cluster_name'] = cluster_name
         nodes = int(self.ui.nodes_edit.text())
         self.parameters['deploy_notebook_arguments']['nodes'] = nodes
@@ -218,6 +230,11 @@ class IdactNotebook(QWidget):
         self.native_args_saver.save(native_args)
         self.edit_native_arguments_window.data_changed = False
         self.edit_native_arguments_window.close()
+
+    def handle_cluster_list_modification(self):
+        self.cluster_names = self.data_provider.get_cluster_names()
+        self.ui.cluster_names_box.clear()
+        self.ui.cluster_names_box.addItems(self.cluster_names)
 
 
 class EditNativeArgumentsWindow(QWidget):

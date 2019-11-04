@@ -14,9 +14,11 @@ from gui.helpers.worker import Worker
 
 
 class AddCluster(QWidget):
-    def __init__(self, parent=None):
+
+    def __init__(self, data_provider, parent=None):
         QWidget.__init__(self, parent=parent)
         self.parent = parent
+        self.data_provider = data_provider
 
         self.popup_window = PopUpWindow()
         self.saver = ParameterSaver()
@@ -48,6 +50,7 @@ class AddCluster(QWidget):
         self.parent.threadpool.start(worker)
 
     def handle_complete_add_cluster(self):
+        self.data_provider.add_cluster_signal.emit()
         self.popup_window.show_message("The cluster has been successfully added", WindowType.success)
 
     def handle_error_add_cluster(self, exception):
