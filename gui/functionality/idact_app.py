@@ -18,11 +18,12 @@ class IdactApp(QWidget):
         self.setWindowTitle("Idact GUI")
         self.threadpool = QThreadPool()
         self.actions_file_name = None
-        data_provider = DataProvider()
 
         self.show_logs_window = ShowLogsWindow()
         sys.stdout = self.show_logs_window
         sys.stderr = self.show_logs_window
+
+        data_provider = DataProvider()
 
         lay = QVBoxLayout(self)
         self.tabs = QTabWidget(self)

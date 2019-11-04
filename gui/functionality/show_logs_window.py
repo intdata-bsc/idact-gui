@@ -17,3 +17,6 @@ class ShowLogsWindow(QWidget):
 
     def write(self, text):
         self.ui.logs_browser.append(text)
+
+    def flush(self):
+        pass
