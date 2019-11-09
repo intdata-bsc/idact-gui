@@ -9,7 +9,7 @@ This is a graphical interface for the [idact](https://github.com/garstka/idact) 
 After clonning the repository, inside `idact-gui` folder just run:
 
 ```
-phyton -m gui.main
+python -m gui.main
 ```
 
 ### Prerequisites
