@@ -131,6 +131,3 @@ dmypy.json
 # End of https://www.gitignore.io/api/pytho
 
 .vscode/
-
-args.json
-native_args.json
