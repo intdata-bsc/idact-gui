@@ -6,7 +6,7 @@ This is a graphical interface for the [idact](https://github.com/garstka/idact) 
 
 ## Getting Started
 
-After clonning the repository inside `idact-gui` folder just run:
+After clonning the repository, inside `idact-gui` folder just run:
 
 ```
 phyton -m gui.main
@@ -14,7 +14,7 @@ phyton -m gui.main
 
 ### Prerequisites
 
-All requirements are listed in `reqiurements-dev.txt`. To install them run:
+All requirements are listed in `requirements-dev.txt`. To install them run:
 
 ```
 pip install -r requirements-dev.txt
