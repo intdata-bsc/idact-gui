@@ -68,6 +68,28 @@ class IdactNotebook(QWidget):
         self.data_provider.add_cluster_signal.connect(self.handle_cluster_list_modification)
         self.ui.cluster_names_box.addItems(self.cluster_names)
 
+        self.ui.allocate_nodes_button.clicked.connect(self.allocate_nodes)
+        self.ui.allocate_nodes_button.setDisabled(True)
+        self.ui.begin_label.setDisabled(True)
+        self.ui.begin_edit.setDisabled(True)
+        self.ui.future_allocation.toggled.connect(self.future_allocation_toggled)
+
+    def allocate_nodes(self):
+        pass
+
+    def future_allocation_toggled(self):
+        if self.ui.future_allocation.isChecked():
+            self.ui.allocate_nodes_button.setDisabled(False)
+            self.ui.deploy_button.setDisabled(True)
+            self.ui.begin_label.setDisabled(False)
+            self.ui.begin_edit.setDisabled(False)
+
+        else:
+            self.ui.allocate_nodes_button.setDisabled(True)
+            self.ui.deploy_button.setDisabled(False)
+            self.ui.begin_label.setDisabled(True)
+            self.ui.begin_edit.setDisabled(True)
+
     def concurrent_deploy_notebook(self):
         """ Setups the worker that allows to run the deploy_notebook functionality
         in the parallel thread.

@@ -34,16 +34,23 @@ class ManageJobs(QWidget):
 
         self.ui.show_jobs_button.clicked.connect(self.concurrent_show_jobs)
         self.ui.refresh_button.clicked.connect(self.concurrent_show_jobs)
+        self.ui.deploy_button.clicked.connect(self.concurrent_deploy_notebook)
         self.ui.cancel_job_button.clicked.connect(self.concurrent_cancel_job)
 
         self.data_provider.remove_cluster_signal.connect(self.handle_cluster_list_modification)
         self.data_provider.add_cluster_signal.connect(self.handle_cluster_list_modification)
         self.ui.cluster_names_box.addItems(self.cluster_names)
 
+        self.ui.deploy_button.setEnabled(False)
         self.ui.cancel_job_button.setEnabled(False)
         self.ui.jobs_table.itemSelectionChanged.connect(
             lambda: self.ui.cancel_job_button.setEnabled(
                 len(self.ui.jobs_table.selectedIndexes()) > 0))
+
+    def change_buttons_to_disabled_or_not(self):
+        any_item_selected = len(self.ui.jobs_table.selectedIndexes()) > 0
+        self.ui.deploy_button.setEnabled(any_item_selected)
+        self.ui.cancel_job_button.setEnabled(any_item_selected)
 
     def concurrent_show_jobs(self):
         """ Setups the worker that allows to run the show_jobs functionality
@@ -102,6 +109,27 @@ class ManageJobs(QWidget):
         node = self.cluster.get_access_node()
         jobs = list(run_squeue(node).values())
         return jobs
+
+    def concurrent_deploy_notebook(self):
+        self.ui.deploy_button.setEnabled(False)
+
+        worker = Worker(self.deploy_notebook)
+        worker.signals.result.connect(self.handle_complete_deploy_notebook)
+        worker.signals.error.connect(self.handle_error_deploy_notebook)
+        self.parent.threadpool.start(worker)
+
+    def handle_complete_deploy_notebook(self):
+        self.ui.deploy_button.setEnabled(True)
+        self.popup_window.show_message("Notebook has been successfully deployed",
+                                       WindowType.success)
+
+    def handle_error_deploy_notebook(self, exception):
+        self.ui.deploy_button.setEnabled(True)
+        self.popup_window.show_message("An error occurred while deploying notebook", WindowType.error)
+        self.ui.deploy_button.setEnabled(True)
+
+    def deploy_notebook(self):
+        pass
 
     def concurrent_cancel_job(self):
         """ Setups the worker that allows to run the cancel_job functionality
