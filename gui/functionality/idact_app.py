@@ -13,15 +13,16 @@ from gui.functionality.show_logs_window import ShowLogsWindow
 
 
 class IdactApp(QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, debug=False):
         QWidget.__init__(self, parent=parent)
         self.setWindowTitle("Idact GUI")
         self.threadpool = QThreadPool()
         self.actions_file_name = None
 
-        self.show_logs_window = ShowLogsWindow()
-        sys.stdout = self.show_logs_window
-        sys.stderr = self.show_logs_window
+        if not debug:
+            self.show_logs_window = ShowLogsWindow()
+            sys.stdout = self.show_logs_window
+            sys.stderr = self.show_logs_window
 
         data_provider = DataProvider()
 
@@ -39,6 +40,7 @@ class IdactApp(QWidget):
         self.tabs.addTab(self.tab5, "Manage Jobs")
         lay.addWidget(self.tabs)
 
-        logs_button = QPushButton('Show logs', self)
-        logs_button.clicked.connect(self.show_logs_window.show)
-        lay.addWidget(logs_button)
+        if not debug:
+            logs_button = QPushButton('Show logs', self)
+            logs_button.clicked.connect(self.show_logs_window.show)
+            lay.addWidget(logs_button)
