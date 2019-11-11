@@ -14,7 +14,7 @@ class PopUpWindow(QWidget):
         self.box.addButton(QMessageBox.Ok)
         self.box.setDefaultButton(QMessageBox.Ok)
 
-    def show_message(self, message, window_type):
+    def show_message(self, message, window_type, error_info=None):
         if window_type == WindowType.success:
             self.box.setWindowTitle("Success")
             self.box.setIcon(QMessageBox.Information)
@@ -25,6 +25,10 @@ class PopUpWindow(QWidget):
             self.box.setIcon(QMessageBox.NoIcon)
 
         self.box.setText(message)
+
+        if error_info:
+            self.box.setDetailedText('Details: ' + str(error_info))
+
         ret = self.box.exec_()
         if ret == QMessageBox.Ok:
             return
