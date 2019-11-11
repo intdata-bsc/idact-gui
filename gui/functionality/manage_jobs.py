@@ -51,6 +51,11 @@ class ManageJobs(QWidget):
         self.ui.deploy_button.setEnabled(any_item_selected)
         self.ui.cancel_job_button.setEnabled(any_item_selected)
 
+    def change_buttons_to_disabled_or_not(self):
+        any_item_selected = len(self.ui.jobs_table.selectedIndexes()) > 0
+        self.ui.deploy_button.setEnabled(any_item_selected)
+        self.ui.cancel_job_button.setEnabled(any_item_selected)
+
     def concurrent_show_jobs(self):
         """ Setups the worker that allows to run the show_jobs functionality
         in the parallel thread.
