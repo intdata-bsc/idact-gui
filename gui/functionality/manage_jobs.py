@@ -37,15 +37,14 @@ class ManageJobs(QWidget):
         self.ui.deploy_button.clicked.connect(self.concurrent_deploy_notebook)
         self.ui.cancel_job_button.clicked.connect(self.concurrent_cancel_job)
 
-        self.data_provider.remove_cluster_signal.connect(self.handle_cluster_list_modification)
-        self.data_provider.add_cluster_signal.connect(self.handle_cluster_list_modification)
-        self.ui.cluster_names_box.addItems(self.cluster_names)
+        self.ui.jobs_table.itemSelectionChanged.connect(self.change_buttons_to_disabled_or_not)
 
         self.ui.deploy_button.setEnabled(False)
         self.ui.cancel_job_button.setEnabled(False)
-        self.ui.jobs_table.itemSelectionChanged.connect(
-            lambda: self.ui.cancel_job_button.setEnabled(
-                len(self.ui.jobs_table.selectedIndexes()) > 0))
+
+        self.data_provider.remove_cluster_signal.connect(self.handle_cluster_list_modification)
+        self.data_provider.add_cluster_signal.connect(self.handle_cluster_list_modification)
+        self.ui.cluster_names_box.addItems(self.cluster_names)
 
     def change_buttons_to_disabled_or_not(self):
         any_item_selected = len(self.ui.jobs_table.selectedIndexes()) > 0
