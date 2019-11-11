@@ -7,6 +7,7 @@ from gui.functionality.idact_notebook import IdactNotebook
 from gui.functionality.add_cluster import AddCluster
 from gui.functionality.remove_cluster import RemoveCluster
 from gui.functionality.manage_jobs import ManageJobs
+from gui.functionality.about import About
 from gui.functionality.adjust_timeouts import AdjustTimeouts
 from gui.helpers.data_provider import DataProvider
 from gui.functionality.show_logs_window import ShowLogsWindow
@@ -32,11 +33,13 @@ class IdactApp(QWidget):
         self.tab3 = RemoveCluster(data_provider, self)
         self.tab4 = AdjustTimeouts(data_provider, self)
         self.tab5 = ManageJobs(data_provider, self)
+        self.tab6 = About(self)
         self.tabs.addTab(self.tab1, "Deploy Notebook")
         self.tabs.addTab(self.tab2, "Add Cluster")
         self.tabs.addTab(self.tab3, "Remove Cluster")
         self.tabs.addTab(self.tab4, "Adjust Timeouts")
         self.tabs.addTab(self.tab5, "Manage Jobs")
+        self.tabs.addTab(self.tab6, "About")
         lay.addWidget(self.tabs)
 
         logs_button = QPushButton('Show logs', self)
