@@ -11,6 +11,7 @@ from idact import save_environment, load_environment
 from gui.functionality.popup_window import WindowType, PopUpWindow
 from gui.helpers.parameter_saver import ParameterSaver
 from gui.helpers.worker import Worker
+from gui.helpers.custom_exceptions import EmptyFieldError
 
 
 class AddCluster(QWidget):
@@ -54,7 +55,9 @@ class AddCluster(QWidget):
         self.popup_window.show_message("The cluster has been successfully added", WindowType.success)
 
     def handle_error_add_cluster(self, exception):
-        if isinstance(exception, ValueError):
+        if isinstance(exception, EmptyFieldError):
+            self.popup_window.show_message("Cluster name cannot be empty", WindowType.error)
+        elif isinstance(exception, ValueError):
             self.popup_window.show_message("Cluster already exists", WindowType.error)
         else:
             self.popup_window.show_message("An error occured while adding cluster", WindowType.error, exception)
@@ -63,6 +66,10 @@ class AddCluster(QWidget):
         load_environment()
 
         cluster_name = self.ui.cluster_name_addc_edit.text()
+
+        if not cluster_name:
+            raise EmptyFieldError()
+
         self.parameters['add_cluster_arguments']['cluster_name'] = cluster_name
         user = self.ui.user_edit.text()
         self.parameters['add_cluster_arguments']['user'] = user

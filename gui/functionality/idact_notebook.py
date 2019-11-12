@@ -19,6 +19,7 @@ from gui.functionality.yes_or_no_window import YesOrNoWindow
 from gui.helpers.native_saver import NativeArgsSaver
 from gui.helpers.parameter_saver import ParameterSaver
 from gui.helpers.worker import Worker
+from gui.helpers.custom_exceptions import NoClustersError
 
 
 class IdactNotebook(QWidget):
@@ -77,11 +78,18 @@ class IdactNotebook(QWidget):
         self.popup_window.show_message("Notebook has been closed", WindowType.success)
 
     def handle_error_deploy_notebook(self, exception):
-        self.popup_window.show_message("An error occured while deploing notebook", WindowType.error, exception)
+        if isinstance(exception, NoClustersError):
+            self.popup_window.show_message("There are no added clusters", WindowType.error)
+        else:
+            self.popup_window.show_message("An error occured while deploing notebook", WindowType.error, exception)
         self.ui.deploy_button.setEnabled(True)
 
     def deploy_notebook(self):
         cluster_name = str(self.ui.cluster_names_box.currentText())
+
+        if not cluster_name:
+            raise NoClustersError()
+
         self.ui.deploy_button.setEnabled(False)
 
         self.parameters['deploy_notebook_arguments']['cluster_name'] = cluster_name
