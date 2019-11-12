@@ -76,8 +76,8 @@ class IdactNotebook(QWidget):
     def handle_complete_deploy_notebook(self):
         self.popup_window.show_message("Notebook has been closed", WindowType.success)
 
-    def handle_error_deploy_notebook(self):
-        self.popup_window.show_message("An error occured while deploing notebook", WindowType.error)
+    def handle_error_deploy_notebook(self, exception):
+        self.popup_window.show_message("An error occured while deploing notebook", WindowType.error, exception)
         self.ui.deploy_button.setEnabled(True)
 
     def deploy_notebook(self):

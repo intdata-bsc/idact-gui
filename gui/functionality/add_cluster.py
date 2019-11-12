@@ -57,7 +57,7 @@ class AddCluster(QWidget):
         if isinstance(exception, ValueError):
             self.popup_window.show_message("Cluster already exists", WindowType.error)
         else:
-            self.popup_window.show_message("An error occured while adding cluster", WindowType.error)
+            self.popup_window.show_message("An error occured while adding cluster", WindowType.error, exception)
 
     def add_cluster(self):
         load_environment()

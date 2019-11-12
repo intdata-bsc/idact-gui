@@ -54,7 +54,7 @@ class RemoveCluster(QWidget):
         if isinstance(exception, KeyError):
             self.popup_window.show_message("The cluster does not exist", WindowType.error)
         else:
-            self.popup_window.show_message("An error occurred while removing cluster", WindowType.error)
+            self.popup_window.show_message("An error occurred while removing cluster", WindowType.error, exception)
 
     def remove_cluster(self):
         load_environment()

@@ -82,7 +82,7 @@ class ManageJobs(QWidget):
         if isinstance(exception, KeyError):
             self.popup_window.show_message("The cluster does not exist", WindowType.error)
         else:
-            self.popup_window.show_message("An error occured while listing jobs", WindowType.error)
+            self.popup_window.show_message("An error occured while listing jobs", WindowType.error, exception)
 
     def show_jobs(self):
         load_environment()
