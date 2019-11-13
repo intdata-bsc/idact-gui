@@ -9,6 +9,7 @@ from idact import show_cluster, load_environment
 from gui.functionality.popup_window import WindowType, PopUpWindow
 from gui.helpers.parameter_saver import ParameterSaver
 from gui.helpers.worker import Worker
+from gui.helpers.custom_exceptions import NoClustersError
 
 
 class ManageJobs(QWidget):
@@ -79,7 +80,9 @@ class ManageJobs(QWidget):
         self.ui.show_jobs_button.setEnabled(True)
         self.ui.refresh_button.setEnabled(True)
 
-        if isinstance(exception, KeyError):
+        if isinstance(exception, NoClustersError):
+            self.popup_window.show_message("There are no added clusters", WindowType.error)
+        elif isinstance(exception, KeyError):
             self.popup_window.show_message("The cluster does not exist", WindowType.error)
         else:
             self.popup_window.show_message("An error occured while listing jobs", WindowType.error, exception)
@@ -87,6 +90,8 @@ class ManageJobs(QWidget):
     def show_jobs(self):
         load_environment()
         cluster_name = str(self.ui.cluster_names_box.currentText())
+        if not cluster_name:
+            raise NoClustersError()
         cluster = show_cluster(name=cluster_name)
         node = cluster.get_access_node()
         jobs = list(run_squeue(node).values())
