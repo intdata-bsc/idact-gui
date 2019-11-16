@@ -9,7 +9,7 @@ class WindowType(Enum):
 
 class PopUpWindow(QWidget):
     def __init__(self):
-        QWidget.__init__(self)
+        super().__init__()
         self.box = QMessageBox(self)
         self.box.addButton(QMessageBox.Ok)
         self.box.setDefaultButton(QMessageBox.Ok)

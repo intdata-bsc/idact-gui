@@ -28,6 +28,8 @@ class MainWindow(QMainWindow):
         self.actions_file_name = None
         self.threadpool = QThreadPool()
 
+        self.setCentralWidget(IdactNotebook(self.data_provider, self))
+
         self.ui.deploy_notebook_action.triggered.connect(self.handle_deploy_notebook_action)
         self.ui.see_running_notebooks_action.triggered.connect(self.handle_see_running_notebooks_action)
 
