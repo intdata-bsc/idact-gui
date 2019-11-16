@@ -10,6 +10,7 @@ from idact import save_environment, load_environment
 
 from gui.functionality.popup_window import WindowType, PopUpWindow
 from gui.helpers.parameter_saver import ParameterSaver
+from gui.helpers.ui_loader import UiLoader
 from gui.helpers.worker import Worker
 from gui.helpers.custom_exceptions import EmptyFieldError
 
@@ -17,16 +18,15 @@ from gui.helpers.custom_exceptions import EmptyFieldError
 class AddCluster(QWidget):
 
     def __init__(self, data_provider, parent=None):
-        QWidget.__init__(self, parent=parent)
+        super().__init__(parent=parent)
+        self.ui = UiLoader.load_ui_from_file('add-cluster.ui', self)
+
         self.parent = parent
         self.data_provider = data_provider
 
         self.popup_window = PopUpWindow()
         self.saver = ParameterSaver()
         self.parameters = self.saver.get_map()
-
-        ui_path = os.path.dirname(os.path.abspath(__file__))
-        self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/add-cluster.ui'))
 
         self.ui.password_edit.setEchoMode(QLineEdit.Password)
         self.ui.add_cluster_button.clicked.connect(self.concurrent_add_cluster)
@@ -40,9 +40,6 @@ class AddCluster(QWidget):
         self.ui.delete_actions_file_button.clicked.connect(self.delete_actions_file)
 
         self.actions_file_name = None
-
-        lay = QVBoxLayout(self)
-        lay.addWidget(self.ui)
 
     def concurrent_add_cluster(self):
         worker = Worker(self.add_cluster)
