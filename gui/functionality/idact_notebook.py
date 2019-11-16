@@ -1,6 +1,4 @@
-import os
-from PyQt5 import uic
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QTableWidgetItem, QMessageBox
+from PyQt5.QtWidgets import QWidget, QTableWidgetItem, QMessageBox
 from contextlib import ExitStack
 
 from idact import load_environment, show_cluster, Walltime

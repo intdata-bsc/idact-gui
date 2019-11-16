@@ -1,7 +1,4 @@
-import os
-
-from PyQt5 import uic
-from PyQt5.QtWidgets import QWidget, QVBoxLayout
+from PyQt5.QtWidgets import QWidget
 
 from gui.helpers.ui_loader import UiLoader
 

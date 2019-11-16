@@ -1,6 +1,4 @@
-import os
-from PyQt5 import uic
-from PyQt5.QtWidgets import QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QWidget
 
 from idact.core.remove_cluster import remove_cluster
 from idact import save_environment, load_environment

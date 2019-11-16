@@ -1,6 +1,4 @@
-import os
-from PyQt5 import uic
-from PyQt5.QtWidgets import QVBoxLayout, QWidget, QLineEdit, QFileDialog
+from PyQt5.QtWidgets import QWidget, QLineEdit, QFileDialog
 
 from idact.core.auth import AuthMethod, KeyType
 from idact.core.add_cluster import add_cluster

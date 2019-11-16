@@ -1,6 +1,4 @@
-import os
-from PyQt5 import uic
-from PyQt5.QtWidgets import QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QWidget
 
 from idact.core.retry import Retry
 from idact.detail.environment.environment_provider import EnvironmentProvider

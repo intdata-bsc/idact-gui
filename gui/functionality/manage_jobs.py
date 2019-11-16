@@ -1,6 +1,4 @@
-import os
-from PyQt5 import uic
-from PyQt5.QtWidgets import QVBoxLayout, QWidget, QTableWidgetItem
+from PyQt5.QtWidgets import QWidget, QTableWidgetItem
 
 from idact.detail.slurm.run_scancel import run_scancel
 from idact.detail.slurm.run_squeue import run_squeue
@@ -143,4 +141,3 @@ class ShowJobsWindow(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.ui = UiLoader.load_ui_from_file('show-jobs.ui', self)
-
