@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QWidget, QMessageBox
 
 class YesOrNoWindow(QWidget):
     def __init__(self):
-        QWidget.__init__(self)
+        super().__init__()
         self.box = QMessageBox(self)
         self.box.addButton(QMessageBox.Yes)
         self.box.addButton(QMessageBox.No)

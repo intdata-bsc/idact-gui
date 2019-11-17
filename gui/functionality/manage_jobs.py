@@ -1,6 +1,4 @@
-import os
-from PyQt5 import uic
-from PyQt5.QtWidgets import QVBoxLayout, QWidget, QTableWidgetItem
+from PyQt5.QtWidgets import QWidget, QTableWidgetItem
 
 from idact.detail.slurm.run_scancel import run_scancel
 from idact.detail.slurm.run_squeue import run_squeue
@@ -8,13 +6,16 @@ from idact import show_cluster, load_environment
 
 from gui.functionality.popup_window import WindowType, PopUpWindow
 from gui.helpers.parameter_saver import ParameterSaver
+from gui.helpers.ui_loader import UiLoader
 from gui.helpers.worker import Worker
 from gui.helpers.custom_exceptions import NoClustersError
 
 
 class ManageJobs(QWidget):
     def __init__(self, data_provider, parent=None):
-        QWidget.__init__(self, parent=parent)
+        super().__init__(parent=parent)
+        self.ui = UiLoader.load_ui_from_file('manage-jobs.ui', self)
+
         self.parent = parent
         self.data_provider = data_provider
 
@@ -22,9 +23,6 @@ class ManageJobs(QWidget):
         self.popup_window = PopUpWindow()
         self.saver = ParameterSaver()
         self.parameters = self.saver.get_map()
-
-        ui_path = os.path.dirname(os.path.abspath(__file__))
-        self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/manage-jobs.ui'))
 
         self.ui.show_jobs_button.clicked.connect(self.concurrent_show_jobs)
         self.ui.refresh_button.clicked.connect(self.concurrent_show_jobs)
@@ -46,9 +44,6 @@ class ManageJobs(QWidget):
         self.data_provider.remove_cluster_signal.connect(self.handle_cluster_list_modification)
         self.data_provider.add_cluster_signal.connect(self.handle_cluster_list_modification)
         self.ui.cluster_names_box.addItems(self.cluster_names)
-
-        lay = QVBoxLayout(self)
-        lay.addWidget(self.ui)
 
     def concurrent_show_jobs(self):
         self.ui.show_jobs_button.setEnabled(False)
@@ -144,11 +139,5 @@ class ManageJobs(QWidget):
 
 class ShowJobsWindow(QWidget):
     def __init__(self, parent=None):
-        QWidget.__init__(self, parent=parent)
-        self.setWindowTitle('Jobs')
-
-        ui_path = os.path.dirname(os.path.abspath(__file__))
-        self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/show-jobs.ui'))
-
-        lay = QVBoxLayout(self)
-        lay.addWidget(self.ui)
+        super().__init__(parent=parent)
+        self.ui = UiLoader.load_ui_from_file('show-jobs.ui', self)

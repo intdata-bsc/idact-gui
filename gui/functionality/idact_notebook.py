@@ -1,6 +1,4 @@
-import os
-from PyQt5 import uic
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QTableWidgetItem, QMessageBox
+from PyQt5.QtWidgets import QWidget, QTableWidgetItem, QMessageBox
 from contextlib import ExitStack
 
 from idact import load_environment, show_cluster, Walltime
@@ -18,13 +16,16 @@ from gui.functionality.popup_window import WindowType, PopUpWindow
 from gui.functionality.yes_or_no_window import YesOrNoWindow
 from gui.helpers.native_saver import NativeArgsSaver
 from gui.helpers.parameter_saver import ParameterSaver
+from gui.helpers.ui_loader import UiLoader
 from gui.helpers.worker import Worker
 from gui.helpers.custom_exceptions import NoClustersError
 
 
 class IdactNotebook(QWidget):
     def __init__(self, data_provider, parent=None):
-        QWidget.__init__(self, parent=parent)
+        super().__init__(parent=parent)
+        self.ui = UiLoader.load_ui_from_file('deploy-notebook.ui', self)
+
         self.parent = parent
         self.data_provider = data_provider
 
@@ -33,9 +34,6 @@ class IdactNotebook(QWidget):
         self.native_args_saver = NativeArgsSaver()
         self.saver = ParameterSaver()
         self.parameters = self.saver.get_map()
-
-        ui_path = os.path.dirname(os.path.abspath(__file__))
-        self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/deploy-notebook.ui'))
 
         self.ui.deploy_button.clicked.connect(self.concurrent_deploy_notebook)
         self.ui.edit_native_arguments_button.clicked.connect(self.open_edit_native_argument)
@@ -64,9 +62,6 @@ class IdactNotebook(QWidget):
         self.data_provider.remove_cluster_signal.connect(self.handle_cluster_list_modification)
         self.data_provider.add_cluster_signal.connect(self.handle_cluster_list_modification)
         self.ui.cluster_names_box.addItems(self.cluster_names)
-
-        lay = QVBoxLayout(self)
-        lay.addWidget(self.ui)
 
     def concurrent_deploy_notebook(self):
         worker = Worker(self.deploy_notebook)
@@ -247,17 +242,11 @@ class IdactNotebook(QWidget):
 
 class EditNativeArgumentsWindow(QWidget):
     def __init__(self, parent=None):
-        QWidget.__init__(self, parent=parent)
-        self.setWindowTitle('Edit native arguments')
-
-        ui_path = os.path.dirname(os.path.abspath(__file__))
-        self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/edit-native.ui'))
+        super().__init__(parent=parent)
+        self.ui = UiLoader.load_ui_from_file('edit-native.ui', self)
 
         self.data_changed = False
         self.yes_or_no_window = YesOrNoWindow()
-
-        lay = QVBoxLayout(self)
-        lay.addWidget(self.ui)
 
     def set_that_data_changed(self):
         self.data_changed = True

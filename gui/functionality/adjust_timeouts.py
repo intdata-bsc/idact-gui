@@ -1,25 +1,22 @@
-import os
-from PyQt5 import uic
-from PyQt5.QtWidgets import QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QWidget
 
 from idact.core.retry import Retry
 from idact.detail.environment.environment_provider import EnvironmentProvider
 from idact import save_environment, load_environment
 
 from gui.functionality.popup_window import WindowType, PopUpWindow
+from gui.helpers.ui_loader import UiLoader
 
 
 class AdjustTimeouts(QWidget):
     def __init__(self, data_provider, parent=None):
-        QWidget.__init__(self, parent=parent)
+        super().__init__(parent=parent)
+        self.ui = UiLoader.load_ui_from_file('adjust-timeouts.ui', self)
 
         self.data_provider = data_provider
         self.popup_window = PopUpWindow()
         self.cluster_names = self.data_provider.get_cluster_names()
         self.current_cluster = ''
-
-        ui_path = os.path.dirname(os.path.abspath(__file__))
-        self.ui = uic.loadUi(os.path.join(ui_path, '../widgets_templates/adjust-timeouts.ui'))
 
         load_environment()
 
@@ -33,9 +30,6 @@ class AdjustTimeouts(QWidget):
 
         self.ui.cluster_names_box.activated[str].connect(self.item_pressed)
         self.ui.save_timeouts_button.clicked.connect(self.save_timeouts)
-
-        lay = QVBoxLayout(self)
-        lay.addWidget(self.ui)
 
         self.data_provider.add_cluster_signal.connect(self.handle_cluster_list_modification)
         self.data_provider.remove_cluster_signal.connect(self.handle_cluster_list_modification)
