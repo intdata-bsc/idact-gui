@@ -38,7 +38,7 @@ class AddCluster(QWidget):
         self.ui.delete_key_button.clicked.connect(self.delete_key)
         self.ui.auth_method_box.currentIndexChanged.connect(self.auth_method_toggled)
         self.actions_file_name = None
-        self.key_name = None
+        self.key_path = None
 
     def auth_method_toggled(self):
         if self.ui.auth_method_box.currentText() == 'GENERATE_KEY':
@@ -49,6 +49,9 @@ class AddCluster(QWidget):
             self.ui.password_edit.setDisabled(True)
             self.ui.add_key_button.setDisabled(False)
             self.ui.delete_key_button.setDisabled(True)
+
+        if self.key_path is not None:
+            self.ui.delete_key_button.setDisabled(False)
 
     def concurrent_add_cluster(self):
         worker = Worker(self.add_cluster)
@@ -112,7 +115,7 @@ class AddCluster(QWidget):
                                   host=host,
                                   port=port,
                                   auth=AuthMethod.PRIVATE_KEY,
-                                  key=self.key_name,
+                                  key=self.key_path,
                                   install_key=False,
                                   setup_actions=setup_actions,
                                   use_jupyter_lab=use_jupyter_lab)
@@ -134,14 +137,14 @@ class AddCluster(QWidget):
         self.ui.delete_actions_file_button.setEnabled(False)
 
     def add_key(self):
-        self.key_name, _ = QFileDialog.getOpenFileName()
-        if self.key_name:
-            self.ui.selected_key_browser.setText(self.key_name)
+        self.key_path, _ = QFileDialog.getOpenFileName()
+        if self.key_path:
+            self.ui.selected_key_browser.setText(self.key_path)
             self.ui.selected_key_browser.setEnabled(True)
             self.ui.delete_key_button.setEnabled(True)
 
     def delete_key(self):
-        self.key_name = None
+        self.key_path = None
         self.ui.selected_key_browser.setText("")
         self.ui.selected_key_browser.setEnabled(False)
         self.ui.delete_key_button.setEnabled(False)
