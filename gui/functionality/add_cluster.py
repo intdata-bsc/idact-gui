@@ -32,12 +32,26 @@ class AddCluster(QWidget):
         self.ui.user_edit.setText(self.parameters['add_cluster_arguments']['user'])
         self.ui.host_edit.setText(self.parameters['add_cluster_arguments']['host'])
         self.ui.port_edit.setValue(self.parameters['add_cluster_arguments']['port'])
-        self.ui.auth_method_box.setCurrentText(self.parameters['add_cluster_arguments']['authentication'])
-        self.ui.key_type_box.setCurrentText(self.parameters['add_cluster_arguments']['key_type'])
         self.ui.add_actions_file_button.clicked.connect(self.open_actions_file_dialog)
         self.ui.delete_actions_file_button.clicked.connect(self.delete_actions_file)
-
+        self.ui.add_key_button.clicked.connect(self.add_key)
+        self.ui.delete_key_button.clicked.connect(self.delete_key)
+        self.ui.auth_method_box.currentIndexChanged.connect(self.auth_method_toggled)
         self.actions_file_name = None
+        self.key_path = None
+
+    def auth_method_toggled(self):
+        if self.ui.auth_method_box.currentText() == 'GENERATE_KEY':
+            self.ui.password_edit.setDisabled(False)
+            self.ui.add_key_button.setDisabled(True)
+            self.ui.delete_key_button.setDisabled(True)
+        else:
+            self.ui.password_edit.setDisabled(True)
+            self.ui.add_key_button.setDisabled(False)
+            self.ui.delete_key_button.setDisabled(True)
+
+        if self.key_path is not None:
+            self.ui.delete_key_button.setDisabled(False)
 
     def concurrent_add_cluster(self):
         worker = Worker(self.add_cluster)
@@ -72,10 +86,8 @@ class AddCluster(QWidget):
         self.parameters['add_cluster_arguments']['host'] = host
         port = int(self.ui.port_edit.text())
         self.parameters['add_cluster_arguments']['port'] = port
-        auth = self.ui.auth_method_box.currentText()
-        self.parameters['add_cluster_arguments']['authentication'] = auth
-        self.parameters['add_cluster_arguments']['key_type'] = self.ui.key_type_box.currentText()
         self.saver.save(self.parameters)
+        auth = self.ui.auth_method_box.currentText()
         password = self.ui.password_edit.text()
         use_jupyter_lab = self.ui.use_jupyter_lab_check_box.isChecked()
 
@@ -84,32 +96,32 @@ class AddCluster(QWidget):
             setup_actions = SetupActionsConfigImpl()
             setup_actions.jupyter = parser.parse_actions(self.actions_file_name)
 
-        if auth == 'PUBLIC_KEY':
-            key = self.ui.key_type_box.currentText()
-            if key == 'RSA_KEY':
-                cluster = add_cluster(name=cluster_name,
-                                      user=user,
-                                      host=host,
-                                      port=port,
-                                      auth=AuthMethod.PUBLIC_KEY,
-                                      key=KeyType.RSA,
-                                      install_key=True,
-                                      setup_actions=setup_actions,
-                                      use_jupyter_lab=use_jupyter_lab)
-        elif auth == 'ASK_EVERYTIME':
+        if auth == 'GENERATE_KEY':
             cluster = add_cluster(name=cluster_name,
                                   user=user,
                                   host=host,
                                   port=port,
-                                  auth=AuthMethod.ASK,
+                                  auth=AuthMethod.GENERATE_KEY,
+                                  key=KeyType.RSA,
+                                  install_key=True,
                                   setup_actions=setup_actions,
                                   use_jupyter_lab=use_jupyter_lab)
-
-        node = cluster.get_access_node()
-        node.connect(password=password)
-
-        save_environment()
-        return
+            node = cluster.get_access_node()
+            node.connect(password=password)
+            save_environment()
+        else:
+            cluster = add_cluster(name=cluster_name,
+                                  user=user,
+                                  host=host,
+                                  port=port,
+                                  auth=AuthMethod.PRIVATE_KEY,
+                                  key=self.key_path,
+                                  install_key=False,
+                                  setup_actions=setup_actions,
+                                  use_jupyter_lab=use_jupyter_lab)
+            node = cluster.get_access_node()
+            node.connect()
+            save_environment()
 
     def open_actions_file_dialog(self):
         self.actions_file_name, _ = QFileDialog.getOpenFileName()
@@ -123,3 +135,16 @@ class AddCluster(QWidget):
         self.ui.selected_file_path_browser.setText("")
         self.ui.selected_file_path_browser.setEnabled(False)
         self.ui.delete_actions_file_button.setEnabled(False)
+
+    def add_key(self):
+        self.key_path, _ = QFileDialog.getOpenFileName()
+        if self.key_path:
+            self.ui.selected_key_browser.setText(self.key_path)
+            self.ui.selected_key_browser.setEnabled(True)
+            self.ui.delete_key_button.setEnabled(True)
+
+    def delete_key(self):
+        self.key_path = None
+        self.ui.selected_key_browser.setText("")
+        self.ui.selected_key_browser.setEnabled(False)
+        self.ui.delete_key_button.setEnabled(False)

@@ -27,7 +27,7 @@ class PopUpWindow(QWidget):
         self.box.setText(message)
 
         if error_info:
-            self.box.setDetailedText('Details: ' + str(error_info))
+            self.box.setDetailedText(str(error_info))
 
         ret = self.box.exec_()
         if ret == QMessageBox.Ok:
