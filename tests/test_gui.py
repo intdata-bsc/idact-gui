@@ -17,4 +17,4 @@ def test_basics(qtbot):
     window.show()
 
     assert window.isVisible()
-    assert window.windowTitle() == 'Idact'
+    assert window.windowTitle() == 'Idact GUI'
