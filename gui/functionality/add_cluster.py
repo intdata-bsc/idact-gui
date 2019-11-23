@@ -53,11 +53,17 @@ class AddCluster(QWidget):
         """ Handles the change of authentication method.
         """
         if self.ui.auth_method_box.currentText() == 'GENERATE_KEY':
+            self.ui.password_label.setDisabled(False)
             self.ui.password_edit.setDisabled(False)
+            self.ui.private_key_label.setDisabled(True)
+            self.ui.currently_selected_key.setDisabled(True)
             self.ui.add_key_button.setDisabled(True)
             self.ui.clear_key_button.setDisabled(True)
         else:
+            self.ui.password_label.setDisabled(True)
             self.ui.password_edit.setDisabled(True)
+            self.ui.private_key_label.setDisabled(False)
+            self.ui.currently_selected_key.setDisabled(False)
             self.ui.add_key_button.setDisabled(False)
             self.ui.clear_key_button.setDisabled(True)
 
@@ -68,6 +74,8 @@ class AddCluster(QWidget):
         """ Setups the worker that allows to run the add_cluster functionality
         in the parallel thread.
         """
+        self.ui.add_cluster_button.setDisabled(True)
+
         worker = Worker(self.add_cluster)
         worker.signals.result.connect(self.handle_complete_add_cluster)
         worker.signals.error.connect(self.handle_error_add_cluster)
@@ -76,6 +84,7 @@ class AddCluster(QWidget):
     def handle_complete_add_cluster(self):
         """ Handles the completion of adding cluster.
         """
+        self.ui.add_cluster_button.setDisabled(False)
         save_environment()
         self.data_provider.add_cluster_signal.emit()
         self.popup_window.show_message("The cluster has been successfully added", WindowType.success)
@@ -85,12 +94,13 @@ class AddCluster(QWidget):
 
             :param exception: Instance of the exception.
         """
+        self.ui.add_cluster_button.setDisabled(False)
         if isinstance(exception, EmptyFieldError):
             self.popup_window.show_message("Cluster name cannot be empty", WindowType.error)
         elif isinstance(exception, ValueError):
             self.popup_window.show_message("Cluster already exists", WindowType.error)
         else:
-            self.popup_window.show_message("An error occured while adding cluster", WindowType.error, exception)
+            self.popup_window.show_message("An error occurred while adding cluster", WindowType.error, exception)
 
     def add_cluster(self):
         """ Main function responsible for adding a cluster.

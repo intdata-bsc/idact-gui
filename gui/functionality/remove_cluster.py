@@ -31,13 +31,7 @@ class RemoveCluster(QWidget):
 
         self.ui.remove_cluster_button.clicked.connect(self.concurrent_remove_cluster)
 
-        self.current_cluster = ''
         self.cluster_names = self.data_provider.get_cluster_names()
-
-        if len(self.cluster_names) > 0:
-            self.current_cluster = self.cluster_names[0]
-        else:
-            self.current_cluster = ''
 
         self.data_provider.remove_cluster_signal.connect(self.handle_cluster_list_modification)
         self.data_provider.add_cluster_signal.connect(self.handle_cluster_list_modification)

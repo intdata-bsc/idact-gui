@@ -30,6 +30,12 @@
    </item>
    <item row="1" column="3">
     <widget class="QPushButton" name="show_jobs_button">
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
      <property name="text">
       <string>Show jobs in queue</string>
      </property>
@@ -93,6 +99,13 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>cluster_names_box</tabstop>
+  <tabstop>show_jobs_button</tabstop>
+  <tabstop>jobs_table</tabstop>
+  <tabstop>refresh_button</tabstop>
+  <tabstop>cancel_job_button</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
