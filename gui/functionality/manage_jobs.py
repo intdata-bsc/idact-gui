@@ -1,3 +1,10 @@
+""" One of the widgets that main window composes of.
+
+    See :class:`.MainWindow`
+    Similar modules: class:`.AddCluster`, :class:`.RemoveCluster`,
+    :class:`.IdactNotebook`, :class:`.AdjustTimeouts`
+    Helpers: class:`.ShowJobsWindow`
+"""
 from PyQt5.QtWidgets import QWidget, QTableWidgetItem
 
 from idact.detail.slurm.run_scancel import run_scancel
@@ -11,6 +18,10 @@ from gui.helpers.custom_exceptions import NoClustersError
 
 
 class ManageJobs(QWidget):
+    """ Module of GUI that is responsible for allowing the management of jobs
+    in the slurm queue.
+    """
+
     def __init__(self, data_provider, parent=None):
         super().__init__(parent=parent)
         self.ui = UiLoader.load_ui_from_file('manage-jobs.ui', self)
@@ -43,6 +54,9 @@ class ManageJobs(QWidget):
         self.ui.cluster_names_box.addItems(self.cluster_names)
 
     def concurrent_show_jobs(self):
+        """ Setups the worker that allows to run the show_jobs functionality
+        in the parallel thread.
+        """
         self.ui.show_jobs_button.setEnabled(False)
         self.ui.refresh_button.setEnabled(False)
 
@@ -52,6 +66,8 @@ class ManageJobs(QWidget):
         self.parent.threadpool.start(worker)
 
     def handle_complete_show_jobs(self, jobs):
+        """ Handles the competion of show jobs function.
+        """
         self.ui.show_jobs_button.setEnabled(True)
         self.ui.refresh_button.setEnabled(True)
 
@@ -69,6 +85,10 @@ class ManageJobs(QWidget):
             self.ui.jobs_table.setItem(i, 5, QTableWidgetItem(jobs[i].state))
 
     def handle_error_show_jobs(self, exception):
+        """ Handles the error thrown while showing jobs.
+
+            :param exception: Instance of the exception.
+        """
         self.ui.show_jobs_button.setEnabled(True)
         self.ui.refresh_button.setEnabled(True)
 
@@ -80,6 +100,8 @@ class ManageJobs(QWidget):
             self.popup_window.show_message("An error occured while listing jobs", WindowType.error, exception)
 
     def show_jobs(self):
+        """ Main function responsible for showing jobs.
+        """
         load_environment()
         cluster_name = str(self.ui.cluster_names_box.currentText())
         if not cluster_name:
@@ -90,6 +112,9 @@ class ManageJobs(QWidget):
         return jobs
 
     def concurrent_cancel_job(self):
+        """ Setups the worker that allows to run the cancel_job functionality
+        in the parallel thread.
+        """
         self.ui.cancel_job_button.setEnabled(False)
         self.ui.cancel_job_button.setEnabled(False)
 
@@ -99,11 +124,17 @@ class ManageJobs(QWidget):
         self.parent.threadpool.start(worker)
 
     def handle_complete_cancel_job(self):
+        """ Handles the competion of cancel job function.
+        """
         self.ui.cancel_job_button.setEnabled(True)
         self.popup_window.show_message("Cancel command has been successfully executed\nRefreshing table may be needed",
                                        WindowType.success)
 
     def handle_error_cancel_job(self, exception):
+        """ Handles the error thrown while cancelling job.
+
+            :param exception: Instance of the exception.
+        """
         self.ui.cancel_job_button.setEnabled(True)
 
         if isinstance(exception, KeyError):
@@ -114,6 +145,8 @@ class ManageJobs(QWidget):
         self.ui.cancel_job_button.setEnabled(True)
 
     def cancel_job(self):
+        """ Main function responsible for cancelling a job.
+        """
         self.ui.cancel_job_button.setEnabled(False)
         load_environment()
         cluster_name = self.current_cluster
@@ -128,12 +161,16 @@ class ManageJobs(QWidget):
         self.ui.cancel_job_button.setEnabled(True)
 
     def handle_cluster_list_modification(self):
+        """ Handles the modification of the clusters list.
+        """
         self.cluster_names = self.data_provider.get_cluster_names()
         self.ui.cluster_names_box.clear()
         self.ui.cluster_names_box.addItems(self.cluster_names)
 
 
 class ShowJobsWindow(QWidget):
+    """ Helper widget for jobs table.
+    """
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.ui = UiLoader.load_ui_from_file('show-jobs.ui', self)
