@@ -60,6 +60,7 @@ class AddCluster(QWidget):
         self.parent.threadpool.start(worker)
 
     def handle_complete_add_cluster(self):
+        save_environment()
         self.data_provider.add_cluster_signal.emit()
         self.popup_window.show_message("The cluster has been successfully added", WindowType.success)
 
@@ -108,7 +109,6 @@ class AddCluster(QWidget):
                                   use_jupyter_lab=use_jupyter_lab)
             node = cluster.get_access_node()
             node.connect(password=password)
-            save_environment()
         else:
             cluster = add_cluster(name=cluster_name,
                                   user=user,
@@ -121,7 +121,6 @@ class AddCluster(QWidget):
                                   use_jupyter_lab=use_jupyter_lab)
             node = cluster.get_access_node()
             node.connect()
-            save_environment()
 
     def open_actions_file_dialog(self):
         self.actions_file_name, _ = QFileDialog.getOpenFileName()
