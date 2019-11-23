@@ -44,7 +44,7 @@
    <item row="9" column="1">
     <widget class="QPushButton" name="add_actions_file_button">
      <property name="text">
-      <string>Add</string>
+      <string>Add file</string>
      </property>
     </widget>
    </item>
@@ -78,12 +78,12 @@
     </widget>
    </item>
    <item row="9" column="2">
-    <widget class="QPushButton" name="delete_actions_file_button">
+    <widget class="QPushButton" name="clear_actions_file_button">
      <property name="enabled">
       <bool>false</bool>
      </property>
      <property name="text">
-      <string>Delete</string>
+      <string>Clear actions file</string>
      </property>
     </widget>
    </item>
@@ -125,12 +125,12 @@
     <widget class="QLineEdit" name="user_edit"/>
    </item>
    <item row="7" column="2">
-    <widget class="QPushButton" name="delete_key_button">
+    <widget class="QPushButton" name="clear_key_button">
      <property name="enabled">
       <bool>false</bool>
      </property>
      <property name="text">
-      <string>Delete key</string>
+      <string>Clear key</string>
      </property>
     </widget>
    </item>

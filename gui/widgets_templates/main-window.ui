@@ -47,15 +47,15 @@
     <addaction name="see_help_action"/>
     <addaction name="about_the_program_action"/>
    </widget>
-   <widget class="QMenu" name="menu_windows">
+   <widget class="QMenu" name="menu_logs">
     <property name="title">
-     <string>Windows</string>
+     <string>Logs</string>
     </property>
     <addaction name="show_logs_action"/>
    </widget>
    <addaction name="menu_notebooks"/>
    <addaction name="menu_clusters"/>
-   <addaction name="menu_windows"/>
+   <addaction name="menu_logs"/>
    <addaction name="menu_help"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
