@@ -7,12 +7,13 @@ from PyQt5.QtCore import QRunnable, QObject, pyqtSignal, pyqtSlot
 
 
 class WorkerSignals(QObject):
-    """ 
+    """ Signals that the worker uses.
+
         :attr:`.finished`: Signal used to inform about normal finish of the worker job.
         :attr:`.error`: Signal used to inform about finish with error of the worker job.
-                        The object parametr is the Error instance.
+                        The object parameter is the Error instance.
         :attr:`.result`: Signal used to inform about the result of the worker job.
-                         The object parametr is the result of the job.
+                         The object parameter is the result of the job.
     """
     finished = pyqtSignal()
     error = pyqtSignal(object)
@@ -33,7 +34,7 @@ class Worker(QRunnable):
 
     @pyqtSlot()
     def run(self):
-        """ Runs the task and signals about trown error or given result
+        """ Runs the task and signals about thrown error or given result
         by emiting the WorkerSignals.
         """
         try:

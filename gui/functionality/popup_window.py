@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import QWidget, QMessageBox
 
 
 class WindowType(Enum):
-    """ Avialble popup window types.
+    """ Available popup window types.
 
         :attr:`.success`: Window that shows a success message.
 
@@ -21,7 +21,7 @@ class WindowType(Enum):
 
 
 class PopUpWindow(QWidget):
-    """ Helper widget window for idact notebook native arguments.
+    """ Helper widget popup window.
     """
     def __init__(self):
         super().__init__()

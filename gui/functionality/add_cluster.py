@@ -74,7 +74,7 @@ class AddCluster(QWidget):
         self.parent.threadpool.start(worker)
 
     def handle_complete_add_cluster(self):
-        """ Handles the competion of adding cluster.
+        """ Handles the completion of adding cluster.
         """
         save_environment()
         self.data_provider.add_cluster_signal.emit()
@@ -145,7 +145,7 @@ class AddCluster(QWidget):
             node.connect()
 
     def open_actions_file_dialog(self):
-        """ Opens the winodw dialog that allows to select an actions file.
+        """ Opens the window dialog that allows to select an actions file.
         """
         self.actions_file_name, _ = QFileDialog.getOpenFileName()
         if self.actions_file_name:
@@ -154,7 +154,7 @@ class AddCluster(QWidget):
             self.ui.clear_actions_file_button.setEnabled(True)
 
     def clear_actions_file(self):
-        """ Removes the selection of actions file.
+        """ Removes the selection of the actions file.
         """
         self.actions_file_name = None
         self.ui.selected_file_path_browser.setText("")
@@ -162,7 +162,7 @@ class AddCluster(QWidget):
         self.ui.clear_actions_file_button.setEnabled(False)
 
     def add_key(self):
-        """ Opens the winow dialog that allows to select a private key file.
+        """ Opens the window dialog that allows to select a private key file.
         """
         self.key_path, _ = QFileDialog.getOpenFileName()
         if self.key_path:
@@ -171,7 +171,7 @@ class AddCluster(QWidget):
             self.ui.clear_key_button.setEnabled(True)
 
     def clear_key(self):
-        """ Removes the selection of private key file.
+        """ Removes the selection of the private key file.
         """
         self.key_path = None
         self.ui.selected_key_browser.setText("")

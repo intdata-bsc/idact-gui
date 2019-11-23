@@ -84,7 +84,7 @@ class IdactNotebook(QWidget):
         self.parent.threadpool.start(worker)
 
     def handle_complete_deploy_notebook(self):
-        """ Handles the competion of deploy of the notebook.
+        """ Handles the completion of deploy of the notebook.
         """
         self.popup_window.show_message("Notebook has been closed", WindowType.success)
 
@@ -195,7 +195,7 @@ class IdactNotebook(QWidget):
 
     def get_prepared_native_args(self):
         """ Fetches the saved native_args from the native_args.json file.
-        Convarts them into proper format.
+        Converts them into proper format.
         """
         args = self.native_args_saver.get_native_args().copy()
         keys = list(args)
@@ -242,7 +242,7 @@ class IdactNotebook(QWidget):
         self.edit_native_arguments_window.set_that_data_changed()
 
     def save_arguments(self):
-        """ Saves the edited native arguments.
+        """ Saves edited native arguments.
         """
         native_args = dict()
 
@@ -289,7 +289,7 @@ class EditNativeArgumentsWindow(QWidget):
         self.data_changed = True
 
     def show_warning_window(self, event):
-        """ Shows warning window that some changes may not have been saved
+        """ Shows warning window that some changes may not have been saved.
 
             :param event: close event
         """
@@ -300,7 +300,7 @@ class EditNativeArgumentsWindow(QWidget):
             event.ignore()
 
     def closeEvent(self, QCloseEvent):
-        """ Overriden method on closing Edit native arguments window
+        """ Overriden method on closing Edit native arguments window.
 
             :param QCloseEvent: close event
         """

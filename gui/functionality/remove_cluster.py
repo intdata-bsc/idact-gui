@@ -53,7 +53,7 @@ class RemoveCluster(QWidget):
         self.parent.threadpool.start(worker)
 
     def handle_complete_remove_cluster(self):
-        """ Handles the competion of removing cluster.
+        """ Handles the completion of removing cluster.
         """
         self.data_provider.remove_cluster_signal.emit()
         self.popup_window.show_message("The cluster has been successfully removed", WindowType.success)

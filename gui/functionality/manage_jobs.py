@@ -66,7 +66,7 @@ class ManageJobs(QWidget):
         self.parent.threadpool.start(worker)
 
     def handle_complete_show_jobs(self, jobs):
-        """ Handles the competion of show jobs function.
+        """ Handles the completion of show jobs function.
         """
         self.ui.show_jobs_button.setEnabled(True)
         self.ui.refresh_button.setEnabled(True)
@@ -124,7 +124,7 @@ class ManageJobs(QWidget):
         self.parent.threadpool.start(worker)
 
     def handle_complete_cancel_job(self):
-        """ Handles the competion of cancel job function.
+        """ Handles the completion of cancel job function.
         """
         self.ui.cancel_job_button.setEnabled(True)
         self.popup_window.show_message("Cancel command has been successfully executed\nRefreshing table may be needed",

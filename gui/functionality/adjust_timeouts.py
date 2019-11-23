@@ -45,7 +45,7 @@ class AdjustTimeouts(QWidget):
         self.data_provider.remove_cluster_signal.connect(self.handle_cluster_list_modification)
 
     def refresh_timeouts(self, cluster_name):
-        """ Fetches and refershes the timeouts of particular cluster.
+        """ Fetches and refreshes the timeouts of the particular cluster.
 
             :param cluster_name: Name of a cluster to refresh timeouts for.
         """
