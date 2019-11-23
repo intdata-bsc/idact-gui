@@ -81,7 +81,7 @@
     </widget>
    </item>
    <item row="9" column="2">
-    <widget class="QPushButton" name="delete_actions_file_button">
+    <widget class="QPushButton" name="clear_actions_file_button">
      <property name="enabled">
       <bool>false</bool>
      </property>
@@ -134,7 +134,7 @@
     <widget class="QLineEdit" name="user_edit"/>
    </item>
    <item row="7" column="2">
-    <widget class="QPushButton" name="delete_key_button">
+    <widget class="QPushButton" name="clear_key_button">
      <property name="enabled">
       <bool>false</bool>
      </property>

@@ -81,7 +81,6 @@ class IdactNotebook(QWidget):
 
         self.ui.deploy_button.setEnabled(False)
 
-        self.parameters['deploy_notebook_arguments']['cluster_name'] = cluster_name
         nodes = int(self.ui.nodes_edit.text())
         self.parameters['deploy_notebook_arguments']['nodes'] = nodes
         cores = int(self.ui.cores_edit.text())
