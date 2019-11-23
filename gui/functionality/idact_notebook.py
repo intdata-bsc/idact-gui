@@ -133,6 +133,10 @@ class IdactNotebook(QWidget):
 
     @staticmethod
     def validate_and_format_walltime(walltime):
+        """ Checks if walltime is correct and converts it to a proper format.
+
+        :param walltime: Walltime string to check and convert.
+        """
         if len(walltime) == 0:
             raise ValueError('Walltime cannot be empty.')
 
