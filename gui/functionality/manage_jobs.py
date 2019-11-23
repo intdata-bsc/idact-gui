@@ -139,10 +139,10 @@ class ManageJobs(QWidget):
         """ Main function responsible for cancelling a job.
         """
         self.ui.cancel_job_button.setEnabled(False)
-        
+
         load_environment()
         node = self.cluster.get_access_node()
-  
+
         indexes = self.ui.jobs_table.selectedIndexes()
         for index in sorted(indexes, reverse=True):
             job_id = int(self.ui.jobs_table.item(index.row(), 0).text())
