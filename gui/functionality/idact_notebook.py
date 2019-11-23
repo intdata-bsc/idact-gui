@@ -1,3 +1,10 @@
+""" One of the widgets that main window composes of.
+
+    See :class:`.MainWindow`
+    Similar modules: class:`.AddCluster`, :class:`.RemoveCluster`,
+    :class:`.AdjustTimeouts`, :class:`.ManageJobs`
+    Helpers: class:`.EditNativeArgumentsWindow`
+"""
 from PyQt5.QtWidgets import QWidget, QTableWidgetItem, QMessageBox
 from contextlib import ExitStack
 
@@ -22,6 +29,10 @@ from gui.helpers.custom_exceptions import NoClustersError
 
 
 class IdactNotebook(QWidget):
+    """ Module of GUI that is responsible for deploying the notebook
+    on the selected cluster.
+    """
+
     def __init__(self, data_provider, parent=None):
         super().__init__(parent=parent)
         self.ui = UiLoader.load_ui_from_file('deploy-notebook.ui', self)
@@ -58,15 +69,24 @@ class IdactNotebook(QWidget):
         self.ui.cluster_names_box.addItems(self.cluster_names)
 
     def concurrent_deploy_notebook(self):
+        """ Setups the worker that allows to run the deploy_notebook functionality
+        in the parallel thread.
+        """
         worker = Worker(self.deploy_notebook)
         worker.signals.result.connect(self.handle_complete_deploy_notebook)
         worker.signals.error.connect(self.handle_error_deploy_notebook)
         self.parent.threadpool.start(worker)
 
     def handle_complete_deploy_notebook(self):
+        """ Handles the completion of deploy of the notebook.
+        """
         self.popup_window.show_message("Notebook has been closed", WindowType.success)
 
     def handle_error_deploy_notebook(self, exception):
+        """ Handles the error thrown while deploying the notebook.
+
+            :param exception: Instance of the exception.
+        """
         if isinstance(exception, NoClustersError):
             self.popup_window.show_message("There are no added clusters", WindowType.error)
         else:
@@ -74,6 +94,8 @@ class IdactNotebook(QWidget):
         self.ui.deploy_button.setEnabled(True)
 
     def deploy_notebook(self):
+        """ Main function responsible for deploying the notebook.
+        """
         cluster_name = str(self.ui.cluster_names_box.currentText())
 
         if not cluster_name:
@@ -175,6 +197,9 @@ class IdactNotebook(QWidget):
         return walltime
 
     def get_prepared_native_args(self):
+        """ Fetches the saved native_args from the native_args.json file.
+        Converts them into proper format.
+        """
         args = self.native_args_saver.get_native_args().copy()
         keys = list(args)
 
@@ -184,6 +209,8 @@ class IdactNotebook(QWidget):
         return args
 
     def open_edit_native_argument(self):
+        """ Opens the window with native arguments edition.
+        """
         native_args = self.native_args_saver.get_native_args()
         counter = len(native_args)
 
@@ -202,10 +229,14 @@ class IdactNotebook(QWidget):
             self.edit_native_arguments_window.set_that_data_changed)
 
     def add_argument_row(self):
+        """ Adds the empty row to the native arguments table.
+        """
         self.edit_native_arguments_window.ui.table_widget.setRowCount(
             self.edit_native_arguments_window.ui.table_widget.rowCount() + 1)
 
     def remove_arguments(self):
+        """ Removes the selected native argument.
+        """
         indexes = self.edit_native_arguments_window.ui.table_widget.selectedIndexes()
 
         for index in sorted(indexes, reverse=True):
@@ -214,6 +245,8 @@ class IdactNotebook(QWidget):
         self.edit_native_arguments_window.set_that_data_changed()
 
     def save_arguments(self):
+        """ Saves edited native arguments.
+        """
         native_args = dict()
 
         for i in range(self.edit_native_arguments_window.ui.table_widget.rowCount()):
@@ -237,12 +270,17 @@ class IdactNotebook(QWidget):
         self.edit_native_arguments_window.close()
 
     def handle_cluster_list_modification(self):
+        """ Handles the modification of the clusters list.
+        """
         self.cluster_names = self.data_provider.get_cluster_names()
         self.ui.cluster_names_box.clear()
         self.ui.cluster_names_box.addItems(self.cluster_names)
 
 
 class EditNativeArgumentsWindow(QWidget):
+    """ Helper widget window for idact notebook native arguments.
+    """
+
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.ui = UiLoader.load_ui_from_file('edit-native.ui', self)
@@ -254,6 +292,10 @@ class EditNativeArgumentsWindow(QWidget):
         self.data_changed = True
 
     def show_warning_window(self, event):
+        """ Shows warning window that some changes may not have been saved.
+
+            :param event: close event
+        """
         close_window = self.yes_or_no_window.show_message(
             "Some changes may not have been saved. \nDo you want to quit anyway?")
         self.yes_or_no_window.box.setDefaultButton(QMessageBox.No)
@@ -261,5 +303,9 @@ class EditNativeArgumentsWindow(QWidget):
             event.ignore()
 
     def closeEvent(self, QCloseEvent):
+        """ Overriden method on closing Edit native arguments window.
+
+            :param QCloseEvent: close event
+        """
         if self.data_changed:
             self.show_warning_window(QCloseEvent)

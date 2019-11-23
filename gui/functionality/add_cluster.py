@@ -1,3 +1,9 @@
+""" One of the widgets that main window composes of.
+
+    See :class:`.MainWindow`
+    Similar modules: :class:`.RemoveCluster`, :class:`.IdactNotebook`,
+    :class:`.AdjustTimeouts`, :class:`.ManageJobs`
+"""
 from PyQt5.QtWidgets import QWidget, QLineEdit, QFileDialog
 
 from idact.core.auth import AuthMethod, KeyType
@@ -14,6 +20,9 @@ from gui.helpers.custom_exceptions import EmptyFieldError
 
 
 class AddCluster(QWidget):
+    """ Module of GUI that is responsible for allowing the addition of the
+    new cluster.
+    """
 
     def __init__(self, data_provider, parent=None):
         super().__init__(parent=parent)
@@ -41,6 +50,8 @@ class AddCluster(QWidget):
         self.key_path = None
 
     def auth_method_toggled(self):
+        """ Handles the change of authentication method.
+        """
         if self.ui.auth_method_box.currentText() == 'GENERATE_KEY':
             self.ui.password_label.setDisabled(False)
             self.ui.password_edit.setDisabled(False)
@@ -60,6 +71,9 @@ class AddCluster(QWidget):
             self.ui.clear_key_button.setDisabled(False)
 
     def concurrent_add_cluster(self):
+        """ Setups the worker that allows to run the add_cluster functionality
+        in the parallel thread.
+        """
         self.ui.add_cluster_button.setDisabled(True)
 
         worker = Worker(self.add_cluster)
@@ -68,15 +82,19 @@ class AddCluster(QWidget):
         self.parent.threadpool.start(worker)
 
     def handle_complete_add_cluster(self):
+        """ Handles the completion of adding cluster.
+        """
         self.ui.add_cluster_button.setDisabled(False)
-
         save_environment()
         self.data_provider.add_cluster_signal.emit()
         self.popup_window.show_message("The cluster has been successfully added", WindowType.success)
 
     def handle_error_add_cluster(self, exception):
-        self.ui.add_cluster_button.setDisabled(False)
+        """ Handles the error thrown while adding a cluster.
 
+            :param exception: Instance of the exception.
+        """
+        self.ui.add_cluster_button.setDisabled(False)
         if isinstance(exception, EmptyFieldError):
             self.popup_window.show_message("Cluster name cannot be empty", WindowType.error)
         elif isinstance(exception, ValueError):
@@ -85,6 +103,8 @@ class AddCluster(QWidget):
             self.popup_window.show_message("An error occurred while adding cluster", WindowType.error, exception)
 
     def add_cluster(self):
+        """ Main function responsible for adding a cluster.
+        """
         load_environment()
 
         cluster_name = self.ui.cluster_name_addc_edit.text()
@@ -135,6 +155,8 @@ class AddCluster(QWidget):
             node.connect()
 
     def open_actions_file_dialog(self):
+        """ Opens the window dialog that allows to select an actions file.
+        """
         self.actions_file_name, _ = QFileDialog.getOpenFileName()
         if self.actions_file_name:
             self.ui.selected_file_path_browser.setText(self.actions_file_name)
@@ -142,12 +164,16 @@ class AddCluster(QWidget):
             self.ui.clear_actions_file_button.setEnabled(True)
 
     def clear_actions_file(self):
+        """ Removes the selection of the actions file.
+        """
         self.actions_file_name = None
         self.ui.selected_file_path_browser.setText("")
         self.ui.selected_file_path_browser.setEnabled(False)
         self.ui.clear_actions_file_button.setEnabled(False)
 
     def add_key(self):
+        """ Opens the window dialog that allows to select a private key file.
+        """
         self.key_path, _ = QFileDialog.getOpenFileName()
         if self.key_path:
             self.ui.selected_key_browser.setText(self.key_path)
@@ -155,6 +181,8 @@ class AddCluster(QWidget):
             self.ui.clear_key_button.setEnabled(True)
 
     def clear_key(self):
+        """ Removes the selection of the private key file.
+        """
         self.key_path = None
         self.ui.selected_key_browser.setText("")
         self.ui.selected_key_browser.setEnabled(False)

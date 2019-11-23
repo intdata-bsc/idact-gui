@@ -1,3 +1,10 @@
+""" Main module of the GUI application. It composes all the widgets
+into one window.
+
+    See: class:`.AddCluster`, :class:`.RemoveCluster`,
+    :class:`.IdactNotebook`, :class:`.AdjustTimeouts`,
+    :class:`.ManageJobs`
+"""
 import sys
 
 from PyQt5.QtCore import QThreadPool
