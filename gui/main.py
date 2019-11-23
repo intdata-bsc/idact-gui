@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QApplication
 
-from gui.configuration_provider import ConfigurationProvider
+from gui.helpers.configuration_provider import ConfigurationProvider
 from gui.functionality.main_window import MainWindow
 
 if __name__ == '__main__':

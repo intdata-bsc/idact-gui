@@ -1,3 +1,9 @@
+""" One of the widgets that main window composes of.
+
+    See :class:`.MainWindow`
+    Similar modules:  class:`.AddCluster`, :class:`.RemoveCluster`,
+    :class:`.IdactNotebook`, :class:`.ManageJobs`
+"""
 from PyQt5.QtWidgets import QWidget
 
 from idact.core.retry import Retry
@@ -9,6 +15,10 @@ from gui.helpers.ui_loader import UiLoader
 
 
 class AdjustTimeouts(QWidget):
+    """ Module of GUI that is responsible for allowing the adjustment of the
+    clusters timeouts.
+    """
+
     def __init__(self, data_provider, parent=None):
         super().__init__(parent=parent)
         self.ui = UiLoader.load_ui_from_file('adjust-timeouts.ui', self)
@@ -35,6 +45,10 @@ class AdjustTimeouts(QWidget):
         self.data_provider.remove_cluster_signal.connect(self.handle_cluster_list_modification)
 
     def refresh_timeouts(self, cluster_name):
+        """ Fetches and refreshes the timeouts of the particular cluster.
+
+            :param cluster_name: Name of a cluster to refresh timeouts for.
+        """
         load_environment()
         default_retries = EnvironmentProvider().environment.clusters[cluster_name].config.retries
 
@@ -71,6 +85,8 @@ class AdjustTimeouts(QWidget):
             default_retries[Retry.TUNNEL_TRY_AGAIN_WITH_ANY_PORT].seconds_between)
 
     def save_timeouts(self):
+        """ Saves to the configuration the timeouts of current cluster.
+        """
         if self.current_cluster == '':
             self.popup_window.show_message("There are no added clusters", WindowType.error)
         else:
@@ -114,10 +130,16 @@ class AdjustTimeouts(QWidget):
             self.popup_window.show_message("Timeouts have been saved", WindowType.success)
 
     def item_pressed(self, item_pressed):
+        """ Handles the cluster change.
+
+            :param item_pressed: Name of a cluster that was selected.
+        """
         self.current_cluster = item_pressed
         self.refresh_timeouts(item_pressed)
 
     def handle_cluster_list_modification(self):
+        """ Handles the modification of the clusters list.
+        """
         self.cluster_names = self.data_provider.get_cluster_names()
         self.ui.cluster_names_box.clear()
         self.ui.cluster_names_box.addItems(self.cluster_names)
