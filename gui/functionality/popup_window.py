@@ -25,6 +25,7 @@ class PopUpWindow(QWidget):
             self.box.setIcon(QMessageBox.NoIcon)
 
         self.box.setText(message)
+        self.box.setDetailedText("")
 
         if error_info:
             self.box.setDetailedText(str(error_info))
