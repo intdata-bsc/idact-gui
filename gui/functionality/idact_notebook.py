@@ -51,13 +51,7 @@ class IdactNotebook(QWidget):
                 len(self.edit_native_arguments_window.ui.table_widget.selectedIndexes()) > 0))
         self.edit_native_arguments_window.ui.save_arguments_button.clicked.connect(self.save_arguments)
 
-        self.current_cluster = ''
         self.cluster_names = self.data_provider.get_cluster_names()
-
-        if len(self.cluster_names) > 0:
-            self.current_cluster = self.cluster_names[0]
-        else:
-            self.current_cluster = ''
 
         self.data_provider.remove_cluster_signal.connect(self.handle_cluster_list_modification)
         self.data_provider.add_cluster_signal.connect(self.handle_cluster_list_modification)
@@ -76,7 +70,7 @@ class IdactNotebook(QWidget):
         if isinstance(exception, NoClustersError):
             self.popup_window.show_message("There are no added clusters", WindowType.error)
         else:
-            self.popup_window.show_message("An error occured while deploing notebook", WindowType.error, exception)
+            self.popup_window.show_message("An error occurred while deploying notebook", WindowType.error, exception)
         self.ui.deploy_button.setEnabled(True)
 
     def deploy_notebook(self):
@@ -96,44 +90,10 @@ class IdactNotebook(QWidget):
         self.parameters['deploy_notebook_arguments']['memory_value'] = memory
         unit = self.ui.memory_unit_box.currentText()
         self.parameters['deploy_notebook_arguments']['memory_unit'] = unit
-        walltime = self.ui.walltime_edit.text()
+        walltime = IdactNotebook.validate_and_format_walltime(self.ui.walltime_edit.text())
         self.parameters['deploy_notebook_arguments']['walltime'] = walltime
         self.saver.save(self.parameters)
 
-        if len(walltime) == 0:
-            raise ValueError('Walltime cannot be empty.')
-
-        if ':' not in walltime:
-            walltime_elements = walltime.split(" ")
-
-            days = 0
-            hours = 0
-            minutes = 0
-            seconds = 0
-
-            for element in walltime_elements:
-                letter = element[len(element) - 1]
-
-                if letter == 'd':
-                    if days != 0:
-                        raise ValueError('Wrong walltime format. Days parameter is multiple defined.')
-                    days = int(element[0:len(element) - 1])
-                elif letter == 'h':
-                    if hours != 0:
-                        raise ValueError('Wrong walltime format. Hours parameter is multiple defined.')
-                    hours = int(element[0:len(element) - 1])
-                elif letter == 'm':
-                    if minutes != 0:
-                        raise ValueError('Wrong walltime format. Minutes parameter is multiple defined.')
-                    minutes = int(element[0:len(element) - 1])
-                elif letter == 's':
-                    if seconds != 0:
-                        raise ValueError('Wrong walltime format. Seconds parameter is multiple defined.')
-                    seconds = int(element[0:len(element) - 1])
-                else:
-                    raise ValueError('Wrong walltime format.')
-
-            walltime = Walltime(days=days, hours=hours, minutes=minutes, seconds=seconds)
         with ExitStack() as stack:
             load_environment()
 
@@ -171,6 +131,45 @@ class IdactNotebook(QWidget):
             self.ui.deploy_button.setEnabled(True)
             sleep_until_allocation_ends(nodes=nodes)
         return
+
+    @staticmethod
+    def validate_and_format_walltime(walltime):
+        if len(walltime) == 0:
+            raise ValueError('Walltime cannot be empty.')
+
+        if ':' not in walltime:
+            walltime_elements = walltime.split(" ")
+
+            days = 0
+            hours = 0
+            minutes = 0
+            seconds = 0
+
+            for element in walltime_elements:
+                letter = element[len(element) - 1]
+
+                if letter == 'd':
+                    if days != 0:
+                        raise ValueError('Wrong walltime format. Days parameter is multiple defined.')
+                    days = int(element[0:len(element) - 1])
+                elif letter == 'h':
+                    if hours != 0:
+                        raise ValueError('Wrong walltime format. Hours parameter is multiple defined.')
+                    hours = int(element[0:len(element) - 1])
+                elif letter == 'm':
+                    if minutes != 0:
+                        raise ValueError('Wrong walltime format. Minutes parameter is multiple defined.')
+                    minutes = int(element[0:len(element) - 1])
+                elif letter == 's':
+                    if seconds != 0:
+                        raise ValueError('Wrong walltime format. Seconds parameter is multiple defined.')
+                    seconds = int(element[0:len(element) - 1])
+                else:
+                    raise ValueError('Wrong walltime format.')
+
+            walltime = str(Walltime(days=days, hours=hours, minutes=minutes, seconds=seconds))
+
+        return walltime
 
     def get_prepared_native_args(self):
         args = self.native_args_saver.get_native_args().copy()

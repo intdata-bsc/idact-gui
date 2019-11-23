@@ -42,11 +42,17 @@ class AddCluster(QWidget):
 
     def auth_method_toggled(self):
         if self.ui.auth_method_box.currentText() == 'GENERATE_KEY':
+            self.ui.password_label.setDisabled(False)
             self.ui.password_edit.setDisabled(False)
+            self.ui.private_key_label.setDisabled(True)
+            self.ui.currently_selected_key.setDisabled(True)
             self.ui.add_key_button.setDisabled(True)
             self.ui.delete_key_button.setDisabled(True)
         else:
+            self.ui.password_label.setDisabled(True)
             self.ui.password_edit.setDisabled(True)
+            self.ui.private_key_label.setDisabled(False)
+            self.ui.currently_selected_key.setDisabled(False)
             self.ui.add_key_button.setDisabled(False)
             self.ui.delete_key_button.setDisabled(True)
 
@@ -69,7 +75,7 @@ class AddCluster(QWidget):
         elif isinstance(exception, ValueError):
             self.popup_window.show_message("Cluster already exists", WindowType.error)
         else:
-            self.popup_window.show_message("An error occured while adding cluster", WindowType.error, exception)
+            self.popup_window.show_message("An error occurred while adding cluster", WindowType.error, exception)
 
     def add_cluster(self):
         load_environment()
