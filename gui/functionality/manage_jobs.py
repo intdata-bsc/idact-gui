@@ -92,8 +92,8 @@ class ManageJobs(QWidget):
 
     def handle_complete_cancel_job(self):
         self.ui.cancel_job_button.setEnabled(True)
-        self.popup_window.show_message("Cancel command has been successfully executed\nRefreshing table may be needed",
-                                       WindowType.success)
+        self.popup_window.show_message("Cancel command has been successfully executed", WindowType.success)
+        self.concurrent_show_jobs()
 
     def handle_error_cancel_job(self, exception):
         self.ui.cancel_job_button.setEnabled(True)
