@@ -214,9 +214,9 @@
   <tabstop>add_actions_file_button</tabstop>
   <tabstop>use_jupyter_lab_check_box</tabstop>
   <tabstop>add_cluster_button</tabstop>
-  <tabstop>delete_key_button</tabstop>
+  <tabstop>clear_key_button</tabstop>
   <tabstop>selected_key_browser</tabstop>
-  <tabstop>delete_actions_file_button</tabstop>
+  <tabstop>clear_actions_file_button</tabstop>
   <tabstop>selected_file_path_browser</tabstop>
  </tabstops>
  <resources/>

@@ -60,17 +60,23 @@ class AddCluster(QWidget):
             self.ui.clear_key_button.setDisabled(False)
 
     def concurrent_add_cluster(self):
+        self.ui.add_cluster_button.setDisabled(True)
+
         worker = Worker(self.add_cluster)
         worker.signals.result.connect(self.handle_complete_add_cluster)
         worker.signals.error.connect(self.handle_error_add_cluster)
         self.parent.threadpool.start(worker)
 
     def handle_complete_add_cluster(self):
+        self.ui.add_cluster_button.setDisabled(False)
+
         save_environment()
         self.data_provider.add_cluster_signal.emit()
         self.popup_window.show_message("The cluster has been successfully added", WindowType.success)
 
     def handle_error_add_cluster(self, exception):
+        self.ui.add_cluster_button.setDisabled(False)
+
         if isinstance(exception, EmptyFieldError):
             self.popup_window.show_message("Cluster name cannot be empty", WindowType.error)
         elif isinstance(exception, ValueError):
