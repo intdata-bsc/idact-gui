@@ -4,7 +4,6 @@ from idact.core.remove_cluster import remove_cluster
 from idact import save_environment, load_environment
 
 from gui.functionality.popup_window import WindowType, PopUpWindow
-from gui.helpers.parameter_saver import ParameterSaver
 from gui.helpers.ui_loader import UiLoader
 from gui.helpers.worker import Worker
 from gui.helpers.custom_exceptions import NoClustersError
@@ -19,8 +18,6 @@ class RemoveCluster(QWidget):
         self.data_provider = data_provider
 
         self.popup_window = PopUpWindow()
-        self.saver = ParameterSaver()
-        self.parameters = self.saver.get_map()
 
         self.ui.remove_cluster_button.clicked.connect(self.concurrent_remove_cluster)
 
@@ -61,9 +58,6 @@ class RemoveCluster(QWidget):
 
         if not cluster_name:
             raise NoClustersError()
-
-        self.parameters['remove_cluster_arguments']['cluster_name'] = cluster_name
-        self.saver.save(self.parameters)
 
         remove_cluster(cluster_name)
         save_environment()
