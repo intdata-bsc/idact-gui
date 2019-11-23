@@ -5,7 +5,6 @@ from idact.detail.slurm.run_squeue import run_squeue
 from idact import show_cluster, load_environment
 
 from gui.functionality.popup_window import WindowType, PopUpWindow
-from gui.helpers.parameter_saver import ParameterSaver
 from gui.helpers.ui_loader import UiLoader
 from gui.helpers.worker import Worker
 from gui.helpers.custom_exceptions import NoClustersError
@@ -21,8 +20,6 @@ class ManageJobs(QWidget):
 
         self.show_jobs_window = ShowJobsWindow()
         self.popup_window = PopUpWindow()
-        self.saver = ParameterSaver()
-        self.parameters = self.saver.get_map()
 
         self.ui.show_jobs_button.clicked.connect(self.concurrent_show_jobs)
         self.ui.refresh_button.clicked.connect(self.concurrent_show_jobs)
@@ -120,7 +117,6 @@ class ManageJobs(QWidget):
         self.ui.cancel_job_button.setEnabled(False)
         load_environment()
         cluster_name = self.current_cluster
-        self.saver.save(self.parameters)
 
         indexes = self.ui.jobs_table.selectedIndexes()
         for index in sorted(indexes, reverse=True):

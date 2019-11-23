@@ -33,9 +33,9 @@ class AddCluster(QWidget):
         self.ui.host_edit.setText(self.parameters['add_cluster_arguments']['host'])
         self.ui.port_edit.setValue(self.parameters['add_cluster_arguments']['port'])
         self.ui.add_actions_file_button.clicked.connect(self.open_actions_file_dialog)
-        self.ui.delete_actions_file_button.clicked.connect(self.delete_actions_file)
+        self.ui.clear_actions_file_button.clicked.connect(self.clear_actions_file)
         self.ui.add_key_button.clicked.connect(self.add_key)
-        self.ui.delete_key_button.clicked.connect(self.delete_key)
+        self.ui.clear_key_button.clicked.connect(self.clear_key)
         self.ui.auth_method_box.currentIndexChanged.connect(self.auth_method_toggled)
         self.actions_file_name = None
         self.key_path = None
@@ -44,14 +44,14 @@ class AddCluster(QWidget):
         if self.ui.auth_method_box.currentText() == 'GENERATE_KEY':
             self.ui.password_edit.setDisabled(False)
             self.ui.add_key_button.setDisabled(True)
-            self.ui.delete_key_button.setDisabled(True)
+            self.ui.clear_key_button.setDisabled(True)
         else:
             self.ui.password_edit.setDisabled(True)
             self.ui.add_key_button.setDisabled(False)
-            self.ui.delete_key_button.setDisabled(True)
+            self.ui.clear_key_button.setDisabled(True)
 
         if self.key_path is not None:
-            self.ui.delete_key_button.setDisabled(False)
+            self.ui.clear_key_button.setDisabled(False)
 
     def concurrent_add_cluster(self):
         worker = Worker(self.add_cluster)
@@ -128,23 +128,23 @@ class AddCluster(QWidget):
         if self.actions_file_name:
             self.ui.selected_file_path_browser.setText(self.actions_file_name)
             self.ui.selected_file_path_browser.setEnabled(True)
-            self.ui.delete_actions_file_button.setEnabled(True)
+            self.ui.clear_actions_file_button.setEnabled(True)
 
-    def delete_actions_file(self):
+    def clear_actions_file(self):
         self.actions_file_name = None
         self.ui.selected_file_path_browser.setText("")
         self.ui.selected_file_path_browser.setEnabled(False)
-        self.ui.delete_actions_file_button.setEnabled(False)
+        self.ui.clear_actions_file_button.setEnabled(False)
 
     def add_key(self):
         self.key_path, _ = QFileDialog.getOpenFileName()
         if self.key_path:
             self.ui.selected_key_browser.setText(self.key_path)
             self.ui.selected_key_browser.setEnabled(True)
-            self.ui.delete_key_button.setEnabled(True)
+            self.ui.clear_key_button.setEnabled(True)
 
-    def delete_key(self):
+    def clear_key(self):
         self.key_path = None
         self.ui.selected_key_browser.setText("")
         self.ui.selected_key_browser.setEnabled(False)
-        self.ui.delete_key_button.setEnabled(False)
+        self.ui.clear_key_button.setEnabled(False)
