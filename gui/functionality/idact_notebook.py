@@ -158,6 +158,9 @@ class IdactNotebook(QWidget):
         """ Checks if walltime is correct and converts it to a proper format.
 
         :param walltime: Walltime string to check and convert.
+                         Expected format: [days-]hours:minutes:seconds (for example 00:10:00)
+                         or {days}d {hours}h {minutes}m {seconds}s - not all necessary and in any order
+                         (for example 20m 30s)
         """
         if len(walltime) == 0:
             raise ValueError('Walltime cannot be empty.')
@@ -172,27 +175,36 @@ class IdactNotebook(QWidget):
 
             for element in walltime_elements:
                 letter = element[len(element) - 1]
+                number = element[0:len(element) - 1]
+                if not number.isdigit():
+                    raise ValueError('Wrong walltime format.')
 
                 if letter == 'd':
                     if days != 0:
                         raise ValueError('Wrong walltime format. Days parameter is multiple defined.')
-                    days = int(element[0:len(element) - 1])
+                    days = int(number)
                 elif letter == 'h':
                     if hours != 0:
                         raise ValueError('Wrong walltime format. Hours parameter is multiple defined.')
-                    hours = int(element[0:len(element) - 1])
+                    hours = int(number)
                 elif letter == 'm':
                     if minutes != 0:
                         raise ValueError('Wrong walltime format. Minutes parameter is multiple defined.')
-                    minutes = int(element[0:len(element) - 1])
+                    minutes = int(number)
                 elif letter == 's':
                     if seconds != 0:
                         raise ValueError('Wrong walltime format. Seconds parameter is multiple defined.')
-                    seconds = int(element[0:len(element) - 1])
+                    seconds = int(number)
                 else:
                     raise ValueError('Wrong walltime format.')
 
             walltime = str(Walltime(days=days, hours=hours, minutes=minutes, seconds=seconds))
+
+        else:
+            try:
+                Walltime.from_string(walltime)
+            except ValueError:
+                raise ValueError('Wrong walltime format.')
 
         return walltime
 
