@@ -2,7 +2,7 @@
 
     See: :class:`.ProgramInfoWindow`, :class:`.ShowLogsWindow`,
     :class:`.YesOrNoWindow`, :class:`.ShowJobsWindow`,
-    :class:`.EditNativeArgumentsWindow`
+    :class:`.EditNativeArgumentsWindow`, :class:`.HelpWindow`
 """
 from enum import Enum
 from PyQt5.QtWidgets import QWidget, QMessageBox

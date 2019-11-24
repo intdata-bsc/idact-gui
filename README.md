@@ -28,4 +28,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Wiki
 
-Please visit our [wiki](https://github.com/intdata-bsc/idact-gui/wiki)
+Please visit our [wiki](https://github.com/intdata-bsc/idact-gui/wiki) where you can find FAQ and user documentation.

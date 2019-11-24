@@ -2,7 +2,7 @@
 
     See: :class:`.ProgramInfoWindow`, :class:`.PopUpWindow`,
     :class:`.ShowLogsWindow`, :class:`.ShowJobsWindow`,
-    :class:`.EditNativeArgumentsWindow`
+    :class:`.EditNativeArgumentsWindow`, :class:`.HelpWindow`
 """
 from PyQt5.QtWidgets import QWidget, QMessageBox
 
