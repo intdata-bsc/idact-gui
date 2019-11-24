@@ -15,6 +15,7 @@ from gui.functionality.adjust_timeouts import AdjustTimeouts
 from gui.functionality.idact_notebook import IdactNotebook
 from gui.functionality.manage_jobs import ManageJobs
 from gui.functionality.program_info_window import ProgramInfoWindow
+from gui.functionality.help_window import HelpWindow
 from gui.functionality.remove_cluster import RemoveCluster
 from gui.functionality.show_logs_window import ShowLogsWindow
 from gui.helpers.data_provider import DataProvider
@@ -32,6 +33,7 @@ class MainWindow(QMainWindow):
 
         self.data_provider = DataProvider()
         self.program_info_window = ProgramInfoWindow()
+        self.help_window = HelpWindow()
         self.actions_file_name = None
         self.threadpool = QThreadPool()
 
@@ -68,7 +70,7 @@ class MainWindow(QMainWindow):
         self.show_logs_window.show()
 
     def handle_see_help_action(self):
-        pass
+        self.help_window.show()
 
     def handle_about_the_program_action(self):
         self.program_info_window.show()
