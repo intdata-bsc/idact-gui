@@ -38,7 +38,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(IdactNotebook(self.data_provider, self))
 
         self.ui.deploy_notebook_action.triggered.connect(self.handle_deploy_notebook_action)
-        self.ui.see_running_notebooks_action.triggered.connect(self.handle_see_running_notebooks_action)
+        self.ui.manage_jobs_action.triggered.connect(self.handle_manage_jobs_action)
 
         self.ui.add_cluster_action.triggered.connect(self.handle_add_cluster_action)
         self.ui.remove_cluster_action.triggered.connect(self.handle_remove_cluster_action)
@@ -52,7 +52,7 @@ class MainWindow(QMainWindow):
     def handle_deploy_notebook_action(self):
         self.setCentralWidget(IdactNotebook(self.data_provider, self))
 
-    def handle_see_running_notebooks_action(self):
+    def handle_manage_jobs_action(self):
         self.setCentralWidget(ManageJobs(self.data_provider, self))
 
     def handle_add_cluster_action(self):
