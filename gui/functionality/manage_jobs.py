@@ -5,16 +5,23 @@
     :class:`.IdactNotebook`, :class:`.AdjustTimeouts`
     Helpers: class:`.ShowJobsWindow`
 """
-from PyQt5.QtWidgets import QWidget, QTableWidgetItem
 
+from PyQt5.QtWidgets import QWidget, QTableWidgetItem
+from idact import show_cluster, load_environment
+from idact.detail.allocation.allocation_parameters import AllocationParameters
+from idact.detail.config.client.client_cluster_config import ClusterConfigImpl
+from idact.detail.nodes.get_access_node import get_access_node
+from idact.detail.nodes.node_impl import NodeImpl
+from idact.detail.nodes.nodes_impl import NodesImpl
 from idact.detail.slurm.run_scancel import run_scancel
 from idact.detail.slurm.run_squeue import run_squeue
-from idact import show_cluster, load_environment
+from idact.detail.slurm.slurm_allocation import SlurmAllocation
+from idact.detail.slurm.squeue_result import SqueueResult
 
 from gui.functionality.popup_window import WindowType, PopUpWindow
+from gui.helpers.custom_exceptions import NoClustersError
 from gui.helpers.ui_loader import UiLoader
 from gui.helpers.worker import Worker
-from gui.helpers.custom_exceptions import NoClustersError
 
 
 class ManageJobs(QWidget):
@@ -51,11 +58,6 @@ class ManageJobs(QWidget):
         self.ui.deploy_button.setEnabled(any_item_selected)
         self.ui.cancel_job_button.setEnabled(any_item_selected)
 
-    def change_buttons_to_disabled_or_not(self):
-        any_item_selected = len(self.ui.jobs_table.selectedIndexes()) > 0
-        self.ui.deploy_button.setEnabled(any_item_selected)
-        self.ui.cancel_job_button.setEnabled(any_item_selected)
-
     def concurrent_show_jobs(self):
         """ Setups the worker that allows to run the show_jobs functionality
         in the parallel thread.
@@ -79,12 +81,12 @@ class ManageJobs(QWidget):
 
         for i in range(counter):
             self.ui.jobs_table.setItem(i, 0, QTableWidgetItem(str(jobs[i].job_id)))
-            self.ui.jobs_table.setItem(i, 1, QTableWidgetItem(str(jobs[i].end_time)))
+            self.ui.jobs_table.setItem(i, 1, QTableWidgetItem(str(jobs[i].end_time.astimezone())))
             self.ui.jobs_table.setItem(i, 2, QTableWidgetItem(str(jobs[i].node_count)))
             self.ui.jobs_table.setItem(
-                i, 3, QTableWidgetItem(','.join(jobs[i].node_list)) if jobs[i].node_list else '')
+                i, 3, (QTableWidgetItem(','.join(jobs[i].node_list) if jobs[i].node_list else '')))
             self.ui.jobs_table.setItem(
-                i, 4, QTableWidgetItem(str(jobs[i].reason if jobs[i].reason else '')))
+                i, 4, QTableWidgetItem(str(jobs[i].reason) if jobs[i].reason else ''))
             self.ui.jobs_table.setItem(i, 5, QTableWidgetItem(jobs[i].state))
 
     def handle_error_show_jobs(self, exception):
@@ -129,11 +131,53 @@ class ManageJobs(QWidget):
 
     def handle_error_deploy_notebook(self, exception):
         self.ui.deploy_button.setEnabled(True)
-        self.popup_window.show_message("An error occurred while deploying notebook", WindowType.error)
-        self.ui.deploy_button.setEnabled(True)
+        self.popup_window.show_message("An error occurred while deploying notebook", WindowType.error, exception)
 
     def deploy_notebook(self):
-        pass
+        indexes = self.ui.jobs_table.selectedIndexes()
+        for index in sorted(indexes, reverse=True):
+            job_id = int(self.ui.jobs_table.item(index.row(), 0).text())
+
+            load_environment()
+
+            config = self.cluster.config
+            assert isinstance(config, ClusterConfigImpl)
+
+            access_node = get_access_node(config=config)
+
+            def run_squeue_task() -> SqueueResult:
+                job_squeue = run_squeue(node=access_node)
+                return job_squeue[job_id]
+
+            job = run_squeue_task()
+
+            node_count = job.node_count
+            nodes_in_cluster = [NodeImpl(config=config) for _ in range(node_count)]
+
+            nodes_in_cluster[0].make_allocated(host=config.host,
+                                               port=config.port,
+                                               cores=None,
+                                               memory=None,
+                                               allocated_until=job.end_time)
+
+            entry_point_script_path = "~/.idact/entry_points"
+
+            allocation = SlurmAllocation(
+                job_id=job_id,
+                access_node=access_node,
+                nodes=nodes_in_cluster,
+                entry_point_script_path=entry_point_script_path,
+                parameters=AllocationParameters())
+
+            nodes = NodesImpl(nodes=nodes_in_cluster,
+                              allocation=allocation)
+
+            notebook = nodes[0].deploy_notebook()
+
+            self.cluster.push_deployment(nodes)
+            self.cluster.push_deployment(notebook)
+
+            notebook.open_in_browser()
 
     def concurrent_cancel_job(self):
         """ Setups the worker that allows to run the cancel_job functionality
@@ -165,13 +209,9 @@ class ManageJobs(QWidget):
         else:
             self.popup_window.show_message("An error occurred while cancelling job", WindowType.error)
 
-        self.ui.cancel_job_button.setEnabled(True)
-
     def cancel_job(self):
         """ Main function responsible for cancelling a job.
         """
-        self.ui.cancel_job_button.setEnabled(False)
-
         load_environment()
         node = self.cluster.get_access_node()
 
