@@ -5,11 +5,15 @@
     :class:`.IdactNotebook`, :class:`.AdjustTimeouts`
     Helpers: class:`.ShowJobsWindow`
 """
+from contextlib import ExitStack
 
 from PyQt5.QtWidgets import QWidget, QTableWidgetItem
 from idact import show_cluster, load_environment
 from idact.detail.allocation.allocation_parameters import AllocationParameters
 from idact.detail.config.client.client_cluster_config import ClusterConfigImpl
+from idact.detail.deployment.cancel_local_on_exit import cancel_local_on_exit
+from idact.detail.entry_point.fetch_port_info import fetch_port_info
+from idact.detail.jupyter_app.sleep_until_allocation_ends import sleep_until_allocation_ends
 from idact.detail.nodes.get_access_node import get_access_node
 from idact.detail.nodes.node_impl import NodeImpl
 from idact.detail.nodes.nodes_impl import NodesImpl
@@ -54,9 +58,9 @@ class ManageJobs(QWidget):
         self.ui.cluster_names_box.addItems(self.cluster_names)
 
     def change_buttons_to_disabled_or_not(self):
-        any_item_selected = len(self.ui.jobs_table.selectedIndexes()) > 0
-        self.ui.deploy_button.setEnabled(any_item_selected)
-        self.ui.cancel_job_button.setEnabled(any_item_selected)
+        items_selected = len(self.ui.jobs_table.selectedIndexes())
+        self.ui.deploy_button.setEnabled(items_selected == 1)
+        self.ui.cancel_job_button.setEnabled(items_selected >= 1)
 
     def concurrent_show_jobs(self):
         """ Setups the worker that allows to run the show_jobs functionality
@@ -125,8 +129,7 @@ class ManageJobs(QWidget):
         self.parent.threadpool.start(worker)
 
     def handle_complete_deploy_notebook(self):
-        self.ui.deploy_button.setEnabled(True)
-        self.popup_window.show_message("Notebook has been successfully deployed",
+        self.popup_window.show_message("Notebook has been closed",
                                        WindowType.success)
 
     def handle_error_deploy_notebook(self, exception):
@@ -135,9 +138,9 @@ class ManageJobs(QWidget):
 
     def deploy_notebook(self):
         indexes = self.ui.jobs_table.selectedIndexes()
-        for index in sorted(indexes, reverse=True):
-            job_id = int(self.ui.jobs_table.item(index.row(), 0).text())
+        job_id = int(self.ui.jobs_table.item(indexes[0].row(), 0).text())
 
+        with ExitStack() as stack:
             load_environment()
 
             config = self.cluster.config
@@ -154,8 +157,11 @@ class ManageJobs(QWidget):
             node_count = job.node_count
             nodes_in_cluster = [NodeImpl(config=config) for _ in range(node_count)]
 
-            nodes_in_cluster[0].make_allocated(host=config.host,
-                                               port=config.port,
+            port_info = fetch_port_info(job_id, config)
+            [node_name, port] = port_info.split(" ")[0].split(":")
+
+            nodes_in_cluster[0].make_allocated(host=node_name,
+                                               port=int(port),
                                                cores=None,
                                                memory=None,
                                                allocated_until=job.end_time)
@@ -173,11 +179,13 @@ class ManageJobs(QWidget):
                               allocation=allocation)
 
             notebook = nodes[0].deploy_notebook()
+            stack.enter_context(cancel_local_on_exit(notebook))
 
             self.cluster.push_deployment(nodes)
             self.cluster.push_deployment(notebook)
 
             notebook.open_in_browser()
+            sleep_until_allocation_ends(nodes=nodes)
 
     def concurrent_cancel_job(self):
         """ Setups the worker that allows to run the cancel_job functionality

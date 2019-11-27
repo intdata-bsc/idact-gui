@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>417</width>
+    <width>450</width>
     <height>330</height>
    </rect>
   </property>
@@ -14,19 +14,6 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="11" column="0" colspan="4">
-    <widget class="QPushButton" name="allocate_nodes_button">
-     <property name="font">
-      <font>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>Allocate nodes</string>
-     </property>
-    </widget>
-   </item>
    <item row="6" column="0">
     <widget class="QRadioButton" name="future_allocation">
      <property name="text">
@@ -121,19 +108,6 @@
    <item row="4" column="1" colspan="3">
     <widget class="QLineEdit" name="walltime_edit"/>
    </item>
-   <item row="13" column="0" colspan="4">
-    <widget class="QPushButton" name="deploy_button">
-     <property name="font">
-      <font>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>Deploy Jupyter Notebook</string>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="0">
     <widget class="QLabel" name="cluster_name_deployn_label">
      <property name="text">
@@ -183,6 +157,32 @@
      </property>
     </spacer>
    </item>
+   <item row="11" column="0" colspan="2">
+    <widget class="QPushButton" name="allocate_nodes_button">
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Only allocate nodes</string>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="2" colspan="2">
+    <widget class="QPushButton" name="deploy_button">
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Allocate nodes and deploy Jupyter Notebook</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <tabstops>
@@ -193,7 +193,6 @@
   <tabstop>memory_unit_box</tabstop>
   <tabstop>walltime_edit</tabstop>
   <tabstop>edit_native_arguments_button</tabstop>
-  <tabstop>deploy_button</tabstop>
  </tabstops>
  <resources/>
  <connections/>
