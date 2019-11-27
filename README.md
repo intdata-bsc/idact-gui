@@ -25,3 +25,7 @@ The project depends on the [forked idact repository](https://github.com/intdata-
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+
+## Wiki
+
+Please visit our [wiki](https://github.com/intdata-bsc/idact-gui/wiki) where you can find FAQ and user documentation.

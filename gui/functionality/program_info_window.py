@@ -2,7 +2,7 @@
 
     See: :class:`.PopUpWindow`, :class:`.ShowLogsWindow`,
     :class:`.YesOrNoWindow`, :class:`.ShowJobsWindow`,
-    :class:`.EditNativeArgumentsWindow`
+    :class:`.EditNativeArgumentsWindow`, :class:`.HelpWindow`
 """
 from PyQt5.QtWidgets import QWidget
 from gui.helpers.ui_loader import UiLoader
