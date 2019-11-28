@@ -4,15 +4,12 @@ import pytest
 from pytestqt.qt_compat import qt_api
 from gui.helpers.configuration_provider import ConfigurationProvider
 from gui.functionality.main_window import MainWindow
-from gui.helpers.parameter_saver import ParameterSaver
 from gui.helpers.data_provider import DataProvider
 from gui.functionality.idact_notebook import IdactNotebook
 from gui.functionality.manage_jobs import ManageJobs
 from gui.functionality.add_cluster import AddCluster
 from gui.functionality.remove_cluster import RemoveCluster
 from gui.functionality.adjust_timeouts import AdjustTimeouts
-from gui.functionality.program_info_window import ProgramInfoWindow
-from gui.functionality.help_window import HelpWindow
 
 
 @pytest.fixture()
@@ -40,7 +37,6 @@ def test_deploy_notebook_window(window, qtbot):
     window.show()
     window.deploy_notebook_action.trigger()
 
-    saver = ParameterSaver()
     data_provider = DataProvider()
     assert window.centralWidget().__class__ == IdactNotebook(data_provider).__class__
 
@@ -50,8 +46,6 @@ def test_manage_jobs_window(window, qtbot):
     """
     window.show()
     window.manage_jobs_action.trigger()
-
-    saver = ParameterSaver()
     data_provider = DataProvider()
 
     assert window.centralWidget().__class__ == ManageJobs(data_provider).__class__
@@ -62,8 +56,6 @@ def test_add_cluster_window(window, qtbot):
     """
     window.show()
     window.add_cluster_action.trigger()
-
-    saver = ParameterSaver()
     data_provider = DataProvider()
 
     assert window.centralWidget().__class__ == AddCluster(data_provider).__class__
@@ -74,8 +66,6 @@ def test_remove_cluster_window(window, qtbot):
     """
     window.show()
     window.remove_cluster_action.trigger()
-
-    saver = ParameterSaver()
     data_provider = DataProvider()
 
     assert window.centralWidget().__class__ == RemoveCluster(data_provider).__class__
@@ -86,8 +76,6 @@ def test_edit_configuration_window(window, qtbot):
     """
     window.show()
     window.edit_configuration_action.trigger()
-
-    saver = ParameterSaver()
     data_provider = DataProvider()
 
     assert window.centralWidget().__class__ == AdjustTimeouts(data_provider).__class__
@@ -121,5 +109,3 @@ def test_about_window(window, qtbot):
 
     assert window.program_info_window.isVisible()
     assert window.program_info_window.windowTitle() == 'About'
-
-
