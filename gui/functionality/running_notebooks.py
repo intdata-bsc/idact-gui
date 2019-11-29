@@ -219,9 +219,9 @@ class RunningNotebooks(QWidget):
 
     def open_notebook(self):
         for item in self.ui.nodes_tree.selectedItems():
-            node_collection: QTreeWidgetItem = item.parent()
+            node_collection = item.parent()
             node_index = node_collection.indexOfChild(item)
-            root: QTreeWidgetItem = node_collection.parent()
+            root = node_collection.parent()
             nodes_index = root.indexOfChild(node_collection)
 
             node: NodeImpl = self.deployments.nodes[nodes_index]._nodes[node_index]
