@@ -4,9 +4,6 @@ from PyQt5.QtWidgets import QWidget, QTreeWidgetItem
 from idact import show_cluster
 from idact.detail.deployment.cancel_local_on_exit import cancel_local_on_exit
 from idact.detail.jupyter_app.sleep_until_allocation_ends import sleep_until_allocation_ends
-from idact.detail.nodes.node_impl import NodeImpl
-
-from gui.functionality.deployments_provider import DeploymentsProvider
 from gui.functionality.loading_window import LoadingWindow
 from gui.functionality.popup_window import WindowType, PopUpWindow
 from gui.helpers.custom_exceptions import NoClustersError
@@ -118,7 +115,8 @@ class RunningNotebooks(QWidget):
         elif isinstance(exception, KeyError):
             self.popup_window.show_message("The cluster does not exist", WindowType.error)
         else:
-            self.popup_window.show_message("An error occurred while listing nodes and notebooks", WindowType.error, exception)
+            self.popup_window.show_message("An error occurred while listing nodes and notebooks", WindowType.error,
+                                           exception)
 
     def show_nodes_and_notebooks(self):
         self.cluster_name = str(self.ui.cluster_names_box.currentText())
