@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>565</width>
+    <height>570</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Jobs</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="3" column="3">
+    <widget class="QPushButton" name="cancel_job_button">
+     <property name="text">
+      <string>Cancel job</string>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="cluster_name_deployn_label_2">
+     <property name="text">
+      <string>Cluster name</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="2">
+    <widget class="QPushButton" name="deploy_button">
+     <property name="text">
+      <string>Deploy Jupyter Notebook</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QPushButton" name="refresh_button">
+     <property name="text">
+      <string>Refresh</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="3">
+    <widget class="QPushButton" name="show_nodes_and_notebooks_button">
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Show nodes and notebooks</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1" colspan="2">
+    <widget class="QComboBox" name="cluster_names_box"/>
+   </item>
+   <item row="3" column="1">
+    <widget class="QPushButton" name="open_notebook_button">
+     <property name="text">
+      <string>Open notebook in browser</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="4">
+    <widget class="QTreeWidget" name="nodes_tree">
+     <column>
+      <property name="text">
+       <string>Name</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Host</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Port</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Cores</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Memory</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Allocated until</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Jupyter Notebook port</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

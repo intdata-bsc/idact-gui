@@ -17,6 +17,7 @@ from idact.detail.jupyter_app.override_parameters_if_possible import \
     override_parameters_if_possible
 from idact.detail.jupyter_app.sleep_until_allocation_ends import sleep_until_allocation_ends
 
+from gui.functionality.loading_window import LoadingWindow
 from gui.functionality.popup_window import WindowType, PopUpWindow
 from gui.functionality.yes_or_no_window import YesOrNoWindow
 from gui.helpers.custom_exceptions import NoClustersError
@@ -31,19 +32,21 @@ class IdactNotebook(QWidget):
     on the selected cluster.
     """
 
-    def __init__(self, data_provider, parent=None):
+    def __init__(self, data_provider, deployment_provider, parent=None):
         super().__init__(parent=parent)
         self.ui = UiLoader.load_ui_from_file('deploy-notebook.ui', self)
 
         self.parent = parent
         self.data_provider = data_provider
+        self.deployment_provider = deployment_provider
 
         self.edit_native_arguments_window = EditNativeArgumentsWindow()
         self.popup_window = PopUpWindow()
+        self.loading_window = LoadingWindow()
         self.native_args_saver = NativeArgsSaver()
         self.saver = ParameterSaver()
         self.parameters = self.saver.get_map()
-        self.cluster = None
+        self.cluster_name = None
 
         self.ui.deploy_button.clicked.connect(self.concurrent_deploy_notebook)
         self.ui.edit_native_arguments_button.clicked.connect(self.open_edit_native_argument)
@@ -85,26 +88,29 @@ class IdactNotebook(QWidget):
             self.ui.begin_edit.setDisabled(True)
 
     def concurrent_allocate_nodes(self):
+        self.loading_window.show_message('Nodes are being allocated')
         self.ui.allocate_nodes_button.setEnabled(False)
         self.ui.deploy_button.setEnabled(False)
+
         worker = Worker(self.allocate_nodes)
         worker.signals.result.connect(self.handle_complete_allocate_nodes)
         worker.signals.error.connect(self.handle_error_allocate_nodes)
         self.parent.threadpool.start(worker)
 
     def handle_complete_allocate_nodes(self):
+        self.loading_window.close()
         self.change_buttons_to_disabled_or_not()
         self.popup_window.show_message("Nodes allocation has been submitted. \nYou can see job status in "
                                        "Notebooks->Manage Jobs", WindowType.success)
 
     def handle_error_allocate_nodes(self, exception):
+        self.loading_window.close()
         self.change_buttons_to_disabled_or_not()
         self.popup_window.show_message("An error occurred while allocating nodes", WindowType.error, exception)
 
     def allocate_nodes(self):
-        cluster_name = str(self.ui.cluster_names_box.currentText())
-
-        self.parameters['deploy_notebook_arguments']['cluster_name'] = cluster_name
+        self.cluster_name = str(self.ui.cluster_names_box.currentText())
+        self.parameters['deploy_notebook_arguments']['cluster_name'] = self.cluster_name
         nodes = int(self.ui.nodes_edit.text())
         self.parameters['deploy_notebook_arguments']['nodes'] = nodes
         cores = int(self.ui.cores_edit.text())
@@ -119,9 +125,9 @@ class IdactNotebook(QWidget):
         begin = self.ui.begin_edit.text()
 
         load_environment()
-        self.cluster = show_cluster(name=cluster_name)
+        cluster = show_cluster(name=self.cluster_name)
 
-        config = self.cluster.config
+        config = cluster.config
         assert isinstance(config, ClusterConfigImpl)
         parameters = AppAllocationParameters.deserialize(
             serialized=config.notebook_defaults)
@@ -136,17 +142,21 @@ class IdactNotebook(QWidget):
                                         memory_per_node=memory + unit,
                                         walltime=walltime,
                                         native_args=native_args.items())
-        return self.cluster.allocate_nodes(
+        nodes = cluster.allocate_nodes(
             nodes=parameters.nodes,
             cores=parameters.cores,
             memory_per_node=parameters.memory_per_node,
             walltime=parameters.walltime,
             native_args=native_args)
+        cluster.push_deployment(nodes)
+        self.deployment_provider.add_deployment(self.cluster_name, nodes)
+        return nodes
 
     def concurrent_deploy_notebook(self):
         """ Setups the worker that allows to run the deploy_notebook functionality
         in the parallel thread.
         """
+        self.loading_window.show_message("Notebook is being deployed")
         self.ui.allocate_nodes_button.setEnabled(False)
         self.ui.deploy_button.setEnabled(False)
 
@@ -165,6 +175,7 @@ class IdactNotebook(QWidget):
 
             :param exception: Instance of the exception.
         """
+        self.loading_window.close()
         self.change_buttons_to_disabled_or_not()
         if isinstance(exception, NoClustersError):
             self.popup_window.show_message("There are no added clusters", WindowType.error)
@@ -181,10 +192,15 @@ class IdactNotebook(QWidget):
             notebook = nodes[0].deploy_notebook()
             stack.enter_context(cancel_local_on_exit(notebook))
 
-            self.cluster.push_deployment(nodes)
-            self.cluster.push_deployment(notebook)
+            cluster = show_cluster(name=self.cluster_name)
+
+            cluster.push_deployment(nodes)
+            self.deployment_provider.add_deployment(self.cluster_name, nodes)
+            cluster.push_deployment(notebook)
+            self.deployment_provider.add_deployment(self.cluster_name, notebook)
 
             notebook.open_in_browser()
+            self.loading_window.close()
             self.change_buttons_to_disabled_or_not()
             sleep_until_allocation_ends(nodes=nodes)
 

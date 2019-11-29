@@ -31,6 +31,7 @@
     </property>
     <addaction name="deploy_notebook_action"/>
     <addaction name="manage_jobs_action"/>
+    <addaction name="running_notebooks_action"/>
    </widget>
    <widget class="QMenu" name="menu_clusters">
     <property name="title">
@@ -106,6 +107,11 @@
   <action name="show_logs_action">
    <property name="text">
     <string>Show logs</string>
+   </property>
+  </action>
+  <action name="running_notebooks_action">
+   <property name="text">
+    <string>Running Notebooks</string>
    </property>
   </action>
  </widget>
