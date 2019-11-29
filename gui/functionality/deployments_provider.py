@@ -7,7 +7,7 @@ class DeploymentsProvider:
     def __init__(self):
         self.cluster_deployments = dict()
 
-    def get_deployments(self, cluster_name: str, update=False) -> SynchronizedDeployments:
+    def get_deployments(self, cluster_name, update=False) -> SynchronizedDeployments:
         if cluster_name not in self.cluster_deployments:
             load_environment()
             cluster = show_cluster(name=cluster_name)

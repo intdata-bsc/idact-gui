@@ -16,7 +16,7 @@ from gui.helpers.worker import Worker
 
 
 class RunningNotebooks(QWidget):
-    def __init__(self, data_provider, deployments_provider: DeploymentsProvider, parent=None):
+    def __init__(self, data_provider, deployments_provider, parent=None):
         super().__init__(parent=parent)
         self.ui = UiLoader.load_ui_from_file('running-notebooks.ui', self)
 
@@ -224,7 +224,7 @@ class RunningNotebooks(QWidget):
             root = node_collection.parent()
             nodes_index = root.indexOfChild(node_collection)
 
-            node: NodeImpl = self.deployments.nodes[nodes_index]._nodes[node_index]
+            node = self.deployments.nodes[nodes_index]._nodes[node_index]
             for jupyter_deployment in self.deployments.jupyter_deployments:
                 if node == jupyter_deployment.deployment.node:
                     jupyter_deployment.open_in_browser()
