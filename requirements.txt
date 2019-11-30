@@ -1,2 +1,2 @@
-idact>=0.7
 PyQt5<5.10
+git+https://github.com/intdata-bsc/idact.git@0.9#egg=idact
