@@ -3,9 +3,6 @@ import setuptools
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-with open('requirements-pip.txt') as requirements_file:
-    REQUIREMENTS = [i for i in requirements_file.readlines() if i]
-
 setuptools.setup(
     name="idact-gui",
     version="0.2.13",
@@ -21,7 +18,7 @@ setuptools.setup(
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
     ],
-    install_requires=REQUIREMENTS,
+    install_requires=['PyQt5<5.10'],
     entry_points={
         'console_scripts': [
             'idactgui=gui.main:main',
