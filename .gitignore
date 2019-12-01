@@ -132,5 +132,5 @@ dmypy.json
 
 .vscode/
 
-args.json
-native_args.json
+/args.json
+/native_args.json
