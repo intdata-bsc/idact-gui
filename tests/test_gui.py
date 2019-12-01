@@ -18,6 +18,8 @@ def window():
     conf_provider = ConfigurationProvider()
     if not conf_provider.check_if_conf_file_exists():
         conf_provider.create_conf_file()
+    if not conf_provider.check_if_args_files_exist():
+        conf_provider.create_args_files()
     window = MainWindow()
     return window
 
