@@ -22,7 +22,7 @@ from gui.helpers.worker import Worker
 
 class RunningNotebooks(QWidget):
     """ Module of GUI that is responsible for showing nodes and local ports for Jupyter Notebook (if exists),
-    cancelling jobs, opening notebooks in the browser if they exists or deploy them if not.
+    cancelling jobs, opening notebooks in the browser if they exists or deploying them if not.
     """
     deployment_ended = pyqtSignal()
 

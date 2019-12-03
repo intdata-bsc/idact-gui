@@ -50,7 +50,7 @@ class DeploymentsProvider:
 
     def _update_deployments(self, cluster_name: str):
         """
-        Update deployments for the cluster.
+        Updates deployments for the cluster.
         :param cluster_name: Name of the cluster.
         """
         cluster = show_cluster(cluster_name)
