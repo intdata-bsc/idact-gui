@@ -26,6 +26,9 @@ from gui.helpers.ui_loader import UiLoader
 
 
 class MainWindow(QMainWindow):
+    """ Main Window of GUI. It is responsible for displaying a proper window
+    after choosing one from menu.
+    """
     def __init__(self):
         self.show_logs_window = ShowLogsWindow()
         sys.stdout = self.show_logs_window
