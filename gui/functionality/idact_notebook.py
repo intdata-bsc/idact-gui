@@ -7,6 +7,7 @@
 """
 from contextlib import ExitStack
 
+from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QWidget, QTableWidgetItem, QMessageBox
 from idact import load_environment, show_cluster, Walltime
 from idact.detail.config.client.client_cluster_config import ClusterConfigImpl
@@ -19,7 +20,7 @@ from idact.detail.jupyter_app.sleep_until_allocation_ends import sleep_until_all
 
 from gui.functionality.loading_window import LoadingWindow
 from gui.functionality.popup_window import WindowType, PopUpWindow
-from gui.functionality.yes_or_no_window import YesOrNoWindow
+from gui.functionality.confirmation_window import ConfirmationWindow
 from gui.helpers.custom_exceptions import NoClustersError
 from gui.helpers.native_saver import NativeArgsSaver
 from gui.helpers.parameter_saver import ParameterSaver
@@ -31,6 +32,7 @@ class IdactNotebook(QWidget):
     """ Module of GUI that is responsible for deploying the notebook
     on the selected cluster.
     """
+    deployment_ended = pyqtSignal()
 
     def __init__(self, data_provider, deployment_provider, parent=None):
         super().__init__(parent=parent)
@@ -75,22 +77,32 @@ class IdactNotebook(QWidget):
         self.ui.begin_edit.setDisabled(True)
         self.ui.future_allocation.toggled.connect(self.change_buttons_to_disabled_or_not)
 
+        self.deployment_ended.connect(self.handle_deployment_ended)
+        self.allocation_or_deployment_in_progress = False
+
+    def handle_deployment_ended(self):
+        self.allocation_or_deployment_in_progress = False
+        self.change_buttons_to_disabled_or_not()
+        self.loading_window.hide()
+
     def change_buttons_to_disabled_or_not(self):
-        if self.ui.future_allocation.isChecked():
-            self.ui.allocate_nodes_button.setDisabled(False)
-            self.ui.deploy_button.setDisabled(True)
-            self.ui.begin_label.setDisabled(False)
-            self.ui.begin_edit.setDisabled(False)
-        else:
-            self.ui.allocate_nodes_button.setDisabled(False)
-            self.ui.deploy_button.setDisabled(False)
-            self.ui.begin_label.setDisabled(True)
-            self.ui.begin_edit.setDisabled(True)
+        if not self.allocation_or_deployment_in_progress:
+            if self.ui.future_allocation.isChecked():
+                self.ui.allocate_nodes_button.setDisabled(False)
+                self.ui.deploy_button.setDisabled(True)
+                self.ui.begin_label.setDisabled(False)
+                self.ui.begin_edit.setDisabled(False)
+            else:
+                self.ui.allocate_nodes_button.setDisabled(False)
+                self.ui.deploy_button.setDisabled(False)
+                self.ui.begin_label.setDisabled(True)
+                self.ui.begin_edit.setDisabled(True)
 
     def concurrent_allocate_nodes(self):
         self.loading_window.show_message('Nodes are being allocated')
         self.ui.allocate_nodes_button.setEnabled(False)
         self.ui.deploy_button.setEnabled(False)
+        self.allocation_or_deployment_in_progress = True
 
         worker = Worker(self.allocate_nodes)
         worker.signals.result.connect(self.handle_complete_allocate_nodes)
@@ -99,12 +111,14 @@ class IdactNotebook(QWidget):
 
     def handle_complete_allocate_nodes(self):
         self.loading_window.close()
+        self.allocation_or_deployment_in_progress = False
         self.change_buttons_to_disabled_or_not()
         self.popup_window.show_message("Nodes allocation has been submitted. \nYou can see job status in "
                                        "Notebooks->Manage Jobs", WindowType.success)
 
     def handle_error_allocate_nodes(self, exception):
         self.loading_window.close()
+        self.allocation_or_deployment_in_progress = False
         self.change_buttons_to_disabled_or_not()
         self.popup_window.show_message("An error occurred while allocating nodes", WindowType.error, exception)
 
@@ -159,6 +173,7 @@ class IdactNotebook(QWidget):
         self.loading_window.show_message("Notebook is being deployed")
         self.ui.allocate_nodes_button.setEnabled(False)
         self.ui.deploy_button.setEnabled(False)
+        self.allocation_or_deployment_in_progress = True
 
         worker = Worker(self.deploy_notebook)
         worker.signals.result.connect(self.handle_complete_deploy_notebook)
@@ -176,6 +191,7 @@ class IdactNotebook(QWidget):
             :param exception: Instance of the exception.
         """
         self.loading_window.close()
+        self.allocation_or_deployment_in_progress = False
         self.change_buttons_to_disabled_or_not()
         if isinstance(exception, NoClustersError):
             self.popup_window.show_message("There are no added clusters", WindowType.error)
@@ -200,8 +216,7 @@ class IdactNotebook(QWidget):
             self.deployment_provider.add_deployment(self.cluster_name, notebook)
 
             notebook.open_in_browser()
-            self.loading_window.close()
-            self.change_buttons_to_disabled_or_not()
+            self.deployment_ended.emit()
             sleep_until_allocation_ends(nodes=nodes)
 
     @staticmethod
@@ -349,7 +364,7 @@ class EditNativeArgumentsWindow(QWidget):
         self.ui = UiLoader.load_ui_from_file('edit-native.ui', self)
 
         self.data_changed = False
-        self.yes_or_no_window = YesOrNoWindow()
+        self.confirmation_window = ConfirmationWindow()
 
     def set_that_data_changed(self):
         self.data_changed = True
@@ -359,9 +374,9 @@ class EditNativeArgumentsWindow(QWidget):
 
             :param event: close event
         """
-        close_window = self.yes_or_no_window.show_message(
+        close_window = self.confirmation_window.show_message(
             "Some changes may not have been saved. \nDo you want to quit anyway?")
-        self.yes_or_no_window.box.setDefaultButton(QMessageBox.No)
+        self.confirmation_window.box.setDefaultButton(QMessageBox.No)
         if not close_window:
             event.ignore()
 
