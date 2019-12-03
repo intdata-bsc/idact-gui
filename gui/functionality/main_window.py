@@ -13,7 +13,6 @@ from idact import show_cluster
 
 from gui.functionality.add_cluster import AddCluster
 from gui.functionality.adjust_timeouts import AdjustTimeouts
-from gui.functionality.deployments_provider import DeploymentsProvider
 from gui.functionality.idact_notebook import IdactNotebook
 from gui.functionality.manage_jobs import ManageJobs
 from gui.functionality.program_info_window import ProgramInfoWindow
@@ -22,6 +21,7 @@ from gui.functionality.remove_cluster import RemoveCluster
 from gui.functionality.running_notebooks import RunningNotebooks
 from gui.functionality.show_logs_window import ShowLogsWindow
 from gui.helpers.data_provider import DataProvider
+from gui.helpers.deployments_provider import DeploymentsProvider
 from gui.helpers.ui_loader import UiLoader
 
 
