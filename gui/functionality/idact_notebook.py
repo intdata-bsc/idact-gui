@@ -282,8 +282,11 @@ class IdactNotebook(QWidget):
         keys = list(args)
 
         for key in keys:
-            if not key.startswith('--'):
-                args['--' + key] = args.pop(key)
+            if not key.startswith('-'):
+                if len(key) == 1:
+                    args['-' + key] = args.pop(key)
+                else:
+                    args['--' + key] = args.pop(key)
         return args
 
     def open_edit_native_argument(self):
