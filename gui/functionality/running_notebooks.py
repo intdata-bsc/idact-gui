@@ -1,3 +1,9 @@
+""" One of the widgets that main window composes of.
+
+    See :class:`.MainWindow`
+    Similar modules: class:`.AddCluster`, :class:`.RemoveCluster`, :class:`.IdactNotebook`,
+    :class:`.AdjustTimeouts`, :class:`.ManageJobs`
+"""
 import copy
 from contextlib import ExitStack
 
@@ -15,6 +21,9 @@ from gui.helpers.worker import Worker
 
 
 class RunningNotebooks(QWidget):
+    """ Module of GUI that is responsible for showing nodes and local ports for Jupyter Notebook (if exists),
+    cancelling jobs, opening notebooks in the browser if they exists or deploy them if not.
+    """
     deployment_ended = pyqtSignal()
 
     def __init__(self, data_provider, deployments_provider, parent=None):
@@ -55,6 +64,7 @@ class RunningNotebooks(QWidget):
         self.loading_window.hide()
 
     def change_buttons_to_disabled_or_not(self):
+        """Changes buttons visibility"""
         selected_items = self.ui.nodes_tree.selectedItems()
 
         if len(selected_items) == 1:
@@ -76,6 +86,9 @@ class RunningNotebooks(QWidget):
         self.ui.cancel_job_button.setEnabled(False)
 
     def concurrent_show_nodes_and_notebooks(self):
+        """ Setups the worker that allows to run the show_nodes_and_notebooks functionality
+        in the parallel thread.
+        """
         self.ui.show_nodes_and_notebooks_button.setEnabled(False)
         self.ui.refresh_button.setEnabled(False)
 
@@ -85,6 +98,8 @@ class RunningNotebooks(QWidget):
         self.parent.threadpool.start(worker)
 
     def handle_complete_show_nodes_and_notebooks(self):
+        """ Handles the completion of show nodes and notebooks function.
+        """
         self.ui.show_nodes_and_notebooks_button.setEnabled(True)
         self.ui.refresh_button.setEnabled(True)
 
@@ -115,6 +130,10 @@ class RunningNotebooks(QWidget):
         self.ui.nodes_tree.expandAll()
 
     def handle_error_show_nodes_and_notebooks(self, exception):
+        """ Handles the error thrown while showing nodes and notebooks.
+
+            :param exception: Instance of the exception.
+        """
         self.ui.show_nodes_and_notebooks_button.setEnabled(True)
         self.ui.refresh_button.setEnabled(True)
 
@@ -127,12 +146,17 @@ class RunningNotebooks(QWidget):
                                            exception)
 
     def show_nodes_and_notebooks(self):
+        """ Main function responsible for showing nodes and notebooks.
+        """
         self.cluster_name = str(self.ui.cluster_names_box.currentText())
         if not self.cluster_name:
             raise NoClustersError()
         self.deployments = self.deployments_provider.get_deployments(self.cluster_name, update=True)
 
     def concurrent_deploy_notebook(self):
+        """ Setups the worker that allows to run the deploy_notebook functionality
+        in the parallel thread.
+        """
         self.loading_window.show_message("Notebook is being deployed")
         self.ui.deploy_button.setEnabled(False)
 
@@ -142,16 +166,24 @@ class RunningNotebooks(QWidget):
         self.parent.threadpool.start(worker)
 
     def handle_complete_deploy_notebook(self):
+        """ Handles the completion of deploy of the notebook.
+        """
         self.ui.deploy_button.setEnabled(True)
         self.popup_window.show_message("Notebook has been closed", WindowType.success)
 
     def handle_error_deploy_notebook(self, exception):
+        """ Handles the error thrown while deploying notebook.
+
+            :param exception: Instance of the exception.
+        """
         self.loading_window.close()
         self.ui.deploy_button.setEnabled(True)
         self.popup_window.show_message("An error occurred while deploying notebook", WindowType.error, exception)
         self.ui.deploy_button.setEnabled(True)
 
     def deploy_notebook(self):
+        """ Main function responsible for deploying the notebook on the node.
+        """
         item = self.ui.nodes_tree.selectedItems()[0]
         node = self.get_node_for_tree_item(item)
         nodes_collection = item.parent()
@@ -170,6 +202,10 @@ class RunningNotebooks(QWidget):
             sleep_until_allocation_ends(nodes=nodes)
 
     def get_node_for_tree_item(self, item):
+        """Returns Node instance for the item.
+
+        :param item: Item in the QTreeWidget
+        """
         node_collection = item.parent()
         node_index = node_collection.indexOfChild(item)
 
@@ -179,6 +215,9 @@ class RunningNotebooks(QWidget):
         return self.deployments.nodes[nodes_index].nodes[node_index]
 
     def concurrent_cancel_job(self):
+        """ Setups the worker that allows to run the cancel_job functionality
+        in the parallel thread.
+        """
         self.ui.cancel_job_button.setEnabled(False)
 
         worker = Worker(self.cancel_job)
@@ -187,10 +226,16 @@ class RunningNotebooks(QWidget):
         self.parent.threadpool.start(worker)
 
     def handle_complete_cancel_job(self):
+        """ Handles the completion of cancel job function.
+        """
         self.ui.cancel_job_button.setEnabled(True)
         self.popup_window.show_message("Cancel command has been successfully executed", WindowType.success)
 
     def handle_error_cancel_job(self, exception):
+        """ Handles the error thrown while cancelling the job.
+
+            :param exception: Instance of the exception.
+        """
         self.ui.cancel_job_button.setEnabled(True)
 
         if isinstance(exception, KeyError):
@@ -199,6 +244,8 @@ class RunningNotebooks(QWidget):
             self.popup_window.show_message("An error occurred while cancelling job", WindowType.error, exception)
 
     def cancel_job(self):
+        """ Main function responsible for cancelling the job.
+        """
         item = self.ui.nodes_tree.selectedItems()[0]
         nodes = self.get_nodes_collection_for_tree_item(item)
         nodes_copy = copy.deepcopy(nodes)
@@ -206,12 +253,19 @@ class RunningNotebooks(QWidget):
         self.concurrent_show_nodes_and_notebooks()
 
     def get_nodes_collection_for_tree_item(self, item):
+        """Returns Nodes instance for the item.
+
+        :param item: Item in the QTreeWidget
+        """
         root = item.parent()
         nodes_index = root.indexOfChild(item)
 
         return self.deployments.nodes[nodes_index]
 
     def concurrent_open_notebook(self):
+        """ Setups the worker that allows to run the open_notebook functionality
+        in the parallel thread.
+        """
         self.ui.open_notebook_button.setEnabled(False)
 
         worker = Worker(self.open_notebook)
@@ -220,13 +274,21 @@ class RunningNotebooks(QWidget):
         self.parent.threadpool.start(worker)
 
     def handle_complete_open_notebook(self):
+        """ Handles the completion of open notebook function.
+        """
         self.ui.open_notebook_button.setEnabled(True)
 
     def handle_error_open_notebook(self, exception):
+        """ Handles the error thrown while opening the notebook.
+
+            :param exception: Instance of the exception.
+        """
         self.ui.open_notebook_button.setEnabled(True)
         self.popup_window.show_message("An error occurred while opening notebook", WindowType.error, exception)
 
     def open_notebook(self):
+        """ Main function responsible for opening the notebook in the browser.
+        """
         for item in self.ui.nodes_tree.selectedItems():
             node_collection = item.parent()
             node_index = node_collection.indexOfChild(item)
@@ -240,6 +302,8 @@ class RunningNotebooks(QWidget):
                     return
 
     def handle_cluster_list_modification(self):
+        """ Handles the modification of the clusters list.
+        """
         self.cluster_names = self.data_provider.get_cluster_names()
         self.ui.cluster_names_box.clear()
         self.ui.cluster_names_box.addItems(self.cluster_names)

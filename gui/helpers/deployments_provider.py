@@ -8,6 +8,11 @@ class DeploymentsProvider:
         self.cluster_deployments = dict()
 
     def get_deployments(self, cluster_name, update=False) -> SynchronizedDeployments:
+        """
+        Returns deployments for the cluster.
+        :param cluster_name: Name of the cluster.
+        :param update: True if deployments should be updated.
+        """
         if cluster_name not in self.cluster_deployments:
             load_environment()
             cluster = show_cluster(name=cluster_name)
@@ -18,6 +23,11 @@ class DeploymentsProvider:
         return self.cluster_deployments[cluster_name]
 
     def add_deployment(self, cluster_name, deployment):
+        """
+        Adds deployment for the cluster.
+        :param cluster_name: Name of the cluster.
+        :param deployment: Deployment to be added.
+        """
         if isinstance(deployment, Nodes):
             for nodes_collection in self.get_deployments(cluster_name).nodes:
                 if nodes_collection.uuid == deployment.uuid:
@@ -39,6 +49,10 @@ class DeploymentsProvider:
             self.get_deployments(cluster_name).dask_deployments.append(deployment)
 
     def _update_deployments(self, cluster_name: str):
+        """
+        Update deployments for the cluster.
+        :param cluster_name: Name of the cluster.
+        """
         cluster = show_cluster(cluster_name)
         nodes = self.cluster_deployments[cluster_name].nodes
         nodes_to_remove = []

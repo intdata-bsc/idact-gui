@@ -121,6 +121,9 @@ class ManageJobs(QWidget):
         return jobs
 
     def concurrent_deploy_notebook(self):
+        """ Setups the worker that allows to run the deploy_notebook functionality
+        in the parallel thread.
+        """
         self.ui.deploy_button.setEnabled(False)
 
         worker = Worker(self.deploy_notebook)
@@ -129,14 +132,22 @@ class ManageJobs(QWidget):
         self.parent.threadpool.start(worker)
 
     def handle_complete_deploy_notebook(self):
+        """ Handles the completion of deploy of the notebook.
+        """
         self.popup_window.show_message("Notebook has been closed",
                                        WindowType.success)
 
     def handle_error_deploy_notebook(self, exception):
+        """ Handles the error thrown while deploying notebook.
+
+            :param exception: Instance of the exception.
+        """
         self.ui.deploy_button.setEnabled(True)
         self.popup_window.show_message("An error occurred while deploying notebook", WindowType.error, exception)
 
     def deploy_notebook(self):
+        """ Main function responsible for deploying the notebook on the node.
+        """
         indexes = self.ui.jobs_table.selectedIndexes()
         job_id = int(self.ui.jobs_table.item(indexes[0].row(), 0).text())
 
@@ -206,7 +217,7 @@ class ManageJobs(QWidget):
         self.concurrent_show_jobs()
 
     def handle_error_cancel_job(self, exception):
-        """ Handles the error thrown while cancelling job.
+        """ Handles the error thrown while cancelling the job.
 
             :param exception: Instance of the exception.
         """
@@ -218,7 +229,7 @@ class ManageJobs(QWidget):
             self.popup_window.show_message("An error occurred while cancelling job", WindowType.error)
 
     def cancel_job(self):
-        """ Main function responsible for cancelling a job.
+        """ Main function responsible for cancelling the job.
         """
         load_environment()
         node = self.cluster.get_access_node()

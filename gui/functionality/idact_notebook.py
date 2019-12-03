@@ -372,7 +372,7 @@ class EditNativeArgumentsWindow(QWidget):
     def show_warning_window(self, event):
         """ Shows warning window that some changes may not have been saved.
 
-            :param event: close event
+            :param event: close event.
         """
         close_window = self.confirmation_window.show_message(
             "Some changes may not have been saved. \nDo you want to quit anyway?")
@@ -380,10 +380,10 @@ class EditNativeArgumentsWindow(QWidget):
         if not close_window:
             event.ignore()
 
-    def closeEvent(self, QCloseEvent):
-        """ Overriden method on closing Edit native arguments window.
+    def closeEvent(self, event):
+        """ Overridden method on closing Edit native arguments window.
 
-            :param QCloseEvent: close event
+            :param event: close event.
         """
         if self.data_changed:
-            self.show_warning_window(QCloseEvent)
+            self.show_warning_window(event)
