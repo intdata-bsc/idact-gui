@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="idact-gui",
-    version="0.3.0",
+    version="0.3.1",
     author="Joanna Chyży, Karolina Piekarz, Piotr Swędrak",
     author_email="piotrekswedrak@gmail.com",
     description="A small example package",
