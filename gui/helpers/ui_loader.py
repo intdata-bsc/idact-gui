@@ -20,5 +20,5 @@ class UiLoader:
             :param form: Instance of the widget.
         """
         ui_path = os.path.dirname(os.path.abspath(__file__))
-        ui_path = os.path.join(ui_path, '../widgets_templates/' + file_name)
+        ui_path = os.path.join(ui_path, os.pardir, 'widgets_templates', file_name)
         return uic.loadUi(ui_path, form)

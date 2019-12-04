@@ -12,6 +12,7 @@ from idact.detail.config.client.setup_actions_config import SetupActionsConfigIm
 from idact.detail.add_cluster_app import actions_parser as parser
 from idact import save_environment, load_environment
 
+from gui.functionality.loading_window import LoadingWindow
 from gui.functionality.popup_window import WindowType, PopUpWindow
 from gui.helpers.parameter_saver import ParameterSaver
 from gui.helpers.ui_loader import UiLoader
@@ -32,6 +33,7 @@ class AddCluster(QWidget):
         self.data_provider = data_provider
 
         self.popup_window = PopUpWindow()
+        self.loading_window = LoadingWindow()
         self.saver = ParameterSaver()
         self.parameters = self.saver.get_map()
 
@@ -74,6 +76,7 @@ class AddCluster(QWidget):
         """ Setups the worker that allows to run the add_cluster functionality
         in the parallel thread.
         """
+        self.loading_window.show_message("Cluster is being added and tested")
         self.ui.add_cluster_button.setDisabled(True)
 
         worker = Worker(self.add_cluster)
@@ -84,6 +87,7 @@ class AddCluster(QWidget):
     def handle_complete_add_cluster(self):
         """ Handles the completion of adding cluster.
         """
+        self.loading_window.close()
         self.ui.add_cluster_button.setDisabled(False)
         save_environment()
         self.data_provider.add_cluster_signal.emit()
@@ -94,6 +98,7 @@ class AddCluster(QWidget):
 
             :param exception: Instance of the exception.
         """
+        self.loading_window.close()
         self.ui.add_cluster_button.setDisabled(False)
         if isinstance(exception, EmptyFieldError):
             self.popup_window.show_message("Cluster name cannot be empty", WindowType.error)

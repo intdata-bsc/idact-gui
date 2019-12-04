@@ -2,6 +2,8 @@
 """
 import pytest
 from pytestqt.qt_compat import qt_api
+
+from gui.functionality.running_notebooks import RunningNotebooks
 from gui.helpers.configuration_provider import ConfigurationProvider
 from gui.functionality.main_window import MainWindow
 from gui.helpers.data_provider import DataProvider
@@ -10,6 +12,7 @@ from gui.functionality.manage_jobs import ManageJobs
 from gui.functionality.add_cluster import AddCluster
 from gui.functionality.remove_cluster import RemoveCluster
 from gui.functionality.adjust_timeouts import AdjustTimeouts
+from gui.helpers.deployments_provider import DeploymentsProvider
 
 
 @pytest.fixture()
@@ -18,6 +21,8 @@ def window():
     conf_provider = ConfigurationProvider()
     if not conf_provider.check_if_conf_file_exists():
         conf_provider.create_conf_file()
+    if not conf_provider.check_if_args_files_exist():
+        conf_provider.create_args_files()
     window = MainWindow()
     return window
 
@@ -38,7 +43,9 @@ def test_deploy_notebook_window(window, qtbot):
     window.deploy_notebook_action.trigger()
 
     data_provider = DataProvider()
-    assert window.centralWidget().__class__ == IdactNotebook(data_provider).__class__
+    deployments_provider = DeploymentsProvider()
+
+    assert window.centralWidget().__class__ == IdactNotebook(data_provider, deployments_provider).__class__
 
 
 def test_manage_jobs_window(window, qtbot):
@@ -49,6 +56,17 @@ def test_manage_jobs_window(window, qtbot):
     data_provider = DataProvider()
 
     assert window.centralWidget().__class__ == ManageJobs(data_provider).__class__
+
+
+def test_running_notebooks_window(window, qtbot):
+    """ Tests if it is possible to open running notebooks window.
+    """
+    window.show()
+    window.running_notebooks_action.trigger()
+    data_provider = DataProvider()
+    deployments_provider = DeploymentsProvider()
+
+    assert window.centralWidget().__class__ == RunningNotebooks(data_provider, deployments_provider).__class__
 
 
 def test_add_cluster_window(window, qtbot):

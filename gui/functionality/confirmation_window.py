@@ -7,7 +7,7 @@
 from PyQt5.QtWidgets import QWidget, QMessageBox
 
 
-class YesOrNoWindow(QWidget):
+class ConfirmationWindow(QWidget):
     """ Helper widget window for confirmation.
     """
 

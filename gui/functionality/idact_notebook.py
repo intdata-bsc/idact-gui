@@ -5,46 +5,50 @@
     :class:`.AdjustTimeouts`, :class:`.ManageJobs`
     Helpers: class:`.EditNativeArgumentsWindow`
 """
-from PyQt5.QtWidgets import QWidget, QTableWidgetItem, QMessageBox
 from contextlib import ExitStack
 
+from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtWidgets import QWidget, QTableWidgetItem, QMessageBox
 from idact import load_environment, show_cluster, Walltime
 from idact.detail.config.client.client_cluster_config import ClusterConfigImpl
 from idact.detail.deployment.cancel_local_on_exit import cancel_local_on_exit
-from idact.detail.deployment.cancel_on_exit import cancel_on_exit
 from idact.detail.jupyter_app.app_allocation_parameters import \
     AppAllocationParameters
 from idact.detail.jupyter_app.override_parameters_if_possible import \
     override_parameters_if_possible
-from idact.detail.jupyter_app.sleep_until_allocation_ends import \
-    sleep_until_allocation_ends
+from idact.detail.jupyter_app.sleep_until_allocation_ends import sleep_until_allocation_ends
 
+from gui.functionality.loading_window import LoadingWindow
 from gui.functionality.popup_window import WindowType, PopUpWindow
-from gui.functionality.yes_or_no_window import YesOrNoWindow
+from gui.functionality.confirmation_window import ConfirmationWindow
+from gui.helpers.custom_exceptions import NoClustersError
 from gui.helpers.native_saver import NativeArgsSaver
 from gui.helpers.parameter_saver import ParameterSaver
 from gui.helpers.ui_loader import UiLoader
 from gui.helpers.worker import Worker
-from gui.helpers.custom_exceptions import NoClustersError
 
 
 class IdactNotebook(QWidget):
     """ Module of GUI that is responsible for deploying the notebook
     on the selected cluster.
     """
+    deployment_ended = pyqtSignal()
 
-    def __init__(self, data_provider, parent=None):
+    def __init__(self, data_provider, deployment_provider, parent=None):
         super().__init__(parent=parent)
         self.ui = UiLoader.load_ui_from_file('deploy-notebook.ui', self)
 
         self.parent = parent
         self.data_provider = data_provider
+        self.deployment_provider = deployment_provider
 
         self.edit_native_arguments_window = EditNativeArgumentsWindow()
         self.popup_window = PopUpWindow()
+        self.loading_window = LoadingWindow()
         self.native_args_saver = NativeArgsSaver()
         self.saver = ParameterSaver()
         self.parameters = self.saver.get_map()
+        self.cluster_name = None
 
         self.ui.deploy_button.clicked.connect(self.concurrent_deploy_notebook)
         self.ui.edit_native_arguments_button.clicked.connect(self.open_edit_native_argument)
@@ -68,10 +72,109 @@ class IdactNotebook(QWidget):
         self.data_provider.add_cluster_signal.connect(self.handle_cluster_list_modification)
         self.ui.cluster_names_box.addItems(self.cluster_names)
 
+        self.ui.allocate_nodes_button.clicked.connect(self.concurrent_allocate_nodes)
+        self.ui.begin_label.setDisabled(True)
+        self.ui.begin_edit.setDisabled(True)
+        self.ui.future_allocation.toggled.connect(self.change_buttons_to_disabled_or_not)
+
+        self.deployment_ended.connect(self.handle_deployment_ended)
+        self.allocation_or_deployment_in_progress = False
+
+    def handle_deployment_ended(self):
+        self.allocation_or_deployment_in_progress = False
+        self.change_buttons_to_disabled_or_not()
+        self.loading_window.hide()
+
+    def change_buttons_to_disabled_or_not(self):
+        if not self.allocation_or_deployment_in_progress:
+            if self.ui.future_allocation.isChecked():
+                self.ui.allocate_nodes_button.setDisabled(False)
+                self.ui.deploy_button.setDisabled(True)
+                self.ui.begin_label.setDisabled(False)
+                self.ui.begin_edit.setDisabled(False)
+            else:
+                self.ui.allocate_nodes_button.setDisabled(False)
+                self.ui.deploy_button.setDisabled(False)
+                self.ui.begin_label.setDisabled(True)
+                self.ui.begin_edit.setDisabled(True)
+
+    def concurrent_allocate_nodes(self):
+        self.loading_window.show_message('Nodes are being allocated')
+        self.ui.allocate_nodes_button.setEnabled(False)
+        self.ui.deploy_button.setEnabled(False)
+        self.allocation_or_deployment_in_progress = True
+
+        worker = Worker(self.allocate_nodes)
+        worker.signals.result.connect(self.handle_complete_allocate_nodes)
+        worker.signals.error.connect(self.handle_error_allocate_nodes)
+        self.parent.threadpool.start(worker)
+
+    def handle_complete_allocate_nodes(self):
+        self.loading_window.close()
+        self.allocation_or_deployment_in_progress = False
+        self.change_buttons_to_disabled_or_not()
+        self.popup_window.show_message("Nodes allocation has been submitted. \nYou can see job status in "
+                                       "Notebooks->Manage Jobs", WindowType.success)
+
+    def handle_error_allocate_nodes(self, exception):
+        self.loading_window.close()
+        self.allocation_or_deployment_in_progress = False
+        self.change_buttons_to_disabled_or_not()
+        self.popup_window.show_message("An error occurred while allocating nodes", WindowType.error, exception)
+
+    def allocate_nodes(self):
+        self.cluster_name = str(self.ui.cluster_names_box.currentText())
+        self.parameters['deploy_notebook_arguments']['cluster_name'] = self.cluster_name
+        nodes = int(self.ui.nodes_edit.text())
+        self.parameters['deploy_notebook_arguments']['nodes'] = nodes
+        cores = int(self.ui.cores_edit.text())
+        self.parameters['deploy_notebook_arguments']['cores'] = cores
+        memory = self.ui.memory_edit.text()
+        self.parameters['deploy_notebook_arguments']['memory_value'] = memory
+        unit = self.ui.memory_unit_box.currentText()
+        self.parameters['deploy_notebook_arguments']['memory_unit'] = unit
+        walltime = self.validate_and_format_walltime(self.ui.walltime_edit.text())
+        self.parameters['deploy_notebook_arguments']['walltime'] = walltime
+        self.saver.save(self.parameters)
+        begin = self.ui.begin_edit.text()
+
+        load_environment()
+        cluster = show_cluster(name=self.cluster_name)
+
+        config = cluster.config
+        assert isinstance(config, ClusterConfigImpl)
+        parameters = AppAllocationParameters.deserialize(
+            serialized=config.notebook_defaults)
+
+        native_args = self.get_prepared_native_args()
+        if begin and self.ui.future_allocation.isChecked():
+            native_args['--begin'] = begin
+
+        override_parameters_if_possible(parameters=parameters,
+                                        nodes=nodes,
+                                        cores=cores,
+                                        memory_per_node=memory + unit,
+                                        walltime=walltime,
+                                        native_args=native_args.items())
+        nodes = cluster.allocate_nodes(
+            nodes=parameters.nodes,
+            cores=parameters.cores,
+            memory_per_node=parameters.memory_per_node,
+            walltime=parameters.walltime,
+            native_args=native_args)
+        cluster.push_deployment(nodes)
+        self.deployment_provider.add_deployment(self.cluster_name, nodes)
+        return nodes
+
     def concurrent_deploy_notebook(self):
         """ Setups the worker that allows to run the deploy_notebook functionality
         in the parallel thread.
         """
+        self.loading_window.show_message("Notebook is being deployed")
+        self.ui.allocate_nodes_button.setEnabled(False)
+        self.ui.deploy_button.setEnabled(False)
+        self.allocation_or_deployment_in_progress = True
+
         worker = Worker(self.deploy_notebook)
         worker.signals.result.connect(self.handle_complete_deploy_notebook)
         worker.signals.error.connect(self.handle_error_deploy_notebook)
@@ -87,71 +190,34 @@ class IdactNotebook(QWidget):
 
             :param exception: Instance of the exception.
         """
+        self.loading_window.close()
+        self.allocation_or_deployment_in_progress = False
+        self.change_buttons_to_disabled_or_not()
         if isinstance(exception, NoClustersError):
             self.popup_window.show_message("There are no added clusters", WindowType.error)
         else:
             self.popup_window.show_message("An error occurred while deploying notebook", WindowType.error, exception)
-        self.ui.deploy_button.setEnabled(True)
 
     def deploy_notebook(self):
         """ Main function responsible for deploying the notebook.
         """
-        cluster_name = str(self.ui.cluster_names_box.currentText())
-
-        if not cluster_name:
-            raise NoClustersError()
-
-        self.ui.deploy_button.setEnabled(False)
-
-        nodes = int(self.ui.nodes_edit.text())
-        self.parameters['deploy_notebook_arguments']['nodes'] = nodes
-        cores = int(self.ui.cores_edit.text())
-        self.parameters['deploy_notebook_arguments']['cores'] = cores
-        memory = self.ui.memory_edit.text()
-        self.parameters['deploy_notebook_arguments']['memory_value'] = memory
-        unit = self.ui.memory_unit_box.currentText()
-        self.parameters['deploy_notebook_arguments']['memory_unit'] = unit
-        walltime = IdactNotebook.validate_and_format_walltime(self.ui.walltime_edit.text())
-        self.parameters['deploy_notebook_arguments']['walltime'] = walltime
-        self.saver.save(self.parameters)
-
         with ExitStack() as stack:
-            load_environment()
-
-            cluster = show_cluster(name=cluster_name)
-
-            config = cluster.config
-            assert isinstance(config, ClusterConfigImpl)
-            parameters = AppAllocationParameters.deserialize(
-                serialized=config.notebook_defaults)
-
-            native_args = self.get_prepared_native_args()
-            override_parameters_if_possible(parameters=parameters,
-                                            nodes=nodes,
-                                            cores=cores,
-                                            memory_per_node=memory + unit,
-                                            walltime=walltime,
-                                            native_args=native_args.items())
-            nodes = cluster.allocate_nodes(
-                nodes=parameters.nodes,
-                cores=parameters.cores,
-                memory_per_node=parameters.memory_per_node,
-                walltime=parameters.walltime,
-                native_args=native_args)
-            stack.enter_context(cancel_on_exit(nodes))
+            nodes = self.allocate_nodes()
             nodes.wait()
 
             notebook = nodes[0].deploy_notebook()
             stack.enter_context(cancel_local_on_exit(notebook))
 
-            cluster.push_deployment(nodes)
+            cluster = show_cluster(name=self.cluster_name)
 
+            cluster.push_deployment(nodes)
+            self.deployment_provider.add_deployment(self.cluster_name, nodes)
             cluster.push_deployment(notebook)
+            self.deployment_provider.add_deployment(self.cluster_name, notebook)
 
             notebook.open_in_browser()
-            self.ui.deploy_button.setEnabled(True)
+            self.deployment_ended.emit()
             sleep_until_allocation_ends(nodes=nodes)
-        return
 
     @staticmethod
     def validate_and_format_walltime(walltime):
@@ -216,8 +282,11 @@ class IdactNotebook(QWidget):
         keys = list(args)
 
         for key in keys:
-            if not key.startswith('--'):
-                args['--' + key] = args.pop(key)
+            if not key.startswith('-'):
+                if len(key) == 1:
+                    args['-' + key] = args.pop(key)
+                else:
+                    args['--' + key] = args.pop(key)
         return args
 
     def open_edit_native_argument(self):
@@ -298,7 +367,7 @@ class EditNativeArgumentsWindow(QWidget):
         self.ui = UiLoader.load_ui_from_file('edit-native.ui', self)
 
         self.data_changed = False
-        self.yes_or_no_window = YesOrNoWindow()
+        self.confirmation_window = ConfirmationWindow()
 
     def set_that_data_changed(self):
         self.data_changed = True
@@ -306,18 +375,18 @@ class EditNativeArgumentsWindow(QWidget):
     def show_warning_window(self, event):
         """ Shows warning window that some changes may not have been saved.
 
-            :param event: close event
+            :param event: close event.
         """
-        close_window = self.yes_or_no_window.show_message(
+        close_window = self.confirmation_window.show_message(
             "Some changes may not have been saved. \nDo you want to quit anyway?")
-        self.yes_or_no_window.box.setDefaultButton(QMessageBox.No)
+        self.confirmation_window.box.setDefaultButton(QMessageBox.No)
         if not close_window:
             event.ignore()
 
-    def closeEvent(self, QCloseEvent):
-        """ Overriden method on closing Edit native arguments window.
+    def closeEvent(self, event):
+        """ Overridden method on closing Edit native arguments window.
 
-            :param QCloseEvent: close event
+            :param event: close event.
         """
         if self.data_changed:
-            self.show_warning_window(QCloseEvent)
+            self.show_warning_window(event)
