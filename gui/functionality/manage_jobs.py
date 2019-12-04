@@ -196,7 +196,7 @@ class ManageJobs(QWidget):
             self.cluster.push_deployment(notebook)
 
             notebook.open_in_browser()
-            sleep_until_allocation_ends(nodes=nodes)
+            sleep_until_allocation_ends(nodes=nodes, echo_messages=False)
 
     def concurrent_cancel_job(self):
         """ Setups the worker that allows to run the cancel_job functionality
