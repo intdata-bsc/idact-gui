@@ -5,11 +5,12 @@ into one window.
     :class:`.IdactNotebook`, :class:`.AdjustTimeouts`,
     :class:`.ManageJobs`
 """
-import sys
+import logging
 
 from PyQt5.QtCore import QThreadPool
 from PyQt5.QtWidgets import QMainWindow
 from idact import show_cluster
+from idact.detail.log.logger_provider import LoggerProvider
 
 from gui.functionality.add_cluster import AddCluster
 from gui.functionality.adjust_timeouts import AdjustTimeouts
@@ -31,8 +32,9 @@ class MainWindow(QMainWindow):
     """
     def __init__(self):
         self.show_logs_window = ShowLogsWindow()
-        sys.stdout = self.show_logs_window
-        sys.stderr = self.show_logs_window
+        logger_provider = LoggerProvider()
+        logger_provider.set_stream(self.show_logs_window)
+        logger_provider.log_level = logging.INFO
 
         super(MainWindow, self).__init__()
         self.ui = UiLoader.load_ui_from_file('main-window.ui', self)

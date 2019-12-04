@@ -22,6 +22,3 @@ class ShowLogsWindow(QWidget):
             :param text: Log text to be shown.
         """
         self.ui.logs_browser.append(text)
-
-    def flush(self):
-        pass

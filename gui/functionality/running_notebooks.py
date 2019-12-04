@@ -199,7 +199,7 @@ class RunningNotebooks(QWidget):
             notebook.open_in_browser()
             self.deployment_ended.emit()
             self.concurrent_show_nodes_and_notebooks()
-            sleep_until_allocation_ends(nodes=nodes)
+            sleep_until_allocation_ends(nodes=nodes, echo_messages=False)
 
     def get_node_for_tree_item(self, item):
         """Returns Node instance for the item.
