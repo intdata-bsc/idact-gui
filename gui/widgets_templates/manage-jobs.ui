@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>565</width>
+    <height>570</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Jobs</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="3" column="0">
+    <widget class="QPushButton" name="refresh_button">
+     <property name="text">
+      <string>Refresh</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="cluster_name_deployn_label_2">
+     <property name="text">
+      <string>Cluster name</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="3">
+    <widget class="QPushButton" name="show_jobs_button">
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Show jobs in queue</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="3">
+    <widget class="QPushButton" name="cancel_job_button">
+     <property name="text">
+      <string>Cancel job</string>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="4">
+    <widget class="QTableWidget" name="jobs_table">
+     <property name="columnCount">
+      <number>6</number>
+     </property>
+     <column>
+      <property name="text">
+       <string>Job ID</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>End time</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Node count</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Node list</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Reason</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>State</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+   <item row="1" column="1" colspan="2">
+    <widget class="QComboBox" name="cluster_names_box"/>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>cluster_names_box</tabstop>
+  <tabstop>show_jobs_button</tabstop>
+  <tabstop>jobs_table</tabstop>
+  <tabstop>refresh_button</tabstop>
+  <tabstop>cancel_job_button</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

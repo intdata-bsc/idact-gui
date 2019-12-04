@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>450</width>
+    <height>482</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="5" column="1" colspan="2">
+    <widget class="QLineEdit" name="password_edit"/>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="password_label">
+     <property name="text">
+      <string>Password</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="0">
+    <widget class="QLabel" name="actions_file_label">
+     <property name="text">
+      <string>Actions file</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1" colspan="2">
+    <widget class="QLineEdit" name="host_edit"/>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="host_label">
+     <property name="text">
+      <string>Host</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="1">
+    <widget class="QPushButton" name="add_actions_file_button">
+     <property name="text">
+      <string>Add file</string>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="1">
+    <widget class="QLabel" name="currently_selected_file_label">
+     <property name="font">
+      <font>
+       <italic>false</italic>
+      </font>
+     </property>
+     <property name="text">
+      <string>Currently selected:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0">
+    <widget class="QLabel" name="private_key_label">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>Private key</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="1">
+    <widget class="QPushButton" name="add_key_button">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>Add key</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="2">
+    <widget class="QPushButton" name="clear_actions_file_button">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>Clear actions file</string>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="0">
+    <widget class="QCheckBox" name="use_jupyter_lab_check_box">
+     <property name="text">
+      <string>Use JupyterLab</string>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="2">
+    <widget class="QTextBrowser" name="selected_file_path_browser">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="cluster_name_label">
+     <property name="text">
+      <string>Cluster name</string>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="0" colspan="3">
+    <widget class="QPushButton" name="add_cluster_button">
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Add cluster and try connection</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1" colspan="2">
+    <widget class="QLineEdit" name="user_edit"/>
+   </item>
+   <item row="7" column="2">
+    <widget class="QPushButton" name="clear_key_button">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>Clear key</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1" colspan="2">
+    <widget class="QSpinBox" name="port_edit"/>
+   </item>
+   <item row="0" column="1" colspan="2">
+    <widget class="QLineEdit" name="cluster_name_addc_edit"/>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="user_label">
+     <property name="text">
+      <string>User</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="1">
+    <widget class="QLabel" name="currently_selected_key">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>Currently selected:</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="port_label">
+     <property name="text">
+      <string>Port</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="2">
+    <widget class="QTextBrowser" name="selected_key_browser">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="auth_method_label">
+     <property name="text">
+      <string>Authentication Method</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1" colspan="2">
+    <widget class="QComboBox" name="auth_method_box">
+     <item>
+      <property name="text">
+       <string>GENERATE_KEY</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>PRIVATE_KEY</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>cluster_name_addc_edit</tabstop>
+  <tabstop>host_edit</tabstop>
+  <tabstop>user_edit</tabstop>
+  <tabstop>port_edit</tabstop>
+  <tabstop>auth_method_box</tabstop>
+  <tabstop>password_edit</tabstop>
+  <tabstop>add_key_button</tabstop>
+  <tabstop>add_actions_file_button</tabstop>
+  <tabstop>use_jupyter_lab_check_box</tabstop>
+  <tabstop>add_cluster_button</tabstop>
+  <tabstop>clear_key_button</tabstop>
+  <tabstop>selected_key_browser</tabstop>
+  <tabstop>clear_actions_file_button</tabstop>
+  <tabstop>selected_file_path_browser</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

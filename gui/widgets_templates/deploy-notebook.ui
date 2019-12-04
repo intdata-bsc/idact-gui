@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>417</width>
+    <height>260</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="5" column="0" colspan="4">
+    <widget class="QPushButton" name="edit_native_arguments_button">
+     <property name="text">
+      <string>Edit native arguments</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="cores_label">
+     <property name="text">
+      <string>Cores per node</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="3">
+    <widget class="QComboBox" name="memory_unit_box">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <item>
+      <property name="text">
+       <string>GiB</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>MiB</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>TiB</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>PiB</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="3" column="0">
+    <widget class="QLabel" name="memory_label">
+     <property name="text">
+      <string>Memory per node</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1" colspan="3">
+    <widget class="QSpinBox" name="cores_edit"/>
+   </item>
+   <item row="1" column="1" colspan="3">
+    <widget class="QSpinBox" name="nodes_edit"/>
+   </item>
+   <item row="3" column="1" colspan="2">
+    <widget class="QSpinBox" name="memory_edit">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1" colspan="3">
+    <widget class="QLineEdit" name="walltime_edit"/>
+   </item>
+   <item row="0" column="1" colspan="3">
+    <widget class="QComboBox" name="cluster_names_box"/>
+   </item>
+   <item row="7" column="0" colspan="4">
+    <widget class="QPushButton" name="deploy_button">
+     <property name="font">
+      <font>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Deploy Jupyter Notebook</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="walltime_label">
+     <property name="maximumSize">
+      <size>
+       <width>139</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Walltime</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="cluster_name_deployn_label">
+     <property name="text">
+      <string>Cluster name</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="nodes_label">
+     <property name="text">
+      <string>Nodes</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>cluster_names_box</tabstop>
+  <tabstop>nodes_edit</tabstop>
+  <tabstop>cores_edit</tabstop>
+  <tabstop>memory_edit</tabstop>
+  <tabstop>memory_unit_box</tabstop>
+  <tabstop>walltime_edit</tabstop>
+  <tabstop>edit_native_arguments_button</tabstop>
+  <tabstop>deploy_button</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

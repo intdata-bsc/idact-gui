@@ -1,0 +1,15 @@
+{
+    "deploy_notebook_arguments": {
+        "nodes": 1,
+        "cores": 1,
+        "memory_value": "1",
+        "memory_unit": "GiB",
+        "walltime": "00:20:00"
+    },
+    "add_cluster_arguments": {
+        "cluster_name": "",
+        "host": "",
+        "user": "",
+        "port": 22
+    }
+}

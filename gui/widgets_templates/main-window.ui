@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>462</width>
+    <height>466</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Idact GUI</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout"/>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>462</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_notebooks">
+    <property name="title">
+     <string>Notebooks</string>
+    </property>
+    <addaction name="deploy_notebook_action"/>
+    <addaction name="see_running_notebooks_action"/>
+   </widget>
+   <widget class="QMenu" name="menu_clusters">
+    <property name="title">
+     <string>Clusters</string>
+    </property>
+    <addaction name="add_cluster_action"/>
+    <addaction name="remove_cluster_action"/>
+    <addaction name="edit_configuration_action"/>
+   </widget>
+   <widget class="QMenu" name="menu_help">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="see_help_action"/>
+    <addaction name="about_the_program_action"/>
+   </widget>
+   <widget class="QMenu" name="menu_logs">
+    <property name="title">
+     <string>Logs</string>
+    </property>
+    <addaction name="show_logs_action"/>
+   </widget>
+   <addaction name="menu_notebooks"/>
+   <addaction name="menu_clusters"/>
+   <addaction name="menu_logs"/>
+   <addaction name="menu_help"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="deploy_notebook_action">
+   <property name="text">
+    <string>Deploy notebook</string>
+   </property>
+  </action>
+  <action name="see_running_notebooks_action">
+   <property name="text">
+    <string>See running notebooks</string>
+   </property>
+  </action>
+  <action name="add_cluster_action">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Add cluster</string>
+   </property>
+  </action>
+  <action name="remove_cluster_action">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Remove cluster</string>
+   </property>
+   <property name="toolTip">
+    <string>Remove cluster</string>
+   </property>
+  </action>
+  <action name="edit_configuration_action">
+   <property name="text">
+    <string>Edit clusters configuration</string>
+   </property>
+  </action>
+  <action name="see_help_action">
+   <property name="text">
+    <string>See help</string>
+   </property>
+  </action>
+  <action name="about_the_program_action">
+   <property name="text">
+    <string>About the program</string>
+   </property>
+  </action>
+  <action name="show_logs_action">
+   <property name="text">
+    <string>Show logs</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
