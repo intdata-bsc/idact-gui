@@ -6,4 +6,4 @@ fabric3>=1.14
 sshtunnel>=0.1.4
 requests>=2.18.4
 
-git+https://github.com/intdata-bsc/idact.git@0.8#egg=idact
+git+https://github.com/intdata-bsc/idact.git@0.9#egg=idact
