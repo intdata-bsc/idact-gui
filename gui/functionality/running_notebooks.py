@@ -15,7 +15,6 @@ from idact.detail.jupyter_app.sleep_until_allocation_ends import sleep_until_all
 from gui.functionality.loading_window import LoadingWindow
 from gui.functionality.popup_window import WindowType, PopUpWindow
 from gui.helpers.custom_exceptions import NoClustersError
-from gui.helpers.parameter_saver import ParameterSaver
 from gui.helpers.ui_loader import UiLoader
 from gui.helpers.worker import Worker
 
