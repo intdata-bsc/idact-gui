@@ -23,6 +23,8 @@ class AdjustTimeouts(QWidget):
         super().__init__(parent=parent)
         self.ui = UiLoader.load_ui_from_file('adjust-timeouts.ui', self)
 
+        self.parent = parent
+
         self.popup_window = PopUpWindow()
         self.cluster_names = self.parent.data_provider.get_cluster_names()
         self.current_cluster = ''
