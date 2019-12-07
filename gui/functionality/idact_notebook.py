@@ -34,13 +34,11 @@ class IdactNotebook(QWidget):
     """
     deployment_ended = pyqtSignal()
 
-    def __init__(self, data_provider, deployment_provider, parent=None):
+    def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.ui = UiLoader.load_ui_from_file('deploy-notebook.ui', self)
 
         self.parent = parent
-        self.data_provider = data_provider
-        self.deployment_provider = deployment_provider
 
         self.edit_native_arguments_window = EditNativeArgumentsWindow()
         self.popup_window = PopUpWindow()
@@ -66,10 +64,10 @@ class IdactNotebook(QWidget):
                 len(self.edit_native_arguments_window.ui.table_widget.selectedIndexes()) > 0))
         self.edit_native_arguments_window.ui.save_arguments_button.clicked.connect(self.save_arguments)
 
-        self.cluster_names = self.data_provider.get_cluster_names()
+        self.cluster_names = self.parent.data_provider.get_cluster_names()
 
-        self.data_provider.remove_cluster_signal.connect(self.handle_cluster_list_modification)
-        self.data_provider.add_cluster_signal.connect(self.handle_cluster_list_modification)
+        self.parent.data_provider.remove_cluster_signal.connect(self.handle_cluster_list_modification)
+        self.parent.data_provider.add_cluster_signal.connect(self.handle_cluster_list_modification)
         self.ui.cluster_names_box.addItems(self.cluster_names)
 
         self.ui.allocate_nodes_button.clicked.connect(self.concurrent_allocate_nodes)
@@ -163,7 +161,7 @@ class IdactNotebook(QWidget):
             walltime=parameters.walltime,
             native_args=native_args)
         cluster.push_deployment(nodes)
-        self.deployment_provider.add_deployment(self.cluster_name, nodes)
+        self.parent.deployments_provider.add_deployment(self.cluster_name, nodes)
         return nodes
 
     def concurrent_deploy_notebook(self):
@@ -211,9 +209,9 @@ class IdactNotebook(QWidget):
             cluster = show_cluster(name=self.cluster_name)
 
             cluster.push_deployment(nodes)
-            self.deployment_provider.add_deployment(self.cluster_name, nodes)
+            self.parent.deployments_provider.add_deployment(self.cluster_name, nodes)
             cluster.push_deployment(notebook)
-            self.deployment_provider.add_deployment(self.cluster_name, notebook)
+            self.parent.deployments_provider.add_deployment(self.cluster_name, notebook)
 
             notebook.open_in_browser()
             self.deployment_ended.emit()
@@ -353,7 +351,7 @@ class IdactNotebook(QWidget):
     def handle_cluster_list_modification(self):
         """ Handles the modification of the clusters list.
         """
-        self.cluster_names = self.data_provider.get_cluster_names()
+        self.cluster_names = self.parent.data_provider.get_cluster_names()
         self.ui.cluster_names_box.clear()
         self.ui.cluster_names_box.addItems(self.cluster_names)
 

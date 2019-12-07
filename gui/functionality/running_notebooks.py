@@ -26,18 +26,14 @@ class RunningNotebooks(QWidget):
     """
     deployment_ended = pyqtSignal()
 
-    def __init__(self, data_provider, deployments_provider, parent=None):
+    def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.ui = UiLoader.load_ui_from_file('running-notebooks.ui', self)
 
         self.parent = parent
-        self.data_provider = data_provider
-        self.deployments_provider = deployments_provider
 
         self.popup_window = PopUpWindow()
         self.loading_window = LoadingWindow()
-        self.saver = ParameterSaver()
-        self.parameters = self.saver.get_map()
         self.deployments = None
         self.cluster_name = None
 
@@ -47,10 +43,10 @@ class RunningNotebooks(QWidget):
         self.ui.deploy_button.clicked.connect(self.concurrent_deploy_notebook)
         self.ui.cancel_job_button.clicked.connect(self.concurrent_cancel_job)
 
-        self.cluster_names = self.data_provider.get_cluster_names()
+        self.cluster_names = self.parent.data_provider.get_cluster_names()
 
-        self.data_provider.remove_cluster_signal.connect(self.handle_cluster_list_modification)
-        self.data_provider.add_cluster_signal.connect(self.handle_cluster_list_modification)
+        self.parent.data_provider.remove_cluster_signal.connect(self.handle_cluster_list_modification)
+        self.parent.data_provider.add_cluster_signal.connect(self.handle_cluster_list_modification)
         self.ui.cluster_names_box.addItems(self.cluster_names)
 
         self.ui.open_notebook_button.setEnabled(False)
@@ -151,7 +147,7 @@ class RunningNotebooks(QWidget):
         self.cluster_name = str(self.ui.cluster_names_box.currentText())
         if not self.cluster_name:
             raise NoClustersError()
-        self.deployments = self.deployments_provider.get_deployments(self.cluster_name, update=True)
+        self.deployments = self.parent.deployments_provider.get_deployments(self.cluster_name, update=True)
 
     def concurrent_deploy_notebook(self):
         """ Setups the worker that allows to run the deploy_notebook functionality
@@ -195,7 +191,7 @@ class RunningNotebooks(QWidget):
             stack.enter_context(cancel_local_on_exit(notebook))
             cluster = show_cluster(name=self.cluster_name)
             cluster.push_deployment(notebook)
-            self.deployments_provider.add_deployment(self.cluster_name, notebook)
+            self.parent.deployments_provider.add_deployment(self.cluster_name, notebook)
             notebook.open_in_browser()
             self.deployment_ended.emit()
             self.concurrent_show_nodes_and_notebooks()
@@ -304,6 +300,6 @@ class RunningNotebooks(QWidget):
     def handle_cluster_list_modification(self):
         """ Handles the modification of the clusters list.
         """
-        self.cluster_names = self.data_provider.get_cluster_names()
+        self.cluster_names = self.parent.data_provider.get_cluster_names()
         self.ui.cluster_names_box.clear()
         self.ui.cluster_names_box.addItems(self.cluster_names)

@@ -19,13 +19,12 @@ class AdjustTimeouts(QWidget):
     clusters timeouts.
     """
 
-    def __init__(self, data_provider, parent=None):
+    def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.ui = UiLoader.load_ui_from_file('adjust-timeouts.ui', self)
 
-        self.data_provider = data_provider
         self.popup_window = PopUpWindow()
-        self.cluster_names = self.data_provider.get_cluster_names()
+        self.cluster_names = self.parent.data_provider.get_cluster_names()
         self.current_cluster = ''
 
         load_environment()
@@ -41,8 +40,8 @@ class AdjustTimeouts(QWidget):
         self.ui.cluster_names_box.activated[str].connect(self.item_pressed)
         self.ui.save_timeouts_button.clicked.connect(self.save_timeouts)
 
-        self.data_provider.add_cluster_signal.connect(self.handle_cluster_list_modification)
-        self.data_provider.remove_cluster_signal.connect(self.handle_cluster_list_modification)
+        self.parent.data_provider.add_cluster_signal.connect(self.handle_cluster_list_modification)
+        self.parent.data_provider.remove_cluster_signal.connect(self.handle_cluster_list_modification)
 
     def refresh_timeouts(self, cluster_name):
         """ Fetches and refreshes the timeouts of the particular cluster.
@@ -140,6 +139,6 @@ class AdjustTimeouts(QWidget):
     def handle_cluster_list_modification(self):
         """ Handles the modification of the clusters list.
         """
-        self.cluster_names = self.data_provider.get_cluster_names()
+        self.cluster_names = self.parent.data_provider.get_cluster_names()
         self.ui.cluster_names_box.clear()
         self.ui.cluster_names_box.addItems(self.cluster_names)

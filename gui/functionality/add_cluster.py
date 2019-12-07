@@ -25,12 +25,11 @@ class AddCluster(QWidget):
     new cluster.
     """
 
-    def __init__(self, data_provider, parent=None):
+    def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.ui = UiLoader.load_ui_from_file('add-cluster.ui', self)
 
         self.parent = parent
-        self.data_provider = data_provider
 
         self.popup_window = PopUpWindow()
         self.loading_window = LoadingWindow()
@@ -90,7 +89,7 @@ class AddCluster(QWidget):
         self.loading_window.close()
         self.ui.add_cluster_button.setDisabled(False)
         save_environment()
-        self.data_provider.add_cluster_signal.emit()
+        self.parent.data_provider.add_cluster_signal.emit()
         self.popup_window.show_message("The cluster has been successfully added", WindowType.success)
 
     def handle_error_add_cluster(self, exception):
