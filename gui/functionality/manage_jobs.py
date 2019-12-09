@@ -21,13 +21,13 @@ class ManageJobs(QWidget):
     in the slurm queue.
     """
 
-    def __init__(self, data_provider, parent=None):
+    def __init__(self, parent):
         super().__init__(parent=parent)
         self.ui = UiLoader.load_ui_from_file('manage-jobs.ui', self)
 
         self.parent = parent
-        self.data_provider = data_provider
-        self.cluster_names = self.data_provider.get_cluster_names()
+
+        self.cluster_names = self.parent.data_provider.get_cluster_names()
         self.popup_window = PopUpWindow()
         self.cluster = None
 
@@ -38,8 +38,8 @@ class ManageJobs(QWidget):
         self.ui.jobs_table.itemSelectionChanged.connect(self.change_button_to_disabled_or_not)
         self.ui.cancel_job_button.setEnabled(False)
 
-        self.data_provider.remove_cluster_signal.connect(self.handle_cluster_list_modification)
-        self.data_provider.add_cluster_signal.connect(self.handle_cluster_list_modification)
+        self.parent.data_provider.remove_cluster_signal.connect(self.handle_cluster_list_modification)
+        self.parent.data_provider.add_cluster_signal.connect(self.handle_cluster_list_modification)
         self.ui.cluster_names_box.addItems(self.cluster_names)
 
     def change_button_to_disabled_or_not(self):
@@ -148,6 +148,6 @@ class ManageJobs(QWidget):
     def handle_cluster_list_modification(self):
         """ Handles the modification of the clusters list.
         """
-        self.cluster_names = self.data_provider.get_cluster_names()
+        self.cluster_names = self.parent.data_provider.get_cluster_names()
         self.ui.cluster_names_box.clear()
         self.ui.cluster_names_box.addItems(self.cluster_names)

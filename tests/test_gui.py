@@ -6,13 +6,11 @@ from pytestqt.qt_compat import qt_api
 from gui.functionality.running_notebooks import RunningNotebooks
 from gui.helpers.configuration_provider import ConfigurationProvider
 from gui.functionality.main_window import MainWindow
-from gui.helpers.data_provider import DataProvider
 from gui.functionality.idact_notebook import IdactNotebook
 from gui.functionality.manage_jobs import ManageJobs
 from gui.functionality.add_cluster import AddCluster
 from gui.functionality.remove_cluster import RemoveCluster
 from gui.functionality.adjust_timeouts import AdjustTimeouts
-from gui.helpers.deployments_provider import DeploymentsProvider
 
 
 @pytest.fixture()
@@ -42,10 +40,7 @@ def test_deploy_notebook_window(window, qtbot):
     window.show()
     window.deploy_notebook_action.trigger()
 
-    data_provider = DataProvider()
-    deployments_provider = DeploymentsProvider()
-
-    assert window.centralWidget().__class__ == IdactNotebook(data_provider, deployments_provider).__class__
+    assert window.centralWidget().__class__ == IdactNotebook(window).__class__
 
 
 def test_manage_jobs_window(window, qtbot):
@@ -53,9 +48,8 @@ def test_manage_jobs_window(window, qtbot):
     """
     window.show()
     window.manage_jobs_action.trigger()
-    data_provider = DataProvider()
 
-    assert window.centralWidget().__class__ == ManageJobs(data_provider).__class__
+    assert window.centralWidget().__class__ == ManageJobs(window).__class__
 
 
 def test_running_notebooks_window(window, qtbot):
@@ -63,10 +57,8 @@ def test_running_notebooks_window(window, qtbot):
     """
     window.show()
     window.running_notebooks_action.trigger()
-    data_provider = DataProvider()
-    deployments_provider = DeploymentsProvider()
 
-    assert window.centralWidget().__class__ == RunningNotebooks(data_provider, deployments_provider).__class__
+    assert window.centralWidget().__class__ == RunningNotebooks(window).__class__
 
 
 def test_add_cluster_window(window, qtbot):
@@ -74,9 +66,8 @@ def test_add_cluster_window(window, qtbot):
     """
     window.show()
     window.add_cluster_action.trigger()
-    data_provider = DataProvider()
 
-    assert window.centralWidget().__class__ == AddCluster(data_provider).__class__
+    assert window.centralWidget().__class__ == AddCluster(window).__class__
 
 
 def test_remove_cluster_window(window, qtbot):
@@ -84,9 +75,8 @@ def test_remove_cluster_window(window, qtbot):
     """
     window.show()
     window.remove_cluster_action.trigger()
-    data_provider = DataProvider()
 
-    assert window.centralWidget().__class__ == RemoveCluster(data_provider).__class__
+    assert window.centralWidget().__class__ == RemoveCluster(window).__class__
 
 
 def test_edit_configuration_window(window, qtbot):
@@ -94,9 +84,8 @@ def test_edit_configuration_window(window, qtbot):
     """
     window.show()
     window.edit_configuration_action.trigger()
-    data_provider = DataProvider()
 
-    assert window.centralWidget().__class__ == AdjustTimeouts(data_provider).__class__
+    assert window.centralWidget().__class__ == AdjustTimeouts(window).__class__
 
 
 def test_logs_window(window, qtbot):
