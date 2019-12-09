@@ -19,7 +19,7 @@ class AdjustTimeouts(QWidget):
     clusters timeouts.
     """
 
-    def __init__(self, parent=None):
+    def __init__(self, parent):
         super().__init__(parent=parent)
         self.ui = UiLoader.load_ui_from_file('adjust-timeouts.ui', self)
 

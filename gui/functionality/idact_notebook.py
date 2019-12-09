@@ -34,7 +34,7 @@ class IdactNotebook(QWidget):
     """
     deployment_ended = pyqtSignal()
 
-    def __init__(self, parent=None):
+    def __init__(self, parent):
         super().__init__(parent=parent)
         self.ui = UiLoader.load_ui_from_file('deploy-notebook.ui', self)
 

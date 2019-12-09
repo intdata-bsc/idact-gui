@@ -20,7 +20,7 @@ class RemoveCluster(QWidget):
     selected cluster.
     """
 
-    def __init__(self, parent=None):
+    def __init__(self, parent):
         super().__init__(parent=parent)
         self.ui = UiLoader.load_ui_from_file('remove-cluster.ui', self)
 
