@@ -8,7 +8,7 @@ with open('requirements-pip.txt') as requirements_file:
 
 setuptools.setup(
     name="idact-gui",
-    version="0.4.0",
+    version="0.4.1",
     author="Joanna Chyży, Karolina Piekarz, Piotr Swędrak",
     author_email="piotrekswedrak@gmail.com",
     description="A small example package",

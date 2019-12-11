@@ -20,21 +20,20 @@ class RemoveCluster(QWidget):
     selected cluster.
     """
 
-    def __init__(self, data_provider, parent=None):
+    def __init__(self, parent):
         super().__init__(parent=parent)
         self.ui = UiLoader.load_ui_from_file('remove-cluster.ui', self)
 
         self.parent = parent
-        self.data_provider = data_provider
 
         self.popup_window = PopUpWindow()
 
         self.ui.remove_cluster_button.clicked.connect(self.concurrent_remove_cluster)
 
-        self.cluster_names = self.data_provider.get_cluster_names()
+        self.cluster_names = self.parent.data_provider.get_cluster_names()
 
-        self.data_provider.remove_cluster_signal.connect(self.handle_cluster_list_modification)
-        self.data_provider.add_cluster_signal.connect(self.handle_cluster_list_modification)
+        self.parent.data_provider.remove_cluster_signal.connect(self.handle_cluster_list_modification)
+        self.parent.data_provider.add_cluster_signal.connect(self.handle_cluster_list_modification)
         self.ui.cluster_names_box.addItems(self.cluster_names)
 
     def concurrent_remove_cluster(self):
@@ -49,7 +48,7 @@ class RemoveCluster(QWidget):
     def handle_complete_remove_cluster(self):
         """ Handles the completion of removing cluster.
         """
-        self.data_provider.remove_cluster_signal.emit()
+        self.parent.data_provider.remove_cluster_signal.emit()
         self.popup_window.show_message("The cluster has been successfully removed", WindowType.success)
 
     def handle_error_remove_cluster(self, exception):
@@ -81,6 +80,6 @@ class RemoveCluster(QWidget):
     def handle_cluster_list_modification(self):
         """ Handles the modification of the clusters list.
         """
-        self.cluster_names = self.data_provider.get_cluster_names()
+        self.cluster_names = self.parent.data_provider.get_cluster_names()
         self.ui.cluster_names_box.clear()
         self.ui.cluster_names_box.addItems(self.cluster_names)

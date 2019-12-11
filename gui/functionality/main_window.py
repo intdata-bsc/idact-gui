@@ -46,7 +46,7 @@ class MainWindow(QMainWindow):
         self.actions_file_name = None
         self.threadpool = QThreadPool()
 
-        self.setCentralWidget(IdactNotebook(self.data_provider, self.deployments_provider, self))
+        self.setCentralWidget(IdactNotebook(self))
 
         self.ui.deploy_notebook_action.triggered.connect(self.handle_deploy_notebook_action)
         self.ui.manage_jobs_action.triggered.connect(self.handle_manage_jobs_action)
@@ -62,22 +62,22 @@ class MainWindow(QMainWindow):
         self.ui.about_the_program_action.triggered.connect(self.handle_about_the_program_action)
 
     def handle_deploy_notebook_action(self):
-        self.setCentralWidget(IdactNotebook(self.data_provider, self.deployments_provider, self))
+        self.setCentralWidget(IdactNotebook(self))
 
     def handle_manage_jobs_action(self):
-        self.setCentralWidget(ManageJobs(self.data_provider, self))
+        self.setCentralWidget(ManageJobs(self))
 
     def handle_running_notebooks_action(self):
-        self.setCentralWidget(RunningNotebooks(self.data_provider, self.deployments_provider, self))
+        self.setCentralWidget(RunningNotebooks(self))
 
     def handle_add_cluster_action(self):
-        self.setCentralWidget(AddCluster(self.data_provider, self))
+        self.setCentralWidget(AddCluster(self))
 
     def handle_remove_cluster_action(self):
-        self.setCentralWidget(RemoveCluster(self.data_provider, self))
+        self.setCentralWidget(RemoveCluster(self))
 
     def handle_edit_configuration_action(self):
-        self.setCentralWidget(AdjustTimeouts(self.data_provider, self))
+        self.setCentralWidget(AdjustTimeouts(self))
 
     def handle_show_logs_action(self):
         self.show_logs_window.show()
